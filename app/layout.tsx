@@ -1,25 +1,32 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Raleway } from 'next/font/google'
 import "../styles/globals.css"
 import Navbar from "@/components/Navbar"
 import PreFooter from "@/components/PreFooter"
 import Footer from "@/components/Footer"
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+
+const raleway = Raleway({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800'],
+  variable: '--font-raleway',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://whiteboxmedia.co.in'),
+  metadataBase: new URL('https://roomyo.in'),
   title: {
-    default: 'WhiteBox Media - Premier Event Management & Digital Marketing Agency',
-    template: 'WBM Developed by RelaxKartikey'
+    default: 'Roomyo - Find Your Perfect Property & PG Accommodation',
+    template: '%s | Roomyo'
   },
-  description: 'WhiteBox Media, founded by Neeraj Sharma in 2013, is a leading event management and digital marketing agency in Jaipur, offering comprehensive solutions for corporate events, weddings, and brand promotions.',
-  keywords: ['event management', 'digital marketing', 'corporate events', 'wedding planning', 'brand promotion', 'Jaipur', 'WhiteBox Media', 'Neeraj Sharma'],
+  description: 'Roomyo is your trusted platform for finding the perfect property or PG accommodation across major Indian cities. Easy booking, verified listings, and hassle-free experience.',
+  keywords: ['real estate', 'PG accommodation', 'property rental', 'house hunting', 'rental properties', 'paying guest', 'India', 'accommodation'],
   authors: [
-    { name: 'Neeraj Sharma', url: 'https://whiteboxmedia.co.in' },
+    { name: 'Roomyo', url: 'https://roomyo.in' },
   ],
-  creator: 'Neeraj Sharma',
-  publisher: 'White Box Media Pvt. Ltd.',
+  creator: 'Roomyo',
+  publisher: 'Roomyo Pvt. Ltd.',
   formatDetection: {
     email: true,
     address: true,
@@ -29,26 +36,26 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'WhiteBox Media - Premier Event Management & Digital Marketing Agency',
-    description: 'Leading event management and digital marketing agency in Jaipur, founded by Neeraj Sharma. Offering comprehensive solutions for corporate events, weddings, and brand promotions.',
-    url: 'https://whiteboxmedia.co.in',
-    siteName: 'WhiteBox Media',
-    locale: 'en_US',
+    title: 'Roomyo - Find Your Perfect Property & PG Accommodation',
+    description: 'Discover and book the perfect property or PG accommodation across major Indian cities. Verified listings, easy booking, and 24/7 support.',
+    url: 'https://roomyo.in',
+    siteName: 'Roomyo',
+    locale: 'en_IN',
     type: 'website',
     images: [
       {
-        url: 'https://cdn.whiteboxmedia.co.in/logo.PNG',
-        width: 800,
-        height: 600,
-        alt: 'WhiteBox Media Logo',
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Roomyo - Property & PG Booking',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'WhiteBox Media - Premier Event Management Agency',
-    description: 'Leading event management and digital marketing agency in Jaipur, founded by Neeraj Sharma',
-    images: ['https://cdn.whiteboxmedia.co.in/logo.PNG'],
+    title: 'Roomyo - Property & PG Booking Made Easy',
+    description: 'Find your perfect property or PG accommodation across major Indian cities',
+    images: ['/og-image.jpg'],
   },
   robots: {
     index: true,
@@ -64,22 +71,8 @@ export const metadata: Metadata = {
   verification: {
     google: 'add-your-google-site-verification-here',
   },
-  category: 'Event Management & Digital Marketing',
-  classification: 'Business',
-  other: {
-    'contact:email': 'info@whiteboxmedia.co.in',
-    'contact:phone': '+919352057269',
-    'contact:address': 'E 31, Forth floor 408 Amar Heights Rani Sati Nagar, Nirman Nagar, DCM Ajmer Road, Near MG Motor, 302019',
-    'business:contact_data:street_address': 'E 31, Forth floor 408 Amar Heights',
-    'business:contact_data:locality': 'Rani Sati Nagar, Nirman Nagar',
-    'business:contact_data:region': 'DCM Ajmer Road',
-    'business:contact_data:postal_code': '302019',
-    'business:contact_data:country_name': 'India',
-    'business:contact_data:email': 'info@whiteboxmedia.co.in',
-    'business:contact_data:phone_number': '+919352057269',
-    'business:contact_data:website': 'https://whiteboxmedia.co.in',
-    'developer': 'RelaxKartikey (https://kartikey.tech)',
-  }
+  category: 'Real Estate & Accommodation',
+  classification: 'Property Rental',
 }
 
 export default function RootLayout({
@@ -88,8 +81,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={inter.className}>
-      <body className="min-h-screen bg-black">
+    <html lang="en" className={`${inter.variable} ${raleway.variable}`}>
+      <body className="min-h-screen bg-white font-body">
         <Navbar />
         <main>{children}</main>
         <PreFooter />

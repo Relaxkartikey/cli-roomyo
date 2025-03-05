@@ -18,6 +18,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'cdn.whiteboxmedia.co.in',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
   },
 }

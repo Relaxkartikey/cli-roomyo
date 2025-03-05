@@ -1,52 +1,188 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import { Search, MapPin, Building2, Home } from "lucide-react";
 
 const HeroSection = () => {
   return (
     <section
       id="home"
-      className="relative w-full h-screen bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: "url('/herobg.png')",
-      }}
+      className="relative w-full min-h-[calc(100vh-80px)] bg-secondary flex items-center pt-20 pb-12"
     >
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/70"></div>
-
-      {/* Content */}
-      <div className="relative h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+      <div className="relative w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Text Content */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-8 tracking-tight"
+            className="text-left order-2 lg:order-1"
           >
-            White Box Media.
-            <div className="w-48 h-1 bg-red-600 mx-auto mt-4"></div>
-          </motion.h1>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-4 text-sm md:text-base font-medium text-primary"
+            >
+              Find Your Perfect Space
+            </motion.div>
+
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-heading text-foreground mb-6 tracking-tight leading-[1.1]">
+              Your Dream
+              <br />
+              Home Is Just
+              <br />
+              A Click Away
+            </h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="max-w-3xl mx-auto text-lg md:text-xl text-gray-200 mb-12"
+              className="max-w-xl text-base sm:text-lg md:text-xl text-muted-foreground mb-8"
           >
-            White Box Media is your premier partner in creating unforgettable events with top-notch graphics and video production. From weddings and corporate events to social gatherings, we turn your vision into reality, providing impeccable services and creativity.
+              Discover the perfect property or PG accommodation across 7 major Indian cities. 
+              Easy booking, trusted dealers, and hassle-free experience.
           </motion.p>
 
+            {/* Search Bar */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <a
-              href="/contact"
-              className="inline-block bg-[#b91c1c] text-white px-8 py-4 text-lg font-semibold uppercase tracking-wider hover:bg-[#991b1b] transition-colors duration-300 rounded-md"
+              className="relative max-w-2xl mb-8"
             >
-              Get In Touch
-            </a>
+              <div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-lg">
+                <div className="flex-1 flex items-center gap-2 px-4 py-2">
+                  <MapPin className="w-5 h-5 text-primary" />
+                  <input
+                    type="text"
+                    placeholder="Enter city or locality"
+                    className="w-full bg-transparent border-none focus:outline-none text-foreground"
+                  />
+                </div>
+                <button className="bg-accent hover:bg-accent-dark text-white px-6 py-3 rounded-md transition-colors duration-300 flex items-center gap-2">
+                  <Search className="w-5 h-5" />
+                  <span>Search</span>
+                </button>
+              </div>
+            </motion.div>
+
+            {/* Featured Cities */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="flex flex-wrap gap-2 mb-8"
+            >
+              {['Mumbai', 'Delhi', 'Bangalore', 'Pune'].map((city) => (
+                <button
+                  key={city}
+                  className="px-4 py-2 bg-white rounded-full text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm"
+                >
+                  {city}
+                </button>
+              ))}
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="mt-12 grid grid-cols-3 gap-4 max-w-md"
+            >
+              <div>
+                <div className="text-2xl md:text-3xl font-bold text-primary">7+</div>
+                <div className="text-sm text-muted-foreground">Major Cities</div>
+              </div>
+              <div>
+                <div className="text-2xl md:text-3xl font-bold text-primary">1000+</div>
+                <div className="text-sm text-muted-foreground">Properties</div>
+              </div>
+              <div>
+                <div className="text-2xl md:text-3xl font-bold text-primary">24/7</div>
+                <div className="text-sm text-muted-foreground">Support</div>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Image Grid */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="relative order-1 lg:order-2"
+          >
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <div className="relative h-[200px] md:h-[300px] rounded-2xl overflow-hidden">
+                  <Image
+                    src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&auto=format&fit=crop&q=60"
+                    alt="Modern Apartment"
+                    fill
+                    className="object-cover hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <div className="relative h-[150px] md:h-[200px] rounded-2xl overflow-hidden">
+                  <Image
+                    src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=60"
+                    alt="Luxury Home"
+                    fill
+                    className="object-cover hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+              <div className="space-y-4 pt-8">
+                <div className="relative h-[150px] md:h-[200px] rounded-2xl overflow-hidden">
+                  <Image
+                    src="https://images.unsplash.com/photo-1515263487990-61b07816b324?w=800&auto=format&fit=crop&q=60"
+                    alt="Modern Kitchen"
+                    fill
+                    className="object-cover hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <div className="relative h-[200px] md:h-[300px] rounded-2xl overflow-hidden">
+                  <Image
+                    src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&auto=format&fit=crop&q=60"
+                    alt="Cozy Bedroom"
+                    fill
+                    className="object-cover hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            {/* Floating Elements */}
+            <motion.div
+              animate={{
+                y: [0, -10, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute top-1/4 right-[10%] bg-white p-3 rounded-full shadow-lg hidden md:block"
+            >
+              <Building2 className="w-6 h-6 text-primary" />
+            </motion.div>
+            
+            <motion.div
+              animate={{
+                y: [0, 10, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.5,
+              }}
+              className="absolute bottom-1/4 left-[10%] bg-white p-3 rounded-full shadow-lg hidden md:block"
+            >
+              <Home className="w-6 h-6 text-accent" />
+            </motion.div>
           </motion.div>
         </div>
       </div>
