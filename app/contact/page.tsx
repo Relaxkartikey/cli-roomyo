@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import HeroTitle from "@/components/HeroTitle";
-import emailjs from '@emailjs/browser';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaInstagram, FaLinkedin, FaGlobe } from "react-icons/fa";
+import { MapPin, Mail, Phone } from "lucide-react";
+import { FaInstagram, FaFacebookF, FaLinkedin, FaWhatsapp } from "react-icons/fa";
+import Link from "next/link";
 
 interface FormData {
   name: string;
@@ -31,33 +31,14 @@ export default function ContactPage() {
     setSubmitStatus({ type: null, message: "" });
 
     try {
-      const templateParams = {
-        to_name: "WhiteBoxMedia",
-        from_name: formData.name,
-        from_email: formData.email,
-        phone_number: formData.phone,
-        message: formData.message,
-        reply_to: formData.email,
-      };
-
-      const response = await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-        templateParams,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
-      );
-
-      if (response.status === 200) {
-        setSubmitStatus({
-          type: "success",
-          message: "Thank you for your message. We'll get back to you soon!",
-        });
-        setFormData({ name: "", email: "", phone: "", message: "" });
-      } else {
-        throw new Error('Failed to send message');
-      }
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setSubmitStatus({
+        type: "success",
+        message: "Thank you for your message. We'll get back to you soon!",
+      });
+      setFormData({ name: "", email: "", phone: "", message: "" });
     } catch (error) {
-      console.error("EmailJS Error:", error);
+      console.error("Form Error:", error);
       setSubmitStatus({
         type: "error",
         message: "Something went wrong. Please try again later.",
@@ -77,115 +58,164 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-h-screen bg-black">
-      <HeroTitle 
-        title="Contact Us" 
-        subtitle="Get in Touch with White Box Media"
-      />
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="relative bg-background pt-32 pb-16">
+        <div className="container px-4 mx-auto">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl font-bold tracking-tight">
+              Get in Touch
+              <div className="w-20 h-1 bg-primary mx-auto mt-4"></div>
+            </h1>
+            <p className="mt-6 text-lg text-muted-foreground">
+              Have questions about our properties or services? We're here to help you find your perfect living space.
+            </p>
+          </div>
+        </div>
+      </section>
 
-      <section className="py-16 md:py-24 w-full bg-black">
-        <div className="max-w-3xl mx-auto px-4">
-          {/* Contact Information Cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-8"
-          >
-            <div className="bg-black/50 border border-neutral-800 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <FaMapMarkerAlt className="text-red-500 text-xl" />
-                <h3 className="text-lg font-semibold text-white">Visit Us</h3>
-              </div>
-              <p className="text-white/70">
-                E 31, Forth floor 408 Amar Heights<br />
-                Rani Sati Nagar, Nirman Nagar<br />
-                DCM Ajmer Road, Near MG Motor<br />
-                302019
-              </p>
-            </div>
-
-            <div className="bg-black/50 border border-neutral-800 rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <FaGlobe className="text-red-500 text-xl" />
-                <h3 className="text-lg font-semibold text-white">Connect with Us</h3>
-              </div>
-              <div className="space-y-4">
-                <a href="tel:+919352057269" className="flex items-center gap-3 text-white/70 hover:text-red-500 transition-colors">
-                  <FaPhone className="text-red-500/70" />
-                  +91 93520 57269
-                </a>
-                <div className="space-y-2">
-                  <a href="mailto:info@whiteboxmedia.co.in" className="flex items-center gap-3 text-white/70 hover:text-red-500 transition-colors">
-                    <FaEnvelope className="text-red-500/70" />
-                    info@whiteboxmedia.co.in
-                  </a>
-                  <a href="mailto:hr@whiteboxmedia.co.in" className="flex items-center gap-3 text-white/70 hover:text-red-500 transition-colors">
-                    <FaEnvelope className="text-red-500/70" />
-                    hr@whiteboxmedia.co.in
-                  </a>
+      {/* Contact Cards Section */}
+      <section className="py-12 bg-secondary/50">
+        <div className="container px-4 mx-auto">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="bg-background rounded-xl p-6 shadow-md"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-lg bg-primary/10">
+                    <MapPin className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold">Visit Us</h3>
+                    <p className="mt-2 text-muted-foreground">
+                      Pearl Apartments,<br />
+                      Jagatpura, Jaipur,<br />
+                      Rajasthan, India
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="bg-background rounded-xl p-6 shadow-md"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-lg bg-primary/10">
+                    <Mail className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold">Email Us</h3>
+                    <div className="mt-2 space-y-1">
+                      <a href="mailto:contact@roomyo.in" className="block text-muted-foreground hover:text-primary transition-colors">
+                        contact@roomyo.in
+                      </a>
+                      <a href="mailto:support@roomyo.in" className="block text-muted-foreground hover:text-primary transition-colors">
+                        support@roomyo.in
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="bg-background rounded-xl p-6 shadow-md"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-lg bg-primary/10">
+                    <Phone className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold">Call Us</h3>
+                    <div className="mt-2 space-y-1">
+                      <a href="tel:+919876543210" className="block text-muted-foreground hover:text-primary transition-colors">
+                        +91 98765 43210
+                      </a>
+                      <a href="https://wa.me/919876543210" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+                        <FaWhatsapp className="w-4 h-4" />
+                        <span>WhatsApp Support</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
+          </div>
+        </div>
+      </section>
 
-          {/* Google Maps Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mb-16 w-full bg-black/50 border border-neutral-800 rounded-xl overflow-hidden"
-          >
-            <div className="aspect-video w-full">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3558.0901518778!2d75.7900492!3d26.9016599!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db5e7e0777dff%3A0x7f485e3e7b9dbf2!2sWhite%20Box%20Media!5e0!3m2!1sen!2sin!4v1706651361402!5m2!1sen!2sin"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="grayscale hover:grayscale-0 transition-all duration-300"
-              />
-            </div>
-          </motion.div>
-
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="w-full"
-          >
-            <h2 className="text-3xl font-bold text-white mb-8">
-              Send Us a Message
-              <div className="w-12 h-1 bg-red-600 mt-4"></div>
-            </h2>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Your Name"
-                  required
-                  className="w-full px-4 py-3 bg-black/50 border border-neutral-800 rounded-lg focus:border-red-600/50 text-white placeholder:text-neutral-400 outline-none transition-colors"
+      {/* Map Section */}
+      <section className="py-12 bg-background">
+        <div className="container px-4 mx-auto">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="rounded-xl overflow-hidden shadow-md"
+            >
+              <div className="aspect-[21/9]">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3559.9749481910113!2d75.8663553!3d26.8462184!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db5f33e40c1fb%3A0x1ee06f9e585c0d7e!2sJagatpura%2C%20Jaipur%2C%20Rajasthan!5e0!3m2!1sen!2sin!4v1706651361402!5m2!1sen!2sin"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="grayscale hover:grayscale-0 transition-all duration-300"
                 />
               </div>
-              <div>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Your Email"
-                  required
-                  className="w-full px-4 py-3 bg-black/50 border border-neutral-800 rounded-lg focus:border-red-600/50 text-white placeholder:text-neutral-400 outline-none transition-colors"
-                />
-              </div>
-              <div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-12 bg-secondary/50">
+        <div className="container px-4 mx-auto">
+          <div className="max-w-3xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="bg-background rounded-xl p-8 shadow-md"
+            >
+              <h2 className="text-2xl font-bold">
+                Send Us a Message
+                <div className="w-12 h-1 bg-primary mt-4"></div>
+              </h2>
+
+              <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Your Name"
+                    required
+                    className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Your Email"
+                    required
+                    className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
+                  />
+                </div>
                 <input
                   type="tel"
                   name="phone"
@@ -193,10 +223,8 @@ export default function ContactPage() {
                   onChange={handleChange}
                   placeholder="Your Phone"
                   required
-                  className="w-full px-4 py-3 bg-black/50 border border-neutral-800 rounded-lg focus:border-red-600/50 text-white placeholder:text-neutral-400 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
                 />
-              </div>
-              <div>
                 <textarea
                   name="message"
                   value={formData.message}
@@ -204,31 +232,31 @@ export default function ContactPage() {
                   placeholder="Your Message"
                   required
                   rows={5}
-                  className="w-full px-4 py-3 bg-black/50 border border-neutral-800 rounded-lg focus:border-red-600/50 text-white placeholder:text-neutral-400 outline-none transition-colors resize-none"
+                  className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors resize-none"
                 />
-              </div>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full px-8 py-4 bg-red-600 hover:bg-red-700 disabled:bg-red-800 text-white font-medium rounded-lg transition-colors"
-              >
-                {isSubmitting ? "Sending..." : "Send Message"}
-              </button>
-              {submitStatus.type && (
-                <p
-                  className={`text-sm ${
-                    submitStatus.type === "success"
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-primary text-white px-8 py-4 rounded-lg hover:bg-primary/90 disabled:bg-primary/70 transition-colors"
                 >
-                  {submitStatus.message}
-                </p>
-              )}
-            </form>
-          </motion.div>
+                  {isSubmitting ? "Sending..." : "Send Message"}
+                </button>
+                {submitStatus.type && (
+                  <p
+                    className={`text-sm ${
+                      submitStatus.type === "success"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {submitStatus.message}
+                  </p>
+                )}
+              </form>
+            </motion.div>
+          </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

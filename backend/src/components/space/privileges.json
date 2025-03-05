@@ -1,0 +1,66 @@
+{
+  "collectionName": "components_space_privileges",
+  "info": {
+    "displayName": "Privileges",
+    "description": "Select available privileges for the space"
+  },
+  "options": {},
+  "attributes": {
+    "all_inclusive_price": {
+      "type": "boolean",
+      "default": false
+    },
+    "no_security_deposit": {
+      "type": "boolean",
+      "default": false
+    },
+    "flexible_payment": {
+      "type": "boolean",
+      "default": false
+    },
+    "maintenance_included": {
+      "type": "boolean",
+      "default": false
+    },
+    "utility_included": {
+      "type": "boolean",
+      "default": false
+    },
+    "flexible_move_in": {
+      "type": "boolean",
+      "default": false
+    },
+    "flexible_move_out": {
+      "type": "boolean",
+      "default": false
+    },
+    "short_term_allowed": {
+      "type": "boolean",
+      "default": false
+    },
+    "couples_allowed": {
+      "type": "boolean",
+      "default": false
+    },
+    "pets_allowed": {
+      "type": "boolean",
+      "default": false
+    },
+    "visitors_allowed": {
+      "type": "boolean",
+      "default": false
+    },
+    "cooking_allowed": {
+      "type": "boolean",
+      "default": false
+    },
+    "other_privileges": {
+      "type": "text",
+      "description": "List any additional privileges not covered above"
+    },
+    "custom_privileges": {
+      "type": "text",
+      "description": "Add any additional custom privileges (comma-separated)"
+    }
+  }
+} 

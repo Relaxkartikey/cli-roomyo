@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Share2, MapPin, Building2 } from "lucide-react";
+import { Share2, MapPin, Building2, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -17,8 +17,11 @@ export interface Property {
   name: string;
   location: string;
   category: string;
-  price: string;
-  priceNumeric: number;
+  prices: Array<{
+    type: string;
+    price: string;
+    priceNumeric: number;
+  }>;
   amenities: string[];
   image: string;
   images: string[];
@@ -38,8 +41,8 @@ export default function SpacesPage() {
     if (selectedCategory && property.category !== selectedCategory) return false;
     return true;
   }).sort((a, b) => {
-    if (selectedSort === "Low to High") return a.priceNumeric - b.priceNumeric;
-    if (selectedSort === "High to Low") return b.priceNumeric - a.priceNumeric;
+    if (selectedSort === "Low to High") return a.prices[0].priceNumeric - b.prices[0].priceNumeric;
+    if (selectedSort === "High to Low") return b.prices[0].priceNumeric - a.prices[0].priceNumeric;
     return 0; // Recent is default
   });
 
@@ -145,49 +148,64 @@ export default function SpacesPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="bg-white rounded-xl overflow-hidden border border-gray-100 transition-all duration-300 group shadow-lg hover:shadow-xl"
+              className="bg-white rounded-xl overflow-hidden border border-gray-100 transition-all duration-300 group shadow-lg hover:shadow-xl flex flex-col h-full"
             >
               {/* Property Image */}
-              <div className="relative h-48">
-                <Image
-                  src={property.images[0]}
-                  alt={property.name}
-                  fill
-                  className="object-cover"
-                />
-                <button className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <Share2 className="w-5 h-5 text-gray-700" />
-                </button>
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent h-24" />
-              </div>
+              <Link href={createPropertyUrl(property)} className="block flex-1">
+                <div className="relative h-full min-h-[12rem]">
+                  <Image
+                    src={property.images[0]}
+                    alt={property.name}
+                    fill
+                    className="object-cover"
+                  />
+                  <button 
+                    className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      // Share functionality here
+                    }}
+                  >
+                    <Share2 className="w-5 h-5 text-gray-700" />
+                  </button>
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent h-24" />
+                </div>
+              </Link>
 
               {/* Property Details */}
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <MapPin className="w-4 h-4 text-primary" />
-                  <span className="text-sm text-gray-600">{property.location}</span>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{property.name}</h3>
-                <div className="flex items-center gap-2 mb-4">
-                  <Building2 className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm text-gray-500">{property.category}</span>
-                </div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-primary font-semibold">{property.price}</span>
-                  <div className="flex gap-2">
-                    {property.amenities.slice(0, 2).map((amenity, index) => (
-                      <span key={index} className="text-xs bg-primary/5 text-primary px-2 py-1 rounded-full">
-                        {amenity}
-                      </span>
-                    ))}
+              <div className="p-6 flex flex-col">
+                <Link href={createPropertyUrl(property)} className="block">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-primary" />
+                      <span className="text-sm text-gray-600">{property.location}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      {property.amenities.slice(0, 2).map((amenity, index) => (
+                        <span key={index} className="text-xs bg-primary/5 text-primary px-2 py-1 rounded-full">
+                          {amenity}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-                <Link 
-                  href={createPropertyUrl(property)}
-                  className="block w-full text-center py-2 px-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors duration-300"
-                >
-                  View Details
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{property.name}</h3>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Building2 className="w-4 h-4 text-gray-500" />
+                    <span className="text-sm text-gray-500">{property.category}</span>
+                  </div>
                 </Link>
+                
+                {/* Price Options */}
+                <div className="space-y-2 mt-auto">
+                  {property.prices.map((priceOption, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <span className="text-primary font-semibold">{priceOption.price}</span>
+                      <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
+                        {priceOption.type}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </motion.div>
           ))}

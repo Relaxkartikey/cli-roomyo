@@ -1,146 +1,453 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import HeroTitle from "@/components/HeroTitle";
+import Link from "next/link";
 import { motion } from "framer-motion";
+import { 
+  Building, MapPin, Mail, Globe, Phone, CheckCircle2, 
+  Users, Target, Shield, Coffee, Clock, Zap,
+  ChefHat, Smartphone, Lock, Home
+} from "lucide-react";
 
-const AboutPage = () => {
+const MISSION_POINTS = [
+  "Premium, fully-furnished accommodations with high-end amenities",
+  "A seamless rental experience with no brokerage or hidden charges",
+  "A vibrant, like-minded community where residents can network",
+  "Top-notch hospitality services including housekeeping and gourmet meals"
+];
+
+const KEY_FEATURES = [
+  {
+    icon: Home,
+    title: "Move-in Ready",
+    description: "Fully furnished spaces with modern interiors and work-friendly setups"
+  },
+  {
+    icon: Shield,
+    title: "Zero Brokerage",
+    description: "No middlemen, no extra costs – straightforward and transparent pricing"
+  },
+  {
+    icon: Users,
+    title: "24/7 Support",
+    description: "IHM-trained managers ensuring a hotel-like experience"
+  },
+  {
+    icon: ChefHat,
+    title: "Healthy Gourmet Meals",
+    description: "Tasty, nutritious food included in your stay"
+  },
+  {
+    icon: Smartphone,
+    title: "Tech-Enabled Living",
+    description: "Pay rent, request maintenance, and manage services with just a tap"
+  },
+  {
+    icon: Lock,
+    title: "Unmatched Security",
+    description: "3-tier safety with biometric locks, CCTV surveillance, and security"
+  }
+];
+
+const TEAM_MEMBERS = [
+  {
+    name: "Anand",
+    role: "Founder",
+    image: "/team/founder.jpg",
+    description: "The visionary behind Roomyo, set out to create more than just a rental service—he wanted to build a community-driven living experience that brings comfort, luxury, and convenience under one roof."
+  },
+  {
+    name: "Kartikey Sharma",
+    role: "Tech Lead",
+    image: "/team/tech-lead.jpg",
+    description: "The brain behind Roomyo's seamless digital experience. With expertise in software development and automation, he ensures that Roomyo stays ahead in the PropTech industry."
+  },
+  {
+    name: "Varun Chahar",
+    role: "Marketing Lead",
+    image: "/team/marketing-lead.jpg",
+    description: "The driving force behind Roomyo's outreach. From strategic branding to targeted campaigns, he ensures that Roomyo reaches the right audience."
+  }
+];
+
+export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
-      <HeroTitle 
-        title="About Us"
-        subtitle="Meet the visionaries behind WhiteBoxMedia"
-      />
+    <main className="min-h-screen bg-secondary">
+      {/* Hero Section */}
+      <section className="relative h-[70vh] flex items-center justify-center">
+        <Image
+          src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af"
+          alt="Roomyo Office"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/50" />
+        <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-5xl md:text-6xl font-bold mb-6"
+          >
+            Who We Are
+            <div className="w-20 h-1 bg-primary mx-auto mt-4"></div>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-xl md:text-2xl text-gray-200"
+          >
+            Jaipur's premier rental accommodation provider designed exclusively for students and working professionals
+          </motion.p>
+        </div>
+      </section>
 
-      <section className="max-w-7xl mx-auto px-4 py-16 md:py-24">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="grid md:grid-cols-1 gap-12"
-        >
-          <div className="space-y-12">
-            <div className="text-center">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                Neeraj Sharma
-                <div className="w-12 h-1 bg-red-600 mx-auto mt-4"></div>
+      {/* Introduction Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h2 className="text-4xl font-bold mb-6">
+                Welcome to Roomyo
+                <div className="w-20 h-1 bg-primary mt-4"></div>
               </h2>
-              <h3 className="text-xl md:text-2xl text-red-500 font-semibold">Founder & CEO</h3>
-              <p className="text-neutral-400 mt-2">White Box Media</p>
-            </div>
+              <p className="text-xl text-muted-foreground mb-6">
+                We believe in redefining co-living by combining comfort, convenience, and community into one seamless experience.
+              </p>
+              <p className="text-xl text-muted-foreground">
+                At Roomyo, we don't just offer a place to stay; we offer a lifestyle. Whether you're moving to Jaipur for work or studies, we ensure that your stay is hassle-free, luxurious, and truly enriching.
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="relative aspect-[4/3] rounded-2xl overflow-hidden"
+            >
+              <Image
+                src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
+                alt="Roomyo Living Space"
+                fill
+                className="object-cover"
+              />
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
-            <div className="space-y-12 text-neutral-300 max-w-4xl mx-auto">
-              <motion.div 
+      {/* Mission Section */}
+      <section className="py-24 bg-secondary">
+        <div className="max-w-7xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Our Mission
+              <div className="w-20 h-1 bg-primary mx-auto mt-4"></div>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              To provide modern, well-equipped, and vibrant living spaces that make life easier and more fulfilling
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {MISSION_POINTS.map((point, index) => (
+              <motion.div
+                key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="bg-black/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-8 hover:border-red-600/50 transition-colors"
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="flex items-start gap-4 bg-white rounded-xl p-6 shadow-lg"
               >
-                <h3 className="text-2xl font-semibold text-white mb-4">Profile Overview</h3>
-                <p className="text-lg">Neeraj Sharma is the founder and CEO of White Box Media, Jaipur-based entrepreneur.</p>
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Target className="w-6 h-6 text-primary" />
+                </div>
+                <p className="text-lg text-muted-foreground">{point}</p>
               </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              <motion.div 
+      {/* Features Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Why Choose Roomyo?
+              <div className="w-20 h-1 bg-primary mx-auto mt-4"></div>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Finding the perfect place to live can be stressful. Roomyo removes the hassle by offering an all-inclusive rental solution
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {KEY_FEATURES.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="bg-secondary/50 rounded-xl p-6 hover:bg-secondary transition-all duration-300"
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 rounded-lg bg-primary/10">
+                      <Icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-semibold">{feature.title}</h3>
+                  </div>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Founder Section */}
+      <section className="py-24 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent" />
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl"
+            >
+              <Image
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d"
+                alt="Anand - Founder of Roomyo"
+                fill
+                className="object-cover"
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="relative"
+            >
+              <div className="absolute -left-8 top-0 w-1 h-full bg-primary/20" />
+              <h2 className="text-4xl font-bold mb-6">
+                Meet Our Founder
+                <div className="w-20 h-1 bg-primary mt-4"></div>
+              </h2>
+              <h3 className="text-2xl font-semibold text-primary mb-4">Anand</h3>
+              <p className="text-xl text-muted-foreground mb-6">
+                The visionary behind Roomyo, set out to create more than just a rental service—he wanted to build a community-driven living experience that brings comfort, luxury, and convenience under one roof.
+              </p>
+              <p className="text-xl text-muted-foreground">
+                His passion for revolutionizing rental accommodations led to the creation of Roomyo, where every resident feels at home the moment they step in.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="py-24 bg-secondary">
+        <div className="max-w-7xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Meet Our Team
+              <div className="w-20 h-1 bg-primary mx-auto mt-4"></div>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              The passionate individuals behind Roomyo's success
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {TEAM_MEMBERS.map((member, index) => (
+              <motion.div
+                key={member.name}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="bg-black/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-8 hover:border-red-600/50 transition-colors"
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-white rounded-xl overflow-hidden shadow-lg"
               >
-                <h3 className="text-2xl font-semibold text-white mb-4">Expertise and Skills</h3>
-                <ul className="list-disc pl-6 space-y-3 text-lg">
-                  <li>Founder and CEO of White Box Media, a digital marketing agency in Jaipur.</li>
-                  <li>Expertise in Designing and Event strategies with experience of more than 15 years.</li>
-                  <li>Strong network in Related Industries.</li>
-                  <li>Graphic Designer with innovative designs and services.</li>
-                  <li>Event management with strong team and professional experience.</li>
-                </ul>
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="bg-black/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-8 hover:border-red-600/50 transition-colors"
-              >
-                <h3 className="text-2xl font-semibold text-white mb-4">Company Overview</h3>
-                <p className="text-lg mb-6">White Box Media founded and established in 2013, is a digital marketing agency based in Jaipur, India. They offer a range of services to help businesses grow online with comprehensive and creative solutions.</p>
-                
-                <p className="text-lg font-semibold text-white mb-4">The agency&apos;s core areas of expertise include:</p>
-                <ul className="list-disc pl-6 space-y-3 text-lg">
-                  <li><span className="text-white font-semibold">Graphic Design:</span> Crafting visually appealing designs that communicate the essence of brands.</li>
-                  <li><span className="text-white font-semibold">Video Production:</span> Creating impactful video content for marketing, events, and promotions.</li>
-                  <li><span className="text-white font-semibold">Advertising:</span> Developing and executing strategic ad campaigns across various platforms.</li>
-                  <li><span className="text-white font-semibold">Corporate Branding:</span> Helping businesses build strong, recognizable identities.</li>
-                  <li><span className="text-white font-semibold">Product Shoots:</span> Capturing professional imagery for e-commerce.</li>
-                  <li><span className="text-white font-semibold">Brand Promotions:</span> Designing campaigns that boost brand visibility and engagement.</li>
-                  <li><span className="text-white font-semibold">Wedding and Corporate Events:</span> Providing end-to-end event management services, ensuring memorable and seamless experiences.</li>
-                </ul>
-
-                <p className="text-lg mt-6">Through White Box Media, as Founder and CEO, Neeraj continues to empower brands to stand out and create lasting impressions through impactful visual storytelling and strategic marketing. The company&apos;s work spans across multiple sectors, reflection Neeraj&apos;s commitment to excellence and his ability to deliver creative solutions that drive results.</p>
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                className="bg-black/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-8 hover:border-red-600/50 transition-colors"
-              >
-                <h3 className="text-2xl font-semibold text-white mb-4">Responsibilities</h3>
-                <p className="text-lg mb-4">As the founder and CEO, Neeraj Sharma is responsible for:</p>
-                <ol className="list-decimal pl-6 space-y-3 text-lg">
-                  <li>Strategic Planning: Developing and implementing the company&apos;s overall strategy and vision.</li>
-                  <li>Business Development: Building and maintaining relationships with clients, partners, and stakeholders.</li>
-                  <li>Team Management: Leading and managing a team of Event and marketing professionals.</li>
-                  <li>Innovation: Staying up-to-date with the latest trends and technologies.</li>
-                </ol>
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="bg-black/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-8 hover:border-red-600/50 transition-colors"
-              >
-                <h3 className="text-2xl font-semibold text-white mb-4">Achievements</h3>
-                <p className="text-lg mb-4">Under Neeraj Sharma&apos;s leadership, White Box Media has:</p>
-                <ol className="list-decimal pl-6 space-y-3 text-lg">
-                  <li>Established itself as a reputable Event agency in Jaipur, India.</li>
-                  <li>Worked with numerous clients across various industries, including e-commerce, healthcare, and finance.</li>
-                  <li>Developed a strong team of Event and management professionals.</li>
-                </ol>
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.7 }}
-                className="bg-black/50 backdrop-blur-sm border border-neutral-800 rounded-xl p-8 hover:border-red-600/50 transition-colors"
-              >
-                <h3 className="text-2xl font-semibold text-white mb-4">Vision & Impact</h3>
-                <p className="text-lg">White Box Media has worked with Government and non-government events and branding of various companies.</p>
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
-                className="flex justify-end mt-16"
-              >
-                <div className="relative w-72 h-36">
+                <div className="relative h-64">
                   <Image
-                    src="https://cdn.whiteboxmedia.co.in/sign.png"
-                    alt="Neeraj Sharma's Signature"
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d"
+                    alt={member.name}
                     fill
-                    className="object-contain rounded-lg"
+                    className="object-cover"
                   />
                 </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-semibold mb-2">{member.name}</h3>
+                  <p className="text-primary font-medium mb-4">{member.role}</p>
+                  <p className="text-muted-foreground">{member.description}</p>
+                </div>
               </motion.div>
-            </div>
+            ))}
           </div>
-        </motion.div>
+        </div>
+      </section>
+
+      {/* Location Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Visit Our Office
+              <div className="w-20 h-1 bg-primary mx-auto mt-4"></div>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Located in the heart of Jaipur, we're easily accessible and always ready to welcome you
+            </p>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="bg-secondary rounded-2xl p-8"
+            >
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-lg bg-primary/10">
+                    <MapPin className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Office Address</h3>
+                    <p className="text-muted-foreground">Pearl Apartments,</p>
+                    <p className="text-muted-foreground">Jagatpura, Jaipur,</p>
+                    <p className="text-muted-foreground">Rajasthan, India</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-lg bg-primary/10">
+                    <Mail className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Email Us</h3>
+                    <p className="text-muted-foreground">contact@roomyo.in</p>
+                    <p className="text-muted-foreground">support@roomyo.in</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-lg bg-primary/10">
+                    <Globe className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Connect Online</h3>
+                    <p className="text-muted-foreground">www.roomyo.in</p>
+                    <div className="flex gap-4 mt-2">
+                      <Link href="#" className="text-primary hover:text-primary/80">Instagram</Link>
+                      <Link href="#" className="text-primary hover:text-primary/80">LinkedIn</Link>
+                      <Link href="#" className="text-primary hover:text-primary/80">Twitter</Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg"
+            >
+              <Image
+                src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab"
+                alt="Roomyo Office Location"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <div className="absolute bottom-6 left-6 text-white">
+                <h3 className="text-2xl font-semibold mb-2">Jagatpura Office</h3>
+                <p className="flex items-center gap-2">
+                  <MapPin className="w-5 h-5" />
+                  Jaipur, Rajasthan
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-24 bg-secondary">
+        <div className="max-w-3xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold mb-6">
+              Get in Touch
+              <div className="w-20 h-1 bg-primary mx-auto mt-4"></div>
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Have questions? We'd love to hear from you
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <form className="space-y-4">
+              <input
+                type="text"
+                placeholder="Your Name"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg placeholder:text-gray-400 focus:border-primary focus:ring-primary/20 transition-colors"
+              />
+              <input
+                type="email"
+                placeholder="Your Email"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg placeholder:text-gray-400 focus:border-primary focus:ring-primary/20 transition-colors"
+              />
+              <textarea
+                placeholder="Your Message"
+                rows={4}
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg placeholder:text-gray-400 focus:border-primary focus:ring-primary/20 transition-colors"
+              />
+              <button
+                type="submit"
+                className="w-full bg-primary text-white px-8 py-4 rounded-lg hover:bg-primary/90 transition-colors"
+              >
+                Send Message
+              </button>
+            </form>
+          </motion.div>
+        </div>
       </section>
     </main>
   );
-};
-
-export default AboutPage; 
+} 

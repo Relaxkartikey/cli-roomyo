@@ -6,7 +6,7 @@ import { IoMdMenu, IoMdClose } from "react-icons/io";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 
-const CITIES = [
+const LOCATIONS = [
   "Mumbai",
   "Delhi",
   "Bangalore",
@@ -20,8 +20,9 @@ const NAV_ITEMS = [
   { label: "Home", href: "/" },
   { label: "Privileges", href: "/privileges" },
   { label: "Spaces", href: "/spaces" },
+  { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
-  { label: "City", href: "#", dropdown: CITIES }
+  { label: "Locations", href: "#", dropdown: LOCATIONS }
 ];
 
 export default function Navbar() {
@@ -47,17 +48,17 @@ export default function Navbar() {
       <div className="bg-primary/5 border-b border-primary/10">
         <div className="max-w-[2000px] mx-auto px-4 py-2.5">
           <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center space-x-4 text-gray-600">
-              <span>Premium Living Spaces</span>
-              <span>7+ Major Cities</span>
-              <div className="flex items-center">
+            <div className="flex items-center divide-x divide-gray-300">
+              <span className="pr-4">Premium Living Spaces</span>
+              <span className="px-4">18+ Areas</span>
+              <div className="flex items-center px-4">
                 <span className="text-primary">★★★★★</span>
-                <span className="ml-1">4.8/5 Rating</span>
+                <span className="ml-1">Experience</span>
               </div>
             </div>
-            <div className="hidden md:flex items-center space-x-4 text-gray-600">
-              <span>24/7 Support</span>
-              <span>Verified Properties</span>
+            <div className="hidden md:flex items-center divide-x divide-gray-300">
+              <span className="px-4">24/7 Support</span>
+              <span className="pl-4">Verified Properties</span>
             </div>
           </div>
         </div>
@@ -94,17 +95,17 @@ export default function Navbar() {
                   </Link>
                 )}
                 
-                {/* City Dropdown */}
+                {/* Locations Dropdown */}
                 {item.dropdown && isCityDropdownOpen && (
                   <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-                    {item.dropdown.map((city) => (
+                    {item.dropdown.map((location) => (
                       <Link
-                        key={city}
-                        href={`/city/${city.toLowerCase()}`}
+                        key={location}
+                        href={`/spaces?location=${location}`}
                         className="block px-4 py-2 text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors"
                         onClick={() => setIsCityDropdownOpen(false)}
                       >
-                        {city}
+                        {location}
                       </Link>
                     ))}
                   </div>
@@ -117,7 +118,7 @@ export default function Navbar() {
           <div className="hidden md:block">
             <Link
               href="/contact"
-              className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+              className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary/90 transition-colors"
             >
               Connect with Us
             </Link>
@@ -149,17 +150,17 @@ export default function Navbar() {
                       </button>
                       {isCityDropdownOpen && (
                         <div className="mt-2 pl-4 space-y-2">
-                          {item.dropdown.map((city) => (
+                          {item.dropdown.map((location) => (
                             <Link
-                              key={city}
-                              href={`/city/${city.toLowerCase()}`}
+                              key={location}
+                              href={`/spaces?location=${location}`}
                               className="block text-gray-600 hover:text-primary transition-colors"
                               onClick={() => {
                                 setIsCityDropdownOpen(false);
                                 setIsMenuOpen(false);
                               }}
                             >
-                              {city}
+                              {location}
                             </Link>
                           ))}
                         </div>
@@ -180,7 +181,7 @@ export default function Navbar() {
               ))}
               <Link
                 href="/contact"
-                className="block w-full text-center bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+                className="block w-full text-center bg-primary text-white px-6 py-3 rounded-md hover:bg-primary/90 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Connect with Us

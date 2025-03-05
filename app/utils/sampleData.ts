@@ -3,8 +3,11 @@ export interface Property {
   name: string;
   location: string;
   category: string;
-  price: string;
-  priceNumeric: number;
+  prices: Array<{
+    type: string;
+    price: string;
+    priceNumeric: number;
+  }>;
   amenities: string[];
   images: string[];  // Multiple images
   description: string;
@@ -35,8 +38,11 @@ export const SAMPLE_PROPERTIES: Property[] = [
     name: "Luxury PG in Powai",
     location: "Mumbai",
     category: "Roomyo Spaces",
-    price: "₹15,000/month",
-    priceNumeric: 15000,
+    prices: [
+      { type: "Single Sharing", price: "₹15,000/month", priceNumeric: 15000 },
+      { type: "Double Sharing", price: "₹10,000/month", priceNumeric: 10000 },
+      { type: "Triple Sharing", price: "₹8,000/month", priceNumeric: 8000 }
+    ],
     amenities: ["AC", "Wifi", "Furnished", "Food"],
     images: [
       "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3",
@@ -87,8 +93,11 @@ export const SAMPLE_PROPERTIES: Property[] = [
     name: "Modern Apartment in HSR",
     location: "Bangalore",
     category: "Rent Roomyo",
-    price: "₹25,000/month",
-    priceNumeric: 25000,
+    prices: [
+      { type: "1BHK", price: "₹25,000/month", priceNumeric: 25000 },
+      { type: "2BHK", price: "₹35,000/month", priceNumeric: 35000 },
+      { type: "3BHK", price: "₹45,000/month", priceNumeric: 45000 }
+    ],
     amenities: ["Parking", "Gym", "Security", "Pool"],
     images: [
       "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3",
@@ -139,8 +148,9 @@ export const SAMPLE_PROPERTIES: Property[] = [
     name: "Cozy Studio in Koramangala",
     location: "Bangalore",
     category: "Roomyo Spaces",
-    price: "₹18,000/month",
-    priceNumeric: 18000,
+    prices: [
+      { type: "Studio", price: "₹18,000/month", priceNumeric: 18000 }
+    ],
     amenities: ["Furnished", "Security", "Wifi", "Laundry"],
     images: [
       "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3",
@@ -191,8 +201,10 @@ export const SAMPLE_PROPERTIES: Property[] = [
     name: "Premium PG in Andheri",
     location: "Mumbai",
     category: "Roomyo Spaces",
-    price: "₹17,000/month",
-    priceNumeric: 17000,
+    prices: [
+      { type: "Single Room", price: "₹17,000/month", priceNumeric: 17000 },
+      { type: "Double Sharing", price: "₹12,000/month", priceNumeric: 12000 }
+    ],
     amenities: ["AC", "Gym", "Food", "Wifi"],
     images: [
       "https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3",
@@ -243,8 +255,10 @@ export const SAMPLE_PROPERTIES: Property[] = [
     name: "Deluxe Apartment in Indiranagar",
     location: "Bangalore",
     category: "Rent Roomyo",
-    price: "₹35,000/month",
-    priceNumeric: 35000,
+    prices: [
+      { type: "2BHK", price: "₹35,000/month", priceNumeric: 35000 },
+      { type: "3BHK", price: "₹48,000/month", priceNumeric: 48000 }
+    ],
     amenities: ["Modular Kitchen", "Parking", "Security", "Garden"],
     images: [
       "https://images.unsplash.com/photo-1502672023488-70e25813eb80?ixlib=rb-4.0.3",
@@ -295,8 +309,9 @@ export const SAMPLE_PROPERTIES: Property[] = [
     name: "Student PG in Viman Nagar",
     location: "Pune",
     category: "Roomyo Spaces",
-    price: "₹12,000/month",
-    priceNumeric: 12000,
+    prices: [
+      { type: "Single Room", price: "₹12,000/month", priceNumeric: 12000 }
+    ],
     amenities: ["Study Room", "Wifi", "Food", "Library"],
     images: [
       "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?ixlib=rb-4.0.3",

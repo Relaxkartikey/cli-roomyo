@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { MapPin, Star, Clock, Phone, Mail, ArrowLeft, Send, Building2 } from "lucide-react";
+import { MapPin, Star, Clock, Phone, Mail, ArrowLeft, Send, Building2, User } from "lucide-react";
 import Link from "next/link";
 import { SAMPLE_PROPERTIES, Property } from "../../utils/sampleData";
 
@@ -60,8 +60,8 @@ export default function SpaceDetailsPage({
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Images and Details */}
-          <div className="lg:col-span-2 space-y-8">
+          {/* Left Column - Images */}
+          <div className="lg:col-span-2">
             {/* Image Gallery */}
             <div className="bg-white rounded-xl p-6 shadow-lg">
               <div className="flex gap-4">
@@ -99,8 +99,8 @@ export default function SpaceDetailsPage({
               </div>
             </div>
 
-            {/* Main Details */}
-            <div className="bg-white rounded-xl p-6 shadow-lg space-y-6">
+            {/* Main Details Section */}
+            <div className="mt-8 bg-white rounded-xl p-6 shadow-lg space-y-6">
               <div className="space-y-4">
                 <h2 className="text-2xl font-semibold">Description</h2>
                 <p className="text-gray-600 leading-relaxed">{property.description}</p>
@@ -124,151 +124,141 @@ export default function SpaceDetailsPage({
                 </div>
               </div>
 
-              {/* Location */}
+              {/* Location with Map Icon */}
               <div className="space-y-4">
                 <h2 className="text-2xl font-semibold">Location</h2>
-                <div className="space-y-2">
-                  <p className="text-gray-600">{property.fullAddress}</p>
-                  <button className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
-                    View on Map
+                <div className="flex items-start justify-between">
+                  <p className="text-gray-600 flex-grow">{property.fullAddress}</p>
+                  <button 
+                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.fullAddress)}`, '_blank')}
+                    className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors ml-4"
+                  >
+                    <MapPin className="w-5 h-5" />
+                    <span>Map</span>
                   </button>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right Column - Quick Details, Host Info, and Contact Form */}
-          <div className="relative">
-            {/* Quick Details and Host Info - Static at top */}
-            <div className="space-y-8">
-              {/* Quick Details Card */}
-              <div className="bg-white rounded-xl p-6 shadow-lg space-y-4">
-                <h1 className="text-2xl font-bold text-gray-900">{property.name}</h1>
-                
-                <div className="flex items-center text-gray-600">
-                  <MapPin className="w-5 h-5 mr-2" />
-                  <span>{property.location}</span>
-                </div>
+          {/* Right Column - Quick Details and Contact Form */}
+          <div className="lg:col-span-1 space-y-8">
+            {/* Quick Details Card */}
+            <div className="bg-white rounded-xl p-6 shadow-lg space-y-4">
+              <h1 className="text-2xl font-bold text-gray-900">{property.name}</h1>
+              
+              <div className="flex items-center text-gray-600">
+                <MapPin className="w-5 h-5 mr-2" />
+                <span>{property.location}</span>
+              </div>
 
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Type</span>
-                    <span className="font-medium">{property.roomType}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Category</span>
-                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
-                      {property.category}
-                    </span>
-                  </div>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Type</span>
+                  <span className="font-medium">{property.roomType}</span>
                 </div>
-
-                <div className="border-t border-gray-100 pt-4">
-                  <div className="text-3xl font-bold text-primary">{property.price}</div>
-                  <p className="text-sm text-gray-500 mt-1">All inclusive price</p>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Category</span>
+                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                    {property.category}
+                  </span>
                 </div>
               </div>
 
-              {/* Host Details Card */}
-              <div className="bg-white rounded-xl p-6 shadow-lg space-y-4">
-                <h2 className="text-xl font-semibold">Hosted by</h2>
-                
-                <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 rounded-full overflow-hidden">
-                    <Image
-                      src={property.host.image}
-                      alt={property.host.name}
-                      width={64}
-                      height={64}
-                      className="w-full h-full object-cover"
-                    />
+              <div className="border-t border-gray-100 pt-4 space-y-3">
+                <h3 className="font-medium text-gray-900">Available Options</h3>
+                <div className="space-y-2">
+                  {property.prices.map((priceOption, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <div className="text-2xl font-bold text-primary">{priceOption.price}</div>
+                      <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                        {priceOption.type}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm text-gray-500">All inclusive price</p>
+              </div>
+
+              {/* Host Details */}
+              <div className="border-t border-gray-100 pt-4 space-y-3">
+                <h2 className="font-semibold">Hosted by</h2>
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                    <User className="w-6 h-6 text-gray-600" />
                   </div>
                   <div>
                     <h3 className="font-medium">{property.host.name}</h3>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Star className="w-4 h-4 text-yellow-400 mr-1" />
-                      <span>{property.host.rating} Rating</span>
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Clock className="w-4 h-4 mr-1" />
-                      <span>{property.host.responseTime}</span>
-                    </div>
+                    <p className="text-sm text-gray-600">Property Manager</p>
                   </div>
                 </div>
-
-                <div className="space-y-3">
+                {property.host.phone && (
                   <button className="w-full flex items-center justify-center gap-2 bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors">
                     <Phone className="w-4 h-4" />
                     {property.host.phone}
                   </button>
-                  <button className="w-full flex items-center justify-center gap-2 bg-primary/10 text-primary py-2 rounded-lg hover:bg-primary/20 transition-colors">
-                    <Mail className="w-4 h-4" />
-                    {property.host.email}
-                  </button>
-                </div>
+                )}
               </div>
             </div>
 
-            {/* Contact Form - Starts after host details and sticks to bottom */}
-            <div className="mt-8 lg:sticky lg:bottom-8">
-              <div className="bg-white rounded-xl p-6 shadow-lg space-y-4">
-                <h2 className="text-xl font-semibold">Contact Host</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                    <textarea
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      rows={4}
-                      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                      required
-                    ></textarea>
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full flex items-center justify-center gap-2 bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors"
-                  >
-                    <Send className="w-4 h-4" />
-                    Send Message
-                  </button>
-                </form>
-              </div>
+            {/* Contact Form */}
+            <div className="bg-white rounded-xl p-6 shadow-lg space-y-4">
+              <h2 className="text-xl font-semibold">Contact Host</h2>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                  <textarea
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    rows={4}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    required
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full flex items-center justify-center gap-2 bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors"
+                >
+                  <Send className="w-4 h-4" />
+                  Send Message
+                </button>
+              </form>
             </div>
           </div>
         </div>
 
-        {/* Related Roomyos */}
-        <div className="mt-16">
+        {/* Related Roomyos - Move inside the grid to maintain alignment */}
+        <div className="col-span-full mt-16">
           <h2 className="text-2xl font-semibold mb-8">Related Roomyos</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {relatedProperties.length > 0 ? (
@@ -303,7 +293,10 @@ export default function SpaceDetailsPage({
                       <span className="text-sm text-gray-500">{relatedProperty.category}</span>
                     </div>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-primary font-semibold">{relatedProperty.price}</span>
+                      <div>
+                        <span className="text-primary font-semibold">{relatedProperty.prices[0].price}</span>
+                        <span className="text-sm text-gray-500 ml-2">{relatedProperty.prices[0].type}</span>
+                      </div>
                       <div className="flex gap-2">
                         {relatedProperty.amenities.slice(0, 2).map((amenity, index) => (
                           <span key={index} className="text-xs bg-primary/5 text-primary px-2 py-1 rounded-full">

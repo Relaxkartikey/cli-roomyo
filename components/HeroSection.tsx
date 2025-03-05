@@ -1,10 +1,23 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Search, MapPin, Building2, Home } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+// Import locations from spaces data
+const LOCATIONS = ["Mumbai", "Delhi", "Bangalore", "Pune", "Hyderabad", "Chennai", "Kolkata"];
 
 const HeroSection = () => {
+  const router = useRouter();
+  const [selectedLocation, setSelectedLocation] = useState("");
+
+  const handleSearch = () => {
+    if (selectedLocation) {
+      router.push(`/spaces?location=${selectedLocation}`);
+    }
+  };
+
   return (
     <section
       id="home"
@@ -36,33 +49,43 @@ const HeroSection = () => {
               A Click Away
             </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
               className="max-w-xl text-base sm:text-lg md:text-xl text-muted-foreground mb-8"
-          >
+            >
               Discover the perfect property or PG accommodation across 7 major Indian cities. 
               Easy booking, trusted dealers, and hassle-free experience.
-          </motion.p>
+            </motion.p>
 
             {/* Search Bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
               className="relative max-w-2xl mb-8"
             >
               <div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-lg">
                 <div className="flex-1 flex items-center gap-2 px-4 py-2">
                   <MapPin className="w-5 h-5 text-primary" />
-                  <input
-                    type="text"
-                    placeholder="Enter city or locality"
-                    className="w-full bg-transparent border-none focus:outline-none text-foreground"
-                  />
+                  <select
+                    value={selectedLocation}
+                    onChange={(e) => setSelectedLocation(e.target.value)}
+                    className="w-full bg-transparent border-none focus:outline-none text-foreground appearance-none cursor-pointer"
+                  >
+                    <option value="">Select a location</option>
+                    {LOCATIONS.map((location) => (
+                      <option key={location} value={location}>
+                        {location}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                <button className="bg-accent hover:bg-accent-dark text-white px-6 py-3 rounded-md transition-colors duration-300 flex items-center gap-2">
+                <button 
+                  onClick={handleSearch}
+                  className="bg-accent hover:bg-accent-dark text-white px-6 py-3 rounded-md transition-colors duration-300 flex items-center gap-2"
+                >
                   <Search className="w-5 h-5" />
                   <span>Search</span>
                 </button>
@@ -76,9 +99,13 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.5 }}
               className="flex flex-wrap gap-2 mb-8"
             >
-              {['Mumbai', 'Delhi', 'Bangalore', 'Pune'].map((city) => (
+              {LOCATIONS.slice(0, 4).map((city) => (
                 <button
                   key={city}
+                  onClick={() => {
+                    setSelectedLocation(city);
+                    handleSearch();
+                  }}
                   className="px-4 py-2 bg-white rounded-full text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm"
                 >
                   {city}
