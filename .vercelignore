@@ -1,1 +1,6 @@
 demo
+backend
+backend/**/*
+.env
+.env.*
+README.md
