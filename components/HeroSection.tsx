@@ -49,21 +49,21 @@ const HeroSection = () => {
               A Click Away
             </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
               className="max-w-xl text-base sm:text-lg md:text-xl text-muted-foreground mb-8"
-            >
+          >
               Discover the perfect property or PG accommodation across 7 major Indian cities. 
               Easy booking, trusted dealers, and hassle-free experience.
-            </motion.p>
+          </motion.p>
 
             {/* Search Bar */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
               className="relative max-w-2xl mb-8"
             >
               <div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-lg">
