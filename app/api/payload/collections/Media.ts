@@ -2,33 +2,26 @@ import { CollectionConfig } from 'payload/types';
 
 export const Media: CollectionConfig = {
   slug: 'media',
-  upload: {
-    staticURL: '/media',
-    staticDir: 'media',
-    imageSizes: [
-      {
-        name: 'thumbnail',
-        width: 400,
-        height: 300,
-        position: 'centre',
-      },
-      {
-        name: 'card',
-        width: 768,
-        height: 512,
-        position: 'centre',
-      },
-      {
-        name: 'feature',
-        width: 1920,
-        height: 1080,
-        position: 'centre',
-      },
-    ],
-    adminThumbnail: 'thumbnail',
-    mimeTypes: ['image/*'],
+  admin: {
+    useAsTitle: 'alt',
+  },
+  access: {
+    read: () => true,
   },
   fields: [
+    {
+      name: 'url',
+      type: 'text',
+      required: true,
+      validate: (value) => {
+        try {
+          new URL(value);
+          return true;
+        } catch (e) {
+          return 'Please enter a valid URL';
+        }
+      },
+    },
     {
       name: 'alt',
       type: 'text',
@@ -39,7 +32,4 @@ export const Media: CollectionConfig = {
       type: 'text',
     },
   ],
-  access: {
-    read: () => true,
-  },
 }; 

@@ -58,9 +58,21 @@ export const Spaces: CollectionConfig = {
       minRows: 1,
       fields: [
         {
-          name: 'image',
-          type: 'upload',
-          relationTo: 'media',
+          name: 'url',
+          type: 'text',
+          required: true,
+          validate: (value) => {
+            try {
+              new URL(value);
+              return true;
+            } catch (e) {
+              return 'Please enter a valid URL';
+            }
+          },
+        },
+        {
+          name: 'alt',
+          type: 'text',
           required: true,
         },
       ],
