@@ -42,9 +42,9 @@ const HeroSection = () => {
             </motion.div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-heading text-foreground mb-6 tracking-tight leading-[1.1]">
-              Your Dream
+              Your Perfect
               <br />
-              Home Is Just
+              Rental Is Just
               <br />
               A Click Away
             </h1>
@@ -55,7 +55,7 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
               className="max-w-xl text-base sm:text-lg md:text-xl text-muted-foreground mb-8"
           >
-              Discover the perfect property or PG accommodation across 7 major Indian cities. 
+              Discover the perfect property or PG accommodation across all Jaipur cities. 
               Easy booking, trusted dealers, and hassle-free experience.
           </motion.p>
 

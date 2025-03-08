@@ -50,3 +50,47 @@ It's a real estate and PG booking company. Showing properties and allowing someo
     - Other pages just need some contents (will do later)
 
 
+## Roomyo Privilges
+
+1. Hero Section (Welcome)
+UI: Full-width background (image/video) with an overlay.
+Content:
+Headline: "Luxury Living, Redefined."
+Subtext: "Experience comfort, community, and convenience—all in one place."
+CTA: “Explore Privileges” (scrolls to next section).
+
+2. Privileges Carousel (Swiper.js / React Slick)
+UI: Horizontal slider with images, text, and navigation dots.
+Content (Each Slide):
+
+Fully Furnished Rooms – "Move in hassle-free with stylish, ready-to-use interiors."
+24/7 High-Speed Wi-Fi – "Seamless connectivity for work and entertainment."
+Housekeeping Services – "Enjoy a clean space with our regular maintenance."
+Fitness & Wellness – "Stay active with our in-house gym and wellness zones."
+Community Events – "Networking, entertainment, and social gatherings every week."
+3. Amenities Grid (Tailwind Grid / MUI Cards)
+UI: 3x3 grid of cards, each with an icon, title, and hover effect for details.
+Content (Examples):
+
+Smart Security – "Biometric access, CCTV, and 24/7 surveillance for safety."
+On-Demand Laundry – "Easy, quick, and efficient laundry services."
+Shared & Private Workspaces – "Quiet zones for productivity and collaboration."
+Cafeteria & Dining – "Healthy, delicious meals just steps away."
+Gaming & Recreation – "Common areas for relaxation and fun."
+4. Community & Social Life
+UI: Split section (image + text) or animated number counter (Framer Motion).
+Content:
+
+"More Than Just a Space – A Community."
+"From movie nights to weekend getaways, Roomyo brings like-minded people together."
+Stat Highlights:
+🚀 500+ Residents
+🎉 50+ Social Events Yearly
+🌍 10+ Nationalities Represented
+5. Sticky Contact / Inquiry Form
+UI: Floating button expanding into a form (MUI modal or Chakra UI drawer).
+Content:
+
+"Want to Know More? Let’s Talk!"
+Fields: Name, Email, Message
+Button: "Get in Touch"
