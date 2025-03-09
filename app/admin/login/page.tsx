@@ -35,13 +35,6 @@ export default function AdminLogin() {
     <div className="min-h-screen flex items-center justify-center bg-secondary">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-lg">
         <div className="text-center">
-          <Image
-            src="/logo.png"
-            alt="Roomyo Logo"
-            width={150}
-            height={40}
-            className="mx-auto"
-          />
           <h2 className="mt-6 text-3xl font-bold text-gray-900">Admin Login</h2>
           <p className="mt-2 text-sm text-gray-600">
             Sign in to access the admin dashboard
