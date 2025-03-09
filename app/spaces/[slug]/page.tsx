@@ -1,11 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { MapPin, Star, Clock, Phone, Mail, ArrowLeft, Send, Building2, User } from "lucide-react";
 import Link from "next/link";
-import { SAMPLE_PROPERTIES, Property } from "../../utils/sampleData";
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { Property } from '@/app/types/property';
+import Loader from '@/components/Loader';
 
 export default function SpaceDetailsPage({
   params,
@@ -17,29 +20,75 @@ export default function SpaceDetailsPage({
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [property, setProperty] = useState<Property | null>(null);
+  const [relatedProperties, setRelatedProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
   
-  // Extract the ID from the slug
-  const id = parseInt(params.slug.split("-").pop() || "0");
-  const property = SAMPLE_PROPERTIES.find((p: Property) => p.id === id);
+  useEffect(() => {
+    const fetchProperty = async () => {
+      try {
+        // Extract ID from the slug (last part after the last hyphen)
+        const id = params.slug.split("-").slice(-1)[0];
+        if (!id) throw new Error('Invalid property ID');
+
+        // Query the property by ID
+        const propertiesRef = collection(db, 'properties');
+        const q = query(propertiesRef, where('__name__', '==', id));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const propertyData = {
+            id: querySnapshot.docs[0].id,
+            ...querySnapshot.docs[0].data()
+          } as Property;
+
+          // Redirect to 404 if property is archived
+          if (propertyData.status === 'Archived') {
+            notFound();
+          }
+
+          setProperty(propertyData);
+
+          // Fetch related properties (same category, different property, not archived)
+          const relatedQuery = query(
+            propertiesRef,
+            where('category', '==', propertyData.category),
+            where('__name__', '!=', id),
+            where('status', '!=', 'Archived')
+          );
+          const relatedSnapshot = await getDocs(relatedQuery);
+          const relatedData = relatedSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          })) as Property[];
+          setRelatedProperties(relatedData.slice(0, 3));
+        }
+      } catch (error) {
+        console.error('Error fetching property:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperty();
+  }, [params.slug]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   if (!property) {
     notFound();
   }
 
   // Verify the slug matches the property name
-  const expectedSlug = property.name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "") + "-" + property.id;
+  const expectedSlug = `${property.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${
+    property.location.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+  }-${property.id}`.replace(/(^-|-$)/g, "");
 
   if (params.slug !== expectedSlug) {
     notFound();
   }
-
-  // Get related properties (same category, different property)
-  const relatedProperties = SAMPLE_PROPERTIES.filter(
-    p => p.category === property.category && p.id !== property.id
-  ).slice(0, 3);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,7 +179,7 @@ export default function SpaceDetailsPage({
                 <div className="flex items-start justify-between">
                   <p className="text-gray-600 flex-grow">{property.fullAddress}</p>
                   <button 
-                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.fullAddress)}`, '_blank')}
+                    onClick={() => window.open(property.mapLocation, '_blank')}
                     className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors ml-4"
                   >
                     <MapPin className="w-5 h-5" />
@@ -145,7 +194,14 @@ export default function SpaceDetailsPage({
           <div className="lg:col-span-1 space-y-8">
             {/* Quick Details Card */}
             <div className="bg-white rounded-xl p-6 shadow-lg space-y-4">
-              <h1 className="text-2xl font-bold text-gray-900">{property.name}</h1>
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-gray-900">{property.name}</h1>
+                {property.status === 'Sold' && (
+                  <span className="px-3 py-1 text-sm font-medium bg-blue-100 text-blue-800 rounded-full">
+                    Sold
+                  </span>
+                )}
+              </div>
               
               <div className="flex items-center text-gray-600">
                 <MapPin className="w-5 h-5 mr-2" />
@@ -189,13 +245,19 @@ export default function SpaceDetailsPage({
                   </div>
                   <div>
                     <h3 className="font-medium">{property.host.name}</h3>
-                    <p className="text-sm text-gray-600">Property Manager</p>
+                    <p className="text-sm text-gray-600">{property.host.position}</p>
                   </div>
                 </div>
                 {property.host.phone && (
                   <button className="w-full flex items-center justify-center gap-2 bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors">
                     <Phone className="w-4 h-4" />
                     {property.host.phone}
+                  </button>
+                )}
+                {property.host.email && (
+                  <button className="w-full flex items-center justify-center gap-2 bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                    <Mail className="w-4 h-4" />
+                    {property.host.email}
                   </button>
                 )}
               </div>
@@ -257,7 +319,7 @@ export default function SpaceDetailsPage({
           </div>
         </div>
 
-        {/* Related Roomyos - Move inside the grid to maintain alignment */}
+        {/* Related Roomyos */}
         <div className="col-span-full mt-16">
           <h2 className="text-2xl font-semibold mb-8">Related Roomyos</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -287,7 +349,14 @@ export default function SpaceDetailsPage({
                       <MapPin className="w-4 h-4 text-primary" />
                       <span className="text-sm text-gray-600">{relatedProperty.location}</span>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{relatedProperty.name}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-semibold text-gray-900">{relatedProperty.name}</h3>
+                      {relatedProperty.status === 'Sold' && (
+                        <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                          Sold
+                        </span>
+                      )}
+                    </div>
                     <div className="flex items-center gap-2 mb-4">
                       <Building2 className="w-4 h-4 text-gray-500" />
                       <span className="text-sm text-gray-500">{relatedProperty.category}</span>
@@ -306,7 +375,9 @@ export default function SpaceDetailsPage({
                       </div>
                     </div>
                     <Link 
-                      href={`/spaces/${relatedProperty.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-${relatedProperty.id}`}
+                      href={`/spaces/${relatedProperty.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${
+                        relatedProperty.location.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+                      }-${relatedProperty.id?.slice(0, 5)}`.replace(/(^-|-$)/g, "")}
                       className="block w-full text-center py-2 px-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors duration-300"
                     >
                       View Details

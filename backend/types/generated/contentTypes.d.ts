@@ -435,57 +435,44 @@ export interface ApiSpaceSpace extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    address: Schema.Attribute.Text & Schema.Attribute.Required;
-    amenities: Schema.Attribute.Component<'space.amenities', false> &
-      Schema.Attribute.Required;
-    category: Schema.Attribute.Enumeration<['Rent Roomyo', 'Roomyo Spaces']> &
+    amenities: Schema.Attribute.JSON & Schema.Attribute.Required;
+    category: Schema.Attribute.Enumeration<
+      ['Roomyo Spaces', 'Rent Roomyo', 'Other']
+    > &
       Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.RichText & Schema.Attribute.Required;
-    hostEmail: Schema.Attribute.Email & Schema.Attribute.Required;
-    hostName: Schema.Attribute.String & Schema.Attribute.Required;
-    hostPhone: Schema.Attribute.String & Schema.Attribute.Required;
-    hostRating: Schema.Attribute.Decimal &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 5;
-          min: 0;
-        },
-        number
-      >;
-    hostResponseTime: Schema.Attribute.String & Schema.Attribute.Required;
-    images: Schema.Attribute.Media<undefined, true> & Schema.Attribute.Required;
+    fullAddress: Schema.Attribute.Text & Schema.Attribute.Required;
+    host: Schema.Attribute.Component<'space.host', false> &
+      Schema.Attribute.Required;
+    images: Schema.Attribute.Media<'images', true> & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::space.space'> &
       Schema.Attribute.Private;
     location: Schema.Attribute.String & Schema.Attribute.Required;
-    price: Schema.Attribute.Decimal &
+    mapUrl: Schema.Attribute.String & Schema.Attribute.Required;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    prices: Schema.Attribute.Component<'space.price-option', true> &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
         {
-          min: 0;
+          min: 1;
         },
         number
       >;
-    priceNumeric: Schema.Attribute.Integer &
+    privileges: Schema.Attribute.Component<'space.privilege', true> &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
         {
-          min: 0;
+          max: 6;
+          min: 1;
         },
         number
       >;
-    privileges: Schema.Attribute.Component<'space.privileges', false> &
-      Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     roomType: Schema.Attribute.String & Schema.Attribute.Required;
-    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    title: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

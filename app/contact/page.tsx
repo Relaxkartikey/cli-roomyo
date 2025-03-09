@@ -1,15 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Mail, Phone } from "lucide-react";
 import { FaInstagram, FaFacebookF, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import Link from "next/link";
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 interface FormData {
   name: string;
   email: string;
   phone: string;
   message: string;
+  locality: string;
+  category: string;
 }
 
 export default function ContactPage() {
@@ -18,12 +22,41 @@ export default function ContactPage() {
     email: "",
     phone: "",
     message: "",
+    locality: "",
+    category: ""
   });
+  const [localities, setLocalities] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{
     type: "success" | "error" | null;
     message: string;
   }>({ type: null, message: "" });
+
+  useEffect(() => {
+    const fetchLocationsAndCategories = async () => {
+      try {
+        const propertiesRef = collection(db, 'properties');
+        const querySnapshot = await getDocs(propertiesRef);
+        
+        const uniqueLocalities = new Set<string>();
+        const uniqueCategories = new Set<string>();
+        
+        querySnapshot.docs.forEach(doc => {
+          const data = doc.data();
+          if (data.location) uniqueLocalities.add(data.location);
+          if (data.category) uniqueCategories.add(data.category);
+        });
+        
+        setLocalities(Array.from(uniqueLocalities).sort());
+        setCategories(Array.from(uniqueCategories).sort());
+      } catch (error) {
+        console.error('Error fetching localities and categories:', error);
+      }
+    };
+
+    fetchLocationsAndCategories();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +69,7 @@ export default function ContactPage() {
         type: "success",
         message: "Thank you for your message. We'll get back to you soon!",
       });
-      setFormData({ name: "", email: "", phone: "", message: "" });
+      setFormData({ name: "", email: "", phone: "", message: "", locality: "", category: "" });
     } catch (error) {
       console.error("Form Error:", error);
       setSubmitStatus({
@@ -216,6 +249,34 @@ export default function ContactPage() {
                     className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
                   />
                 </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <select
+                    name="locality"
+                    value={formData.locality}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
+                  >
+                    <option value="">Select Locality</option>
+                    {localities.map((locality) => (
+                      <option key={locality} value={locality}>{locality}</option>
+                    ))}
+                  </select>
+                  <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-lg focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
+                  >
+                    <option value="">Select Category</option>
+                    {categories.map((category) => (
+                      <option key={category} value={category}>{category}</option>
+                    ))}
+                  </select>
+                </div>
+
                 <input
                   type="tel"
                   name="phone"

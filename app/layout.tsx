@@ -4,6 +4,7 @@ import "../styles/globals.css"
 import Navbar from "@/components/Navbar"
 import PreFooter from "@/components/PreFooter"
 import Footer from "@/components/Footer"
+import StyledComponentsRegistry from './registry'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -83,10 +84,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${raleway.variable}`}>
       <body className="min-h-screen bg-white font-body">
-        <Navbar />
-        <main>{children}</main>
-        <PreFooter />
-        <Footer />
+        <StyledComponentsRegistry>
+          <Navbar />
+          <main>{children}</main>
+          <PreFooter />
+          <Footer />
+        </StyledComponentsRegistry>
       </body>
     </html>
   )

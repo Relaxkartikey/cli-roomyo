@@ -4,32 +4,47 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IoMdMenu, IoMdClose } from "react-icons/io";
 import { ChevronDown } from "lucide-react";
-import Image from "next/image";
-
-const LOCATIONS = [
-  "Mumbai",
-  "Delhi",
-  "Bangalore",
-  "Pune",
-  "Hyderabad",
-  "Chennai",
-  "Kolkata"
-];
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const NAV_ITEMS = [
   { label: "Home", href: "/" },
   { label: "Privileges", href: "/privileges" },
-  { label: "Spaces", href: "/spaces" },
-  { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
-  { label: "Locations", href: "#", dropdown: LOCATIONS }
+  { label: "Blog", href: "/blog" },
+  { label: "Locality", href: "#", dropdown: true }
 ];
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
+  const [localities, setLocalities] = useState<string[]>([]);
   const pathname = usePathname();
+
+  useEffect(() => {
+    const fetchLocalities = async () => {
+      try {
+        const propertiesRef = collection(db, 'properties');
+        const querySnapshot = await getDocs(propertiesRef);
+        
+        // Get unique localities from properties
+        const uniqueLocalities = new Set<string>();
+        querySnapshot.forEach((doc) => {
+          const property = doc.data();
+          if (property.location) {
+            uniqueLocalities.add(property.location);
+          }
+        });
+        
+        setLocalities(Array.from(uniqueLocalities));
+      } catch (error) {
+        console.error('Error fetching localities:', error);
+      }
+    };
+
+    fetchLocalities();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,17 +110,17 @@ export default function Navbar() {
                   </Link>
                 )}
                 
-                {/* Locations Dropdown */}
+                {/* Localities Mega Menu Dropdown */}
                 {item.dropdown && isCityDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-                    {item.dropdown.map((location) => (
+                  <div className="absolute top-full left-0 mt-2 w-[600px] bg-white rounded-lg shadow-lg py-4 z-50 grid grid-cols-3 gap-2">
+                    {localities.map((locality) => (
                       <Link
-                        key={location}
-                        href={`/spaces?location=${location}`}
+                        key={locality}
+                        href={`/spaces?location=${locality}`}
                         className="block px-4 py-2 text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors"
                         onClick={() => setIsCityDropdownOpen(false)}
                       >
-                        {location}
+                        {locality}
                       </Link>
                     ))}
                   </div>
@@ -114,8 +129,14 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Connect Button */}
-          <div className="hidden md:block">
+          {/* Connect Button and Browse Spaces */}
+          <div className="hidden md:flex items-center space-x-4">
+            <Link
+              href="/spaces"
+              className="bg-primary/10 text-primary px-6 py-3 rounded-md hover:bg-primary/20 transition-colors"
+            >
+              Browse Spaces
+            </Link>
             <Link
               href="/contact"
               className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary/90 transition-colors"
@@ -150,17 +171,17 @@ export default function Navbar() {
                       </button>
                       {isCityDropdownOpen && (
                         <div className="mt-2 pl-4 space-y-2">
-                          {item.dropdown.map((location) => (
+                          {localities.map((locality) => (
                             <Link
-                              key={location}
-                              href={`/spaces?location=${location}`}
+                              key={locality}
+                              href={`/spaces?location=${locality}`}
                               className="block text-gray-600 hover:text-primary transition-colors"
                               onClick={() => {
                                 setIsCityDropdownOpen(false);
                                 setIsMenuOpen(false);
                               }}
                             >
-                              {location}
+                              {locality}
                             </Link>
                           ))}
                         </div>

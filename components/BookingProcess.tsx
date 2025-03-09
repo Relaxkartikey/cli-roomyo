@@ -141,8 +141,7 @@ const PROCESS_STEPS = [
 ];
 
 const BookingProcess = () => {
-  const [activeStep, setActiveStep] = useState(0);
-  const ActiveIcon = PROCESS_STEPS[activeStep].icon;
+  const [expandedStep, setExpandedStep] = useState<number | null>(null);
 
   return (
     <section id="process" className="py-12 w-full bg-secondary">
@@ -162,69 +161,59 @@ const BookingProcess = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Steps */}
-          <div className="lg:col-span-4">
-            <div className="space-y-2">
-              {PROCESS_STEPS.map((step, index) => {
-                const StepIcon = step.icon;
-                return (
-                  <motion.button
-                    key={step.title}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    onClick={() => setActiveStep(index)}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-colors duration-200 ${
-                      activeStep === index
-                        ? "bg-primary text-primary-foreground"
-                        : "hover:bg-primary/10"
-                    }`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <StepIcon className="w-5 h-5" />
-                      <span className="font-medium">{step.title}</span>
-                    </div>
-                  </motion.button>
-                );
-              })}
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {PROCESS_STEPS.map((step, index) => {
+            const StepIcon = step.icon;
+            return (
+              <motion.div
+                key={step.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden"
+              >
+                <button
+                  onClick={() => setExpandedStep(expandedStep === index ? null : index)}
+                  className="w-full text-left p-6 flex items-start space-x-4"
+                >
+                  <div className="p-3 rounded-lg bg-primary/10">
+                    <StepIcon className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold">{step.title}</h3>
+                    <p className="text-muted-foreground mt-2">{step.description}</p>
+                  </div>
+                </button>
 
-          {/* Content */}
-          <div className="lg:col-span-8">
-            <motion.div
-              key={activeStep}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6"
-            >
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="p-3 rounded-lg bg-primary/10">
-                  <ActiveIcon className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">{PROCESS_STEPS[activeStep].title}</h3>
-                  <p className="text-muted-foreground">{PROCESS_STEPS[activeStep].description}</p>
-                </div>
-              </div>
-              <ul className="space-y-3">
-                {PROCESS_STEPS[activeStep].details.map((detail, index) => (
-                  <motion.li
-                    key={detail}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="flex items-center space-x-2"
+                {expandedStep === index && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="px-6 pb-6"
                   >
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                    <span>{detail}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-          </div>
+                    <div className="pt-4 border-t border-white/10">
+                      <ul className="space-y-3">
+                        {step.details.map((detail, idx) => (
+                          <motion.li
+                            key={detail}
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: idx * 0.1 }}
+                            className="flex items-center space-x-2"
+                          >
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                            <span>{detail}</span>
+                          </motion.li>
+                        ))}
+                      </ul>
+                    </div>
+                  </motion.div>
+                )}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

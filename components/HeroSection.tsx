@@ -1,9 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Search, MapPin, Building2, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 // Import locations from spaces data
 const LOCATIONS = ["Mumbai", "Delhi", "Bangalore", "Pune", "Hyderabad", "Chennai", "Kolkata"];
@@ -11,6 +13,45 @@ const LOCATIONS = ["Mumbai", "Delhi", "Bangalore", "Pune", "Hyderabad", "Chennai
 const HeroSection = () => {
   const router = useRouter();
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [locations, setLocations] = useState<string[]>([]);
+  const [recentLocations, setRecentLocations] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const propertiesRef = collection(db, 'properties');
+        const querySnapshot = await getDocs(propertiesRef);
+        
+        // Get unique locations from properties
+        const uniqueLocations = new Set<string>();
+        querySnapshot.forEach((doc) => {
+          const property = doc.data();
+          if (property.location) {
+            uniqueLocations.add(property.location);
+          }
+        });
+        
+        const locationsList = Array.from(uniqueLocations);
+        setLocations(locationsList);
+        
+        // Get recent 4 locations
+        const recentQuery = query(propertiesRef, orderBy('createdAt', 'desc'), limit(4));
+        const recentSnapshot = await getDocs(recentQuery);
+        const recentLocationsList = new Set<string>();
+        recentSnapshot.forEach((doc) => {
+          const property = doc.data();
+          if (property.location) {
+            recentLocationsList.add(property.location);
+          }
+        });
+        setRecentLocations(Array.from(recentLocationsList));
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+      }
+    };
+
+    fetchLocations();
+  }, []);
 
   const handleSearch = () => {
     if (selectedLocation) {
@@ -75,7 +116,7 @@ const HeroSection = () => {
                     className="w-full bg-transparent border-none focus:outline-none text-foreground appearance-none cursor-pointer"
                   >
                     <option value="">Select a location</option>
-                    {LOCATIONS.map((location) => (
+                    {locations.map((location) => (
                       <option key={location} value={location}>
                         {location}
                       </option>
@@ -99,7 +140,7 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.5 }}
               className="flex flex-wrap gap-2 mb-8"
             >
-              {LOCATIONS.slice(0, 4).map((city) => (
+              {recentLocations.map((city) => (
                 <button
                   key={city}
                   onClick={() => {

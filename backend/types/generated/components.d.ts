@@ -23,6 +23,51 @@ export interface SpaceAmenities extends Struct.ComponentSchema {
   };
 }
 
+export interface SpaceHost extends Struct.ComponentSchema {
+  collectionName: 'components_space_hosts';
+  info: {
+    description: 'Property host information';
+    displayName: 'Host';
+  };
+  attributes: {
+    email: Schema.Attribute.Email;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    phone: Schema.Attribute.String;
+  };
+}
+
+export interface SpacePriceOption extends Struct.ComponentSchema {
+  collectionName: 'components_space_price_options';
+  info: {
+    description: 'Price options for a space';
+    displayName: 'Price Option';
+  };
+  attributes: {
+    price: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        minLength: 4;
+      }>;
+    pricePeriod: Schema.Attribute.Enumeration<
+      ['day', 'monthly', 'yearly', 'other']
+    > &
+      Schema.Attribute.Required;
+    type: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface SpacePrivilege extends Struct.ComponentSchema {
+  collectionName: 'components_space_property_privileges';
+  info: {
+    description: 'Property privileges and features';
+    displayName: 'Privilege';
+  };
+  attributes: {
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SpacePrivileges extends Struct.ComponentSchema {
   collectionName: 'components_space_privileges';
   info: {
@@ -62,6 +107,9 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'space.amenities': SpaceAmenities;
+      'space.host': SpaceHost;
+      'space.price-option': SpacePriceOption;
+      'space.privilege': SpacePrivilege;
       'space.privileges': SpacePrivileges;
     }
   }

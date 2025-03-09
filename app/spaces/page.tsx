@@ -1,51 +1,107 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
-import { Share2, MapPin, Building2, ChevronDown } from "lucide-react";
+import { Share2, MapPin, Building2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { SAMPLE_PROPERTIES } from "../utils/sampleData";
+import { collection, getDocs, query, where, orderBy, CollectionReference, Query, DocumentData } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { Property } from '../types/property';
+import Loader from '@/components/Loader';
 
-// Temporary data until we integrate Strapi
-const LOCATIONS = ["Mumbai", "Delhi", "Bangalore", "Pune", "Hyderabad", "Chennai", "Kolkata"];
-const CATEGORIES = ["Rent Roomyo", "Roomyo Spaces"];
+// Constants
 const SORT_OPTIONS = ["Low to High", "High to Low", "Recent"];
-
-export interface Property {
-  id: number;
-  name: string;
-  location: string;
-  category: string;
-  prices: Array<{
-    type: string;
-    price: string;
-    priceNumeric: number;
-  }>;
-  amenities: string[];
-  image: string;
-  images: string[];
-}
 
 // Separate client component for search functionality
 function SearchComponent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [localities, setLocalities] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedLocation, setSelectedLocation] = useState(searchParams.get("location") || "");
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "");
   const [selectedSort, setSelectedSort] = useState(searchParams.get("sort") || "");
 
-  // Filter and sort properties
-  const filteredProperties = SAMPLE_PROPERTIES.filter(property => {
-    if (selectedLocation && !property.location.includes(selectedLocation)) return false;
-    if (selectedCategory && property.category !== selectedCategory) return false;
-    return true;
-  }).sort((a, b) => {
-    if (selectedSort === "Low to High") return a.prices[0].priceNumeric - b.prices[0].priceNumeric;
-    if (selectedSort === "High to Low") return b.prices[0].priceNumeric - a.prices[0].priceNumeric;
-    return 0; // Recent is default
-  });
+  // Fetch localities and categories from Firestore
+  useEffect(() => {
+    const fetchLocationsAndCategories = async () => {
+      try {
+        const propertiesRef = collection(db, 'properties');
+        const querySnapshot = await getDocs(propertiesRef);
+        
+        const uniqueLocalities = new Set<string>();
+        const uniqueCategories = new Set<string>();
+        
+        querySnapshot.docs.forEach(doc => {
+          const data = doc.data();
+          if (data.location) uniqueLocalities.add(data.location);
+          if (data.category) uniqueCategories.add(data.category);
+        });
+        
+        setLocalities(Array.from(uniqueLocalities).sort());
+        setCategories(Array.from(uniqueCategories).sort());
+      } catch (error) {
+        console.error('Error fetching localities and categories:', error);
+      }
+    };
+
+    fetchLocationsAndCategories();
+  }, []);
+
+  // Fetch properties from Firebase
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const propertiesRef = collection(db, 'properties') as CollectionReference<DocumentData>;
+        let queryRef: Query<DocumentData> = propertiesRef;
+        
+        // Apply filters
+        const conditions = [];
+        if (selectedLocation) conditions.push(where('location', '==', selectedLocation));
+        if (selectedCategory) conditions.push(where('category', '==', selectedCategory));
+        
+        if (conditions.length > 0) {
+          queryRef = query(propertiesRef, ...conditions);
+        }
+        
+        const querySnapshot = await getDocs(queryRef);
+        let propertiesList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Property[];
+
+        // Filter out archived properties
+        propertiesList = propertiesList.filter(property => property.status !== 'Archived');
+
+        // Apply sorting
+        propertiesList = propertiesList.sort((a, b) => {
+          if (selectedSort === "Low to High") {
+            const priceA = parseInt(a.prices[0].price.replace(/[^0-9]/g, ''));
+            const priceB = parseInt(b.prices[0].price.replace(/[^0-9]/g, ''));
+            return priceA - priceB;
+          }
+          if (selectedSort === "High to Low") {
+            const priceA = parseInt(a.prices[0].price.replace(/[^0-9]/g, ''));
+            const priceB = parseInt(b.prices[0].price.replace(/[^0-9]/g, ''));
+            return priceB - priceA;
+          }
+          return 0;
+        });
+
+        setProperties(propertiesList);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, [selectedLocation, selectedCategory, selectedSort]);
 
   // Update URL when filters change
   const updateURL = (location: string, category: string, sort: string) => {
@@ -75,13 +131,16 @@ function SearchComponent() {
   };
 
   // Create SEO-friendly URL for property
-  const createPropertyUrl = (property: typeof SAMPLE_PROPERTIES[0]) => {
-    const slug = property.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
-    return `/spaces/${slug}-${property.id}`;
+  const createPropertyUrl = (property: Property) => {
+    const slug = `${property.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${
+      property.location.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+    }-${property.id}`.replace(/(^-|-$)/g, "");
+    return `/spaces/${slug}`;
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -93,17 +152,17 @@ function SearchComponent() {
         className="bg-white rounded-xl shadow-lg p-6 mb-8"
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Location Dropdown */}
+          {/* Locality Dropdown */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Location</label>
+            <label className="text-sm font-medium text-gray-700">Locality</label>
             <select
               value={selectedLocation}
               onChange={(e) => handleLocationChange(e.target.value)}
               className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
             >
-              <option value="">Select Location</option>
-              {LOCATIONS.map((location) => (
-                <option key={location} value={location}>{location}</option>
+              <option value="">Select Locality</option>
+              {localities.map((locality) => (
+                <option key={locality} value={locality}>{locality}</option>
               ))}
             </select>
           </div>
@@ -117,7 +176,7 @@ function SearchComponent() {
               className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
             >
               <option value="">Select Category</option>
-              {CATEGORIES.map((category) => (
+              {categories.map((category) => (
                 <option key={category} value={category}>{category}</option>
               ))}
             </select>
@@ -142,7 +201,7 @@ function SearchComponent() {
 
       {/* Property Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProperties.map((property, idx) => (
+        {properties.map((property, idx) => (
           <motion.div
             key={property.id}
             initial={{ opacity: 0, y: 20 }}
@@ -181,14 +240,21 @@ function SearchComponent() {
                     <span className="text-sm text-gray-600">{property.location}</span>
                   </div>
                   <div className="flex gap-2">
-                    {property.amenities.slice(0, 2).map((amenity, index) => (
+                    {property.amenities?.slice(0, 2).map((amenity, index) => (
                       <span key={index} className="text-xs bg-primary/5 text-primary px-2 py-1 rounded-full">
                         {amenity}
                       </span>
                     ))}
                   </div>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{property.name}</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-gray-900">{property.name}</h3>
+                  {property.status === 'Sold' && (
+                    <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                      Sold
+                    </span>
+                  )}
+                </div>
                 <div className="flex items-center gap-2 mb-4">
                   <Building2 className="w-4 h-4 text-gray-500" />
                   <span className="text-sm text-gray-500">{property.category}</span>
@@ -197,7 +263,7 @@ function SearchComponent() {
               
               {/* Price Options */}
               <div className="space-y-2 mt-auto">
-                {property.prices.map((priceOption, index) => (
+                {property.prices?.map((priceOption, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <span className="text-primary font-semibold">{priceOption.price}</span>
                     <span className="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
@@ -214,15 +280,6 @@ function SearchComponent() {
   );
 }
 
-// Loading component
-function LoadingComponent() {
-  return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-    </div>
-  );
-}
-
 export default function SpacesPage() {
   return (
     <main className="min-h-screen bg-secondary pt-32 pb-16">
@@ -232,5 +289,14 @@ export default function SpacesPage() {
         </Suspense>
       </div>
     </main>
+  );
+}
+
+// Loading component
+function LoadingComponent() {
+  return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    </div>
   );
 } 
