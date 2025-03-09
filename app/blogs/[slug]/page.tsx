@@ -6,7 +6,6 @@ import { CalendarDays, Clock, ArrowLeft, Search, Mail, Phone, MapPin } from "luc
 import { notFound, useRouter } from "next/navigation";
 import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { formatDate } from '@/utils/dateUtils';
 import Loader from '@/components/Loader';
 
 // Define the Blog interface
@@ -180,13 +179,13 @@ export default function BlogDetailPage({ params }: Props) {
   }
 
   return (
-    <main className="min-h-screen bg-secondary mt-4 pt-16 pb-16">
-      <div className="max-w-7xl mx-auto px-4">
+    <main className="min-h-screen bg-secondary pb-16">
+      <div className="max-w-6xl mx-auto px-4 p-6">
         <Link 
           href="/blogs" 
-          className="inline-flex items-center text-gray-600 hover:text-primary mb-6 group"
+          className="inline-flex items-center text-gray-600 hover:text-primary mb-6"
         >
-          <ArrowLeft className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1" />
+          <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Blogs
         </Link>
 

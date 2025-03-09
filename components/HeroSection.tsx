@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Search, MapPin, Building2, Home } from "lucide-react";
+import { Search, MapPin, Building2, Home, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -15,6 +15,12 @@ const HeroSection = () => {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [locations, setLocations] = useState<string[]>([]);
   const [recentLocations, setRecentLocations] = useState<string[]>([]);
+
+  const stats = [
+    { number: '80+', label: 'Premium PGs' },
+    { number: '500+', label: 'Happy Residents' },
+    { number: '18+', label: 'Locations' },
+  ];
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -60,129 +66,119 @@ const HeroSection = () => {
   };
 
   return (
-    <section
-      id="home"
-      className="relative w-full min-h-[calc(75vh-80px)] pt-[80px] pb-4 sm:pt-[90px] flex flex-col justify-center overflow-hidden bg-secondary"
-    >
-      <div className="relative w-full max-w-[1800px] mx-auto px-3 sm:px-4 lg:px-6 flex-1 flex items-center py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-8 items-center w-full">
-          {/* Text Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-left order-2 lg:order-1 flex flex-col max-w-md lg:max-w-xl"
-          >
+    <section className="relative bg-secondary">
+      <div className="max-w-[2000px] mx-auto p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-8 items-center">
+          {/* Left content */}
+          <div className="order-2 lg:order-1 z-10">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="mb-2 sm:mb-2 text-sm md:text-sm font-medium text-primary"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-left flex flex-col max-w-2xl lg:max-w-3xl"
             >
-              Find Your Perfect Space
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="mb-2 sm:mb-2 text-sm md:text-base font-medium text-primary"
+              >
+                Find Your Perfect Space
+              </motion.div>
 
-            <h1 className="text-3xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-foreground mb-2 sm:mb-3 tracking-tight leading-[1.1]">
-              <span className="block">Your Perfect</span>
-              <span className="block">Rental Is Just</span>
-              <span className="block">A Click Away</span>
-            </h1>
+              <h1 className="text-4xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-heading text-foreground mb-2 sm:mb-3 tracking-tight leading-[1.1]">
+                <span className="block">Your Perfect</span>
+                <span className="block">Rental Is Just</span>
+                <span className="block">A Click Away</span>
+              </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="max-w-lg text-sm sm:text-sm md:text-base text-muted-foreground mb-3 sm:mb-4"
-            >
-              Discover the perfect property or PG accommodation across all Jaipur cities. 
-              <span className="hidden sm:inline"> Easy booking, trusted dealers, and hassle-free experience.</span>
-            </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="max-w-2xl text-sm sm:text-base md:text-lg text-muted-foreground mb-3 sm:mb-4"
+              >
+                Discover the perfect property or PG accommodation across all Jaipur cities. 
+                <span className="hidden sm:inline"> Easy booking, trusted dealers, and hassle-free experience.</span>
+              </motion.p>
 
-            {/* Search Bar */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="relative max-w-md mb-3 sm:mb-4"
-            >
-              <div className="flex items-center gap-2 sm:gap-2 p-2 bg-white rounded-lg shadow-md">
-                <div className="flex-1 flex items-center gap-2 px-2 py-1.5">
-                  <MapPin className="w-4 h-4 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
-                  <select
-                    value={selectedLocation}
-                    onChange={(e) => setSelectedLocation(e.target.value)}
-                    className="w-full bg-transparent border-none focus:outline-none text-foreground appearance-none cursor-pointer text-sm sm:text-sm"
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="relative max-w-xl mb-3 sm:mb-4"
+              >
+                <div className="flex items-center gap-2 sm:gap-2 p-2 bg-white rounded-lg shadow-md">
+                  <div className="flex-1 flex items-center gap-2 px-2 py-1.5">
+                    <MapPin className="w-4 h-4 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
+                    <select
+                      value={selectedLocation}
+                      onChange={(e) => setSelectedLocation(e.target.value)}
+                      className="w-full bg-transparent border-none focus:outline-none text-foreground appearance-none cursor-pointer text-sm sm:text-sm"
+                    >
+                      <option value="">Select a location</option>
+                      {locations.map((location) => (
+                        <option key={location} value={location}>
+                          {location}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <button 
+                    onClick={handleSearch}
+                    className="bg-accent hover:bg-accent-dark text-white px-3 sm:px-4 py-2 sm:py-2 rounded-md transition-colors duration-300 flex items-center gap-1 text-sm sm:text-sm whitespace-nowrap"
                   >
-                    <option value="">Select a location</option>
-                    {locations.map((location) => (
-                      <option key={location} value={location}>
-                        {location}
-                      </option>
-                    ))}
-                  </select>
+                    <Search className="w-4 h-4 sm:w-4 sm:h-4" />
+                    <span>Search</span>
+                  </button>
                 </div>
-                <button 
-                  onClick={handleSearch}
-                  className="bg-accent hover:bg-accent-dark text-white px-3 sm:px-4 py-2 sm:py-2 rounded-md transition-colors duration-300 flex items-center gap-1 text-sm sm:text-sm whitespace-nowrap"
-                >
-                  <Search className="w-4 h-4 sm:w-4 sm:h-4" />
-                  <span>Search</span>
-                </button>
-              </div>
-            </motion.div>
+              </motion.div>
 
-            {/* Featured Cities */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="flex flex-wrap gap-2 sm:gap-1.5 mb-3 sm:mb-4"
-            >
-              {recentLocations.slice(0, 3).map((city) => (
-                <button
-                  key={city}
-                  onClick={() => {
-                    setSelectedLocation(city);
-                    handleSearch();
-                  }}
-                  className="px-3 sm:px-3 py-1.5 sm:py-1.5 bg-white rounded-full text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm"
-                >
-                  {city}
-                </button>
-              ))}
-              {recentLocations.length > 3 && (
-                <button
-                  onClick={() => {}}
-                  className="px-3 sm:px-3 py-1.5 sm:py-1.5 bg-white rounded-full text-sm font-medium text-gray-500 hover:bg-gray-100 transition-colors duration-300 shadow-sm hidden sm:inline-block"
-                >
-                  +{recentLocations.length - 3} more
-                </button>
-              )}
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="flex flex-wrap gap-2 sm:gap-2 mb-4 sm:mb-5"
+              >
+                {recentLocations.slice(0, 3).map((city) => (
+                  <button
+                    key={city}
+                    onClick={() => {
+                      setSelectedLocation(city);
+                      handleSearch();
+                    }}
+                    className="px-4 sm:px-5 py-2 sm:py-2.5 bg-white rounded-full text-base font-medium text-primary hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm"
+                  >
+                    {city}
+                  </button>
+                ))}
+                {recentLocations.length > 3 && (
+                  <button
+                    onClick={() => {}}
+                    className="px-4 sm:px-5 py-2 sm:py-2.5 bg-white rounded-full text-base font-medium text-gray-500 hover:bg-gray-100 transition-colors duration-300 shadow-sm hidden sm:inline-block"
+                  >
+                    +{recentLocations.length - 3} more
+                  </button>
+                )}
+              </motion.div>
 
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="mt-auto sm:mt-3 grid grid-cols-3 gap-2 sm:gap-2 max-w-xs"
-            >
-              <div>
-                <div className="text-lg sm:text-lg md:text-xl lg:text-2xl font-bold text-primary">7+</div>
-                <div className="text-xs sm:text-xs text-muted-foreground">Major Cities</div>
-              </div>
-              <div>
-                <div className="text-lg sm:text-lg md:text-xl lg:text-2xl font-bold text-primary">1000+</div>
-                <div className="text-xs sm:text-xs text-muted-foreground">Properties</div>
-              </div>
-              <div>
-                <div className="text-lg sm:text-lg md:text-xl lg:text-2xl font-bold text-primary">24/7</div>
-                <div className="text-xs sm:text-xs text-muted-foreground">Support</div>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="mt-auto sm:mt-4 grid grid-cols-3 gap-4 sm:gap-6 max-w-lg"
+              >
+                {stats.map((stat, index) => (
+                  <div key={index} className="flex flex-col items-center">
+                    <p className="text-primary font-bold text-base sm:text-lg">{stat.number}</p>
+                    <p className="text-gray-500 text-sm sm:text-base">{stat.label}</p>
+                  </div>
+                ))}
+              </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
 
-          {/* Image Grid - Hidden on mobile */}
+          {/* Right content - Image grid - Hidden on mobile */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -191,42 +187,38 @@ const HeroSection = () => {
           >
             <div className="grid grid-cols-2 gap-2 max-w-md mx-auto lg:max-w-none">
               <div className="space-y-2">
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+                <div className="relative rounded-lg overflow-hidden aspect-[4/3]">
                   <Image
-                    src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&auto=format&fit=crop&q=60"
-                    alt="Modern Apartment"
+                    src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                    alt="Modern Living Room"
                     fill
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                    className="object-cover hover:scale-105 transition-transform duration-500"
+                    className="object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+                <div className="relative rounded-lg overflow-hidden aspect-[4/3]">
                   <Image
-                    src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=60"
-                    alt="Luxury Home"
+                    src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                    alt="Cozy Bedroom"
                     fill
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                    className="object-cover hover:scale-105 transition-transform duration-500"
+                    className="object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
               </div>
-              <div className="space-y-2 pt-3">
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+              <div className="space-y-2 mt-4">
+                <div className="relative rounded-lg overflow-hidden aspect-[4/3]">
                   <Image
-                    src="https://images.unsplash.com/photo-1515263487990-61b07816b324?w=800&auto=format&fit=crop&q=60"
+                    src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
                     alt="Modern Kitchen"
                     fill
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                    className="object-cover hover:scale-105 transition-transform duration-500"
+                    className="object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+                <div className="relative rounded-lg overflow-hidden aspect-[4/3]">
                   <Image
-                    src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&auto=format&fit=crop&q=60"
-                    alt="Cozy Bedroom"
+                    src="https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                    alt="Stylish Bathroom"
                     fill
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                    className="object-cover hover:scale-105 transition-transform duration-500"
+                    className="object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
               </div>
@@ -238,26 +230,41 @@ const HeroSection = () => {
                 y: [0, -8, 0],
               }}
               transition={{
-                duration: 2,
+                duration: 2.5,
                 repeat: Infinity,
-                ease: "easeInOut",
+                repeatType: "reverse",
               }}
-              className="absolute top-1/4 right-[10%] bg-white p-1.5 rounded-full shadow-md hidden sm:block"
+              className="absolute top-1/4 -left-4 p-2 bg-white rounded-lg shadow-lg hidden lg:flex items-center gap-2 z-10"
             >
-              <Building2 className="w-4 h-4 text-primary" />
+              <MapPin className="w-4 h-4 text-primary" />
+              <span className="text-xs font-medium">Jaipur</span>
             </motion.div>
-            
+
             <motion.div
               animate={{
                 y: [0, 8, 0],
               }}
               transition={{
-                duration: 2,
+                duration: 3,
                 repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5,
+                repeatType: "reverse",
               }}
-              className="absolute bottom-1/4 left-[10%] bg-white p-1.5 rounded-full shadow-md hidden sm:block"
+              className="absolute bottom-1/4 -right-4 p-2 bg-white rounded-lg shadow-lg hidden lg:flex items-center gap-2 z-10"
+            >
+              <UserRound className="w-4 h-4 text-accent" />
+              <span className="text-xs font-medium">500+ Users</span>
+            </motion.div>
+
+            <motion.div
+              animate={{
+                y: [0, -10, 0],
+              }}
+              transition={{
+                duration: 3.5,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+              className="absolute bottom-1/3 left-1/3 p-2 bg-white rounded-lg shadow-lg hidden lg:flex items-center gap-2 z-10"
             >
               <Home className="w-4 h-4 text-accent" />
             </motion.div>

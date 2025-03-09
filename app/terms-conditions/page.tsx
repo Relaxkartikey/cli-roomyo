@@ -15,7 +15,7 @@ export default function TermsConditionsPage() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-4xl mx-auto px-4 p-6">
         <Link 
           href="/" 
           className="inline-flex items-center text-gray-600 hover:text-primary mb-6 group"

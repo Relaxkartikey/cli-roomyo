@@ -14,6 +14,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import BlogEditor from '@/app/components/BlogEditor';
 import Loader from '@/components/Loader';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 // Dynamically import SimpleMDE with SSR disabled
 const SimpleMDE = dynamic(
@@ -590,31 +591,19 @@ export default function BlogsDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-secondary pt-12 pb-16">
-      {/* Include SimpleMDE styles */}
-      <SimpleMDEStyles />
-      
-      {loading ? (
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <div className="text-center">
-            <div className="spinner mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading...</p>
-          </div>
-        </div>
-      ) : !userId ? (
-        <div className="flex justify-center items-center min-h-[60vh]">
-          <div className="text-center">
-            <p className="text-xl font-semibold mb-4">Please log in to access this page</p>
-            <Link 
-              href="/admin/login" 
-              className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+    <ProtectedRoute>
+      <main className="min-h-screen bg-secondary pb-16">
+        <div className="max-w-7xl mx-auto px-4 p-6">
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-2xl font-semibold">Blog Manager</h1>
+            <Link
+              href="/admin/dashboard"
+              className="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Go to Login
+              Back to Dashboard
             </Link>
           </div>
-        </div>
-      ) : (
-        <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+
           {/* Stats cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             {statsCards.map((card, idx) => (
@@ -1097,7 +1086,7 @@ export default function BlogsDashboard() {
             )}
           </div>
         </div>
-      )}
-    </div>
+      </main>
+    </ProtectedRoute>
   );
 } 

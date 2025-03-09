@@ -4,6 +4,7 @@ import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase
 import { db } from '@/lib/firebase';
 import Link from 'next/link';
 import { Pencil, Trash2, X } from 'lucide-react';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 interface Category {
   id: string;
@@ -80,89 +81,91 @@ export default function CategoryPage() {
   }
 
   return (
-    <main className="min-h-screen bg-secondary pt-12 pb-16">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-semibold">Category Management</h1>
-          <Link
-            href="/admin/dashboard"
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            Back to Dashboard
-          </Link>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
-          <form onSubmit={handleAdd} className="flex gap-4">
-            <input
-              type="text"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              className="flex-1 rounded-lg border border-gray-300 px-3 py-2"
-              placeholder="Add new category..."
-              required
-            />
-            <button
-              type="submit"
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+    <ProtectedRoute>
+      <main className="min-h-screen bg-secondary pb-16">
+        <div className="max-w-7xl mx-auto px-4 p-6">
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-2xl font-semibold">Category Manager</h1>
+            <Link
+              href="/admin/dashboard"
+              className="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
             >
-              Add Category
-            </button>
-          </form>
+              Back to Dashboard
+            </Link>
+          </div>
 
-          <div className="space-y-4">
-            {categories.map((category) => (
-              <div
-                key={category.id}
-                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+          <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
+            <form onSubmit={handleAdd} className="flex gap-4">
+              <input
+                type="text"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="flex-1 rounded-lg border border-gray-300 px-3 py-2"
+                placeholder="Add new category..."
+                required
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
               >
-                {editingCategory?.id === category.id ? (
-                  <form onSubmit={handleUpdate} className="flex-1 flex items-center gap-4">
-                    <input
-                      type="text"
-                      value={editingCategory.name}
-                      onChange={(e) => setEditingCategory({ ...editingCategory, name: e.target.value })}
-                      className="flex-1 rounded-lg border border-gray-300 px-3 py-2"
-                      required
-                    />
-                    <button
-                      type="submit"
-                      className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-                    >
-                      Save
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setEditingCategory(null)}
-                      className="text-gray-500 hover:text-gray-700"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  </form>
-                ) : (
-                  <>
-                    <span className="text-gray-900">{category.name}</span>
-                    <div className="flex items-center gap-3">
+                Add Category
+              </button>
+            </form>
+
+            <div className="space-y-4">
+              {categories.map((category) => (
+                <div
+                  key={category.id}
+                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                >
+                  {editingCategory?.id === category.id ? (
+                    <form onSubmit={handleUpdate} className="flex-1 flex items-center gap-4">
+                      <input
+                        type="text"
+                        value={editingCategory.name}
+                        onChange={(e) => setEditingCategory({ ...editingCategory, name: e.target.value })}
+                        className="flex-1 rounded-lg border border-gray-300 px-3 py-2"
+                        required
+                      />
                       <button
-                        onClick={() => setEditingCategory(category)}
-                        className="text-blue-600 hover:text-blue-800"
+                        type="submit"
+                        className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
                       >
-                        <Pencil className="w-5 h-5" />
+                        Save
                       </button>
                       <button
-                        onClick={() => handleDelete(category.id)}
-                        className="text-red-600 hover:text-red-800"
+                        type="button"
+                        onClick={() => setEditingCategory(null)}
+                        className="text-gray-500 hover:text-gray-700"
                       >
-                        <Trash2 className="w-5 h-5" />
+                        <X className="w-5 h-5" />
                       </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
+                    </form>
+                  ) : (
+                    <>
+                      <span className="text-gray-900">{category.name}</span>
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => setEditingCategory(category)}
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          <Pencil className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(category.id)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </ProtectedRoute>
   );
 } 

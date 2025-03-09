@@ -484,8 +484,8 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <main className="min-h-screen bg-secondary mt-4 pt-16 pb-16">
-        <div className="max-w-7xl mx-auto px-4">
+      <main className="min-h-screen bg-secondary pb-16">
+        <div className="max-w-7xl mx-auto px-4 p-6">
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
             <button

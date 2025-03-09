@@ -175,144 +175,142 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <>
-      <div className="p-6 max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-2xl font-semibold">Analytics Dashboard</h1>
-            <p className="text-gray-600">Track your website performance and user engagement</p>
-          </div>
-          <Link
-            href="/admin/dashboard"
-            className="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            Back to Dashboard
-          </Link>
+    <div className="p-6 max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-2xl font-semibold">Analytics Dashboard</h1>
+          <p className="text-gray-600">Track your website performance and user engagement</p>
         </div>
+        <Link
+          href="/admin/dashboard"
+          className="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
+        >
+          Back to Dashboard
+        </Link>
+      </div>
 
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <MetricCard
-            title="Page Views"
-            value={analyticsData.pageViews.toLocaleString()}
-            description="Total page views"
-          />
-          <MetricCard
-            title="Unique Visitors"
-            value={analyticsData.uniqueVisitors.toLocaleString()}
-            description="Unique website visitors"
-          />
-          <MetricCard
-            title="Avg. Session Duration"
-            value={analyticsData.averageSessionDuration}
-            description="Time spent on site"
-          />
-          <MetricCard
-            title="Bounce Rate"
-            value={analyticsData.bounceRate}
-            description="Single page sessions"
-          />
-        </div>
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <MetricCard
+          title="Page Views"
+          value={analyticsData.pageViews.toLocaleString()}
+          description="Total page views"
+        />
+        <MetricCard
+          title="Unique Visitors"
+          value={analyticsData.uniqueVisitors.toLocaleString()}
+          description="Unique website visitors"
+        />
+        <MetricCard
+          title="Avg. Session Duration"
+          value={analyticsData.averageSessionDuration}
+          description="Time spent on site"
+        />
+        <MetricCard
+          title="Bounce Rate"
+          value={analyticsData.bounceRate}
+          description="Single page sessions"
+        />
+      </div>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Top Pages Chart */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Top Pages</h2>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={analyticsData.topPages}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="path" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="views" fill="#4F46E5" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Device Breakdown */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Device Breakdown</h2>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={Object.entries(analyticsData.deviceBreakdown).map(([key, value]) => ({
-                      name: key,
-                      value
-                    }))}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {Object.entries(analyticsData.deviceBreakdown).map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-
-        {/* User Engagement */}
-        <div className="bg-white p-6 rounded-lg shadow mb-8">
-          <h2 className="text-xl font-semibold mb-4">User Engagement</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center">
-              <p className="text-gray-600">Daily Active Users</p>
-              <p className="text-2xl font-semibold">{analyticsData.userEngagement.daily.toLocaleString()}</p>
-            </div>
-            <div className="text-center">
-              <p className="text-gray-600">Weekly Active Users</p>
-              <p className="text-2xl font-semibold">{analyticsData.userEngagement.weekly.toLocaleString()}</p>
-            </div>
-            <div className="text-center">
-              <p className="text-gray-600">Monthly Active Users</p>
-              <p className="text-2xl font-semibold">{analyticsData.userEngagement.monthly.toLocaleString()}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Geographic Data */}
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        {/* Top Pages Chart */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Geographic Distribution</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead>
-                <tr className="bg-gray-50">
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Country
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Users
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Percentage
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {analyticsData.geographicData.map((item) => (
-                  <tr key={item.country}>
-                    <td className="px-6 py-4 whitespace-nowrap">{item.country}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{item.users.toLocaleString()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {((item.users / analyticsData.uniqueVisitors) * 100).toFixed(1)}%
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <h2 className="text-xl font-semibold mb-4">Top Pages</h2>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={analyticsData.topPages}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="path" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="views" fill="#4F46E5" />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
+        </div>
+
+        {/* Device Breakdown */}
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4">Device Breakdown</h2>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={Object.entries(analyticsData.deviceBreakdown).map(([key, value]) => ({
+                    name: key,
+                    value
+                  }))}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {Object.entries(analyticsData.deviceBreakdown).map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* User Engagement */}
+      <div className="bg-white p-6 rounded-lg shadow mb-8">
+        <h2 className="text-xl font-semibold mb-4">User Engagement</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="text-center">
+            <p className="text-gray-600">Daily Active Users</p>
+            <p className="text-2xl font-semibold">{analyticsData.userEngagement.daily.toLocaleString()}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-gray-600">Weekly Active Users</p>
+            <p className="text-2xl font-semibold">{analyticsData.userEngagement.weekly.toLocaleString()}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-gray-600">Monthly Active Users</p>
+            <p className="text-2xl font-semibold">{analyticsData.userEngagement.monthly.toLocaleString()}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Geographic Data */}
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-xl font-semibold mb-4">Geographic Distribution</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Country
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Users
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Percentage
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {analyticsData.geographicData.map((item) => (
+                <tr key={item.country}>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.country}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.users.toLocaleString()}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {((item.users / analyticsData.uniqueVisitors) * 100).toFixed(1)}%
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -393,7 +391,7 @@ export default function AnalyticsPage() {
           </div>
         </Dialog>
       </Transition>
-    </>
+    </div>
   );
 }
 

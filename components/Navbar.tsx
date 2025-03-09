@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IoMdMenu, IoMdClose } from "react-icons/io";
@@ -23,6 +23,20 @@ export default function Navbar() {
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
   const [localities, setLocalities] = useState<string[]>([]);
   const pathname = usePathname();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsCityDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchLocalities = async () => {
@@ -94,14 +108,14 @@ export default function Navbar() {
             {/* Desktop Navigation */}
             <div className="flex items-center space-x-8">
               {NAV_ITEMS.map((item) => (
-                <div key={item.href} className="relative group">
+                <div key={item.href} className="relative group" ref={item.dropdown ? dropdownRef : null}>
                   {item.dropdown ? (
                     <button
                       onClick={() => setIsCityDropdownOpen(!isCityDropdownOpen)}
                       className="flex items-center space-x-1 text-gray-700 hover:text-primary transition-colors"
                     >
                       <span>{item.label}</span>
-                      <ChevronDown className="w-4 h-4" />
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCityDropdownOpen ? 'rotate-180' : ''}`} />
                     </button>
                   ) : (
                     <Link

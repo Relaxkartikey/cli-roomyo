@@ -575,26 +575,16 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <main className="min-h-screen bg-secondary pt-12 pb-16">
-        <div className="max-w-7xl mx-auto px-4">
+      <main className="min-h-screen bg-secondary pb-16">
+        <div className="max-w-7xl mx-auto px-4 p-6">
           <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-semibold">Property Manager</h1>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link
-                href="/admin/dashboard"
-                className="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg border border-gray-200"
-              >
-                Back to Dashboard
-              </Link>
-              <button
-                onClick={() => setIsAddingProperty(!isAddingProperty)}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-              >
-                {isAddingProperty ? 'Cancel' : 'Add Property'}
-              </button>
-            </div>
+            <h1 className="text-2xl font-semibold">Property Manager</h1>
+            <Link
+              href="/admin/dashboard"
+              className="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Back to Dashboard
+            </Link>
           </div>
 
           {isAddingProperty && (

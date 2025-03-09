@@ -90,8 +90,8 @@ export default function RootLayout({
           <AnalyticsTracker />
           <Analytics />
           <Navbar />
-          <div className="h-[64px] md:h-[144px]"></div>
-          <main className="relative pb-16 md:pb-0">{children}</main>
+          <div className="h-[64px] md:h-[120px]"></div>
+          <main className="relative pb-12 md:pb-0">{children}</main>
           <PreFooter />
           <Footer />
         </StyledComponentsRegistry>

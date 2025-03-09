@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-4xl mx-auto px-4 p-6">
         <Link 
           href="/" 
           className="inline-flex items-center text-gray-600 hover:text-primary mb-6 group"
@@ -115,7 +115,7 @@ export default function PrivacyPolicyPage() {
               <ul className="list-disc pl-10 text-gray-700">
                 <li>Personalize your accommodation search.</li>
                 <li>Improve website performance and navigation.</li>
-              </ul>
+          </ul>
             </div>
             
             <div className="mb-4">
@@ -126,7 +126,7 @@ export default function PrivacyPolicyPage() {
               <ul className="list-disc pl-10 text-gray-700">
                 <li>Respond to your queries or complaints.</li>
                 <li>Provide after-booking support.</li>
-              </ul>
+          </ul>
             </div>
             
             <div className="mb-4">
@@ -178,7 +178,7 @@ export default function PrivacyPolicyPage() {
                 <li>Government authorities.</li>
                 <li>Law enforcement agencies.</li>
                 <li>Legal or regulatory obligations.</li>
-              </ul>
+          </ul>
             </div>
             
             <div className="mb-4">
@@ -194,7 +194,7 @@ export default function PrivacyPolicyPage() {
               <li><strong>Data Encryption:</strong> All data transfers (personal information, payments, etc.) are encrypted.</li>
               <li><strong>Firestore Database Security:</strong> We use Google Firestore to store your data securely.</li>
               <li><strong>Restricted Access:</strong> Only authorized personnel can access your personal information.</li>
-            </ul>
+          </ul>
             <p className="text-gray-700">However, since no online platform is 100% secure, we encourage you to use strong passwords and avoid sharing sensitive information.</p>
           </section>
           
@@ -217,7 +217,7 @@ export default function PrivacyPolicyPage() {
               <li>Provide our services.</li>
               <li>Fulfill legal obligations.</li>
               <li>Resolve disputes.</li>
-            </ul>
+          </ul>
             <p className="text-gray-700">If you wish to delete your data, you may request to close your account, and we will erase your personal information within a reasonable time.</p>
           </section>
           
