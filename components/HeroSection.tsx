@@ -252,7 +252,7 @@ const HeroSection = () => {
               className="absolute bottom-1/4 -right-4 p-2 bg-white rounded-lg shadow-lg hidden lg:flex items-center gap-2 z-10"
             >
               <UserRound className="w-4 h-4 text-accent" />
-              <span className="text-xs font-medium">500+ Users</span>
+              <span className="text-xs font-medium">Verified</span>
             </motion.div>
 
             <motion.div
