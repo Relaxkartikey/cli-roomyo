@@ -41,6 +41,3 @@ package-lock.json
 # Service account
 /config/service-account/
 
-
-# json files
-*.json
