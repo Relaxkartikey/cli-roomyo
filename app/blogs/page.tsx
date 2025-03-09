@@ -4,9 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { CalendarDays, Clock, ChevronDown, ArrowRight, Search, Tag, ArrowDownWideNarrow } from "lucide-react";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where, orderBy, limit, startAfter } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useSearchParams, useRouter } from "next/navigation";
+import Loader from '@/components/Loader';
 
 // Define the Blog interface
 interface Blog {
@@ -167,7 +168,7 @@ function BlogsListingComponent() {
   const secondaryFeaturedBlogs = featuredBlogs.slice(1, 3);
   
   if (loading) {
-    return <BlogsLoader />;
+    return <Loader />;
   }
   
   if (blogs.length === 0) {
@@ -182,7 +183,7 @@ function BlogsListingComponent() {
       </div>
     );
   }
-  
+
   return (
     <>
       {/* Hero Section with Featured Blogs */}
@@ -192,50 +193,50 @@ function BlogsListingComponent() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
             {/* Main Featured Blog */}
             {mainFeaturedBlog && (
-              <Link 
+            <Link 
                 href={`/blogs/${mainFeaturedBlog.slug}`}
                 className="group block rounded-2xl overflow-hidden shadow-lg h-full"
-              >
+            >
                 <div className="relative w-full h-full min-h-[300px] lg:min-h-[400px]">
-                  <Image
+              <Image
                     src={mainFeaturedBlog.featuredImage}
                     alt={mainFeaturedBlog.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    priority
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                priority
                     sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                     <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
                       {mainFeaturedBlog.tags && mainFeaturedBlog.tags.length > 0 && (
                         <div className="inline-block bg-primary/90 text-white text-xs px-3 py-1 rounded-full mb-3 sm:mb-4">
                           {mainFeaturedBlog.tags[0]}
-                        </div>
+                  </div>
                       )}
                       <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2 group-hover:text-primary transition-colors line-clamp-2">
                         {mainFeaturedBlog.title}
-                      </h2>
+                  </h2>
                       <p className="text-gray-200 text-sm sm:text-base line-clamp-2 mb-3 sm:mb-4 max-w-xl">
                         {mainFeaturedBlog.excerpt}
                       </p>
                       <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-300">
-                        <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1">
                           <CalendarDays className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span>{new Date(mainFeaturedBlog.createdAt).toLocaleDateString('en-US', { 
                             year: 'numeric', 
                             month: 'short', 
                             day: 'numeric' 
                           })}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
+                    </div>
+                    <div className="flex items-center gap-1">
                           <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span>{mainFeaturedBlog.readTime}</span>
                         </div>
-                      </div>
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
+            </Link>
             )}
 
             {/* Secondary Featured Blogs - Stack on all screens */}
@@ -249,15 +250,15 @@ function BlogsListingComponent() {
                   <div className="grid grid-cols-1 md:grid-cols-5 h-full">
                     <div className="relative md:col-span-2">
                       <div className="h-48 md:h-full relative">
-                        <Image
+                    <Image
                           src={blog.featuredImage}
-                          alt={blog.title}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      alt={blog.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                           sizes="(max-width: 768px) 100vw, 20vw"
-                        />
+                    />
                         {blog.tags && blog.tags.length > 0 && (
-                          <div className="absolute top-2 right-2 bg-primary/90 text-white text-xs px-3 py-1 rounded-full">
+                    <div className="absolute top-2 right-2 bg-primary/90 text-white text-xs px-3 py-1 rounded-full">
                             {blog.tags[0]}
                           </div>
                         )}
@@ -265,21 +266,21 @@ function BlogsListingComponent() {
                     </div>
                     <div className="p-4 sm:p-5 flex flex-col justify-center md:col-span-3">
                       <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                        {blog.title}
-                      </h3>
+                      {blog.title}
+                    </h3>
                       <p className="text-gray-600 text-sm line-clamp-2 mb-3">{blog.excerpt}</p>
                       <div className="flex items-center justify-between text-xs text-gray-500 mt-auto">
-                        <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1">
                           <CalendarDays className="w-3 h-3" />
                           <span>{new Date(blog.createdAt).toLocaleDateString('en-US', { 
                             year: 'numeric', 
                             month: 'short', 
                             day: 'numeric' 
                           })}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
+                      </div>
+                      <div className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
-                          <span>{blog.readTime}</span>
+                        <span>{blog.readTime}</span>
                         </div>
                       </div>
                     </div>
@@ -425,51 +426,51 @@ function BlogsListingComponent() {
       {displayedBlogs.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {displayedBlogs.map((blog, idx) => (
-            <motion.article
-              key={blog.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300"
-            >
+              <motion.article
+                key={blog.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                className="bg-white rounded-xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300"
+              >
               <Link href={`/blogs/${blog.slug}`} className="block">
-                <div className="relative h-48">
-                  <Image
+                  <div className="relative h-48">
+                    <Image
                     src={blog.featuredImage}
-                    alt={blog.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+                      alt={blog.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                   {blog.tags && blog.tags.length > 0 && (
                     <div className="absolute top-4 right-4 bg-primary/90 text-white text-xs px-3 py-1 rounded-full">
                       {blog.tags[0]}
                     </div>
                   )}
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-primary transition-colors">
-                    {blog.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-2">{blog.excerpt}</p>
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <CalendarDays className="w-4 h-4" />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-primary transition-colors">
+                      {blog.title}
+                    </h3>
+                    <p className="text-gray-600 mb-4 line-clamp-2">{blog.excerpt}</p>
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <div className="flex items-center gap-1">
+                        <CalendarDays className="w-4 h-4" />
                       <span>{new Date(blog.createdAt).toLocaleDateString('en-US', { 
                         year: 'numeric', 
                         month: 'short', 
                         day: 'numeric' 
                       })}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      <span>{blog.readTime}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        <span>{blog.readTime}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            </motion.article>
-          ))}
-        </div>
+                </Link>
+              </motion.article>
+            ))}
+          </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-16 bg-white rounded-xl shadow-md">
           <div className="text-center max-w-md">
@@ -491,62 +492,20 @@ function BlogsListingComponent() {
           </div>
         </div>
       )}
-      
-      {/* Load More Button */}
-      {hasMoreBlogs && (
+
+          {/* Load More Button */}
+          {hasMoreBlogs && (
         <div className="text-center mt-8 mb-12">
-          <button
+              <button
             onClick={loadMoreBlogs}
             className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors shadow-sm"
-          >
-            Load More
-            <ChevronDown className="w-4 h-4" />
-          </button>
-        </div>
-      )}
-    </>
-  );
-}
-
-// Loading component
-function BlogsLoader() {
-  return (
-    <div className="space-y-8">
-      {/* Featured blog skeleton */}
-      <div className="grid lg:grid-cols-2 gap-8">
-        <div className="bg-gray-200 animate-pulse rounded-2xl h-[400px]"></div>
-        <div className="space-y-8">
-          <div className="bg-gray-200 animate-pulse rounded-xl h-[192px]"></div>
-          <div className="bg-gray-200 animate-pulse rounded-xl h-[192px]"></div>
-        </div>
-      </div>
-      
-      {/* Filters skeleton */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="h-12 bg-gray-200 animate-pulse rounded-lg"></div>
-          <div className="h-12 bg-gray-200 animate-pulse rounded-lg"></div>
-          <div className="h-12 bg-gray-200 animate-pulse rounded-lg"></div>
-        </div>
-      </div>
-      
-      {/* Blogs grid skeleton */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {[...Array(6)].map((_, idx) => (
-          <div key={idx} className="bg-white rounded-xl overflow-hidden shadow-lg">
-            <div className="bg-gray-200 animate-pulse h-48"></div>
-            <div className="p-6 space-y-4">
-              <div className="h-6 bg-gray-200 animate-pulse rounded"></div>
-              <div className="h-16 bg-gray-200 animate-pulse rounded"></div>
-              <div className="flex justify-between">
-                <div className="h-4 w-24 bg-gray-200 animate-pulse rounded"></div>
-                <div className="h-4 w-16 bg-gray-200 animate-pulse rounded"></div>
-              </div>
+              >
+                Load More
+                <ChevronDown className="w-4 h-4" />
+              </button>
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
+          )}
+    </>
   );
 }
 
@@ -554,7 +513,7 @@ export default function BlogsPage() {
   return (
     <main className="min-h-screen bg-secondary pt-12 pb-16">
       <div className="max-w-7xl mx-auto px-4">
-        <Suspense fallback={<BlogsLoader />}>
+        <Suspense fallback={<Loader />}>
           <BlogsListingComponent />
         </Suspense>
       </div>

@@ -13,6 +13,7 @@ import Cookies from 'js-cookie';
 import Link from 'next/link';
 import Image from 'next/image';
 import BlogEditor from '@/app/components/BlogEditor';
+import Loader from '@/components/Loader';
 
 // Dynamically import SimpleMDE with SSR disabled
 const SimpleMDE = dynamic(
@@ -583,6 +584,10 @@ export default function BlogsDashboard() {
       color: 'bg-orange-500'
     }
   ];
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="min-h-screen bg-secondary pt-12 pb-16">

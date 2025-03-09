@@ -5,6 +5,8 @@ import Navbar from "@/components/Navbar"
 import PreFooter from "@/components/PreFooter"
 import Footer from "@/components/Footer"
 import StyledComponentsRegistry from './registry'
+import AnalyticsTracker from '@/components/AnalyticsTracker'
+import { Analytics } from '@vercel/analytics/react'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -85,9 +87,11 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${raleway.variable}`}>
       <body className="min-h-screen bg-white font-body">
         <StyledComponentsRegistry>
+          <AnalyticsTracker />
+          <Analytics />
           <Navbar />
-          <div className="h-[60px] sm:h-[70px]"></div>
-          <main className="relative">{children}</main>
+          <div className="h-[64px] md:h-[144px]"></div>
+          <main className="relative pb-16 md:pb-0">{children}</main>
           <PreFooter />
           <Footer />
         </StyledComponentsRegistry>

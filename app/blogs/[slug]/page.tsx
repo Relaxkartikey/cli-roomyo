@@ -6,6 +6,8 @@ import { CalendarDays, Clock, ArrowLeft, Search, Mail, Phone, MapPin } from "luc
 import { notFound, useRouter } from "next/navigation";
 import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { formatDate } from '@/utils/dateUtils';
+import Loader from '@/components/Loader';
 
 // Define the Blog interface
 interface Blog {
@@ -170,14 +172,7 @@ export default function BlogDetailPage({ params }: Props) {
   };
 
   if (loading) {
-    return (
-      <main className="min-h-screen bg-secondary pt-16 pb-16 flex items-center justify-center">
-        <div className="text-center">
-          <div className="spinner mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading blog...</p>
-        </div>
-      </main>
-    );
+    return <Loader />;
   }
 
   if (!blog) {
@@ -201,13 +196,13 @@ export default function BlogDetailPage({ params }: Props) {
             {/* Blog Header */}
             <div className="bg-white rounded-xl overflow-hidden shadow-lg mb-12">
               <div className="relative h-72 sm:h-96 md:h-[400px]">
-                <Image
+              <Image
                   src={blog.featuredImage}
-                  alt={blog.title}
-                  fill
-                  className="object-cover"
-                  priority
-                />
+                alt={blog.title}
+                fill
+                className="object-cover"
+                priority
+              />
               </div>
               <div className="p-6 md:p-10">
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -234,8 +229,8 @@ export default function BlogDetailPage({ params }: Props) {
                     <Clock className="w-5 h-5" />
                     <span>{blog.readTime}</span>
                   </div>
-                </div>
-                
+            </div>
+
                 {/* Blog Content - Render HTML content */}
                 <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: blog.content }}></div>
               </div>
@@ -271,16 +266,16 @@ export default function BlogDetailPage({ params }: Props) {
                         </h3>
                         <p className="text-gray-600 mb-4 line-clamp-2">{relatedBlog.excerpt}</p>
                         <div className="flex items-center justify-between text-sm text-gray-500">
-                          <div className="flex items-center gap-1">
-                            <CalendarDays className="w-4 h-4" />
+                <div className="flex items-center gap-1">
+                  <CalendarDays className="w-4 h-4" />
                             <span>{new Date(relatedBlog.createdAt).toLocaleDateString('en-US', { 
                               year: 'numeric', 
                               month: 'short', 
                               day: 'numeric' 
                             })}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
                             <span>{relatedBlog.readTime}</span>
                           </div>
                         </div>
@@ -290,7 +285,7 @@ export default function BlogDetailPage({ params }: Props) {
                 </div>
               </section>
             )}
-          </div>
+              </div>
 
           {/* Sidebar */}
           <div className="lg:sticky lg:top-36 self-start">
@@ -320,7 +315,7 @@ export default function BlogDetailPage({ params }: Props) {
                   </div>
                 </div>
                 
-                <button 
+                <button
                   onClick={handleSearch}
                   disabled={!selectedLocation}
                   className={`w-full py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 
@@ -331,7 +326,7 @@ export default function BlogDetailPage({ params }: Props) {
                 </button>
               </div>
             </div>
-            
+
             {/* Contact Widget */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Get in Touch</h3>
@@ -356,10 +351,10 @@ export default function BlogDetailPage({ params }: Props) {
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                     Email
                   </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
@@ -372,10 +367,10 @@ export default function BlogDetailPage({ params }: Props) {
                   <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
                     Phone
                   </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
