@@ -16,7 +16,7 @@ const Loader = () => {
             </div>
                 <span>MacBook Air</span>
               </div>
-              <title>Layer 1</title>
+              <title>Roomyo....</title>
             </div>
             <div className="macbody">
               <div className="face-one">

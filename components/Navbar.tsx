@@ -11,7 +11,7 @@ const NAV_ITEMS = [
   { label: "Home", href: "/" },
   { label: "Privileges", href: "/privileges" },
   { label: "About", href: "/about" },
-  { label: "Blog", href: "/blog" },
+  { label: "Blogs", href: "/blogs" },
   { label: "Locality", href: "#", dropdown: true }
 ];
 

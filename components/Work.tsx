@@ -1,5 +1,76 @@
+"use client";
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+
+const bookingSteps = [
+  {
+    icon: "🔍",
+    title: "Search & Discover",
+    description: "Find your ideal accommodation with our smart search filters",
+    details: [
+      "Filter by location, price, and amenities",
+      "View high-quality photos and virtual tours",
+      "Read verified reviews from previous tenants",
+      "Compare multiple properties side by side"
+    ]
+  },
+  {
+    icon: "📱",
+    title: "Schedule Visit",
+    description: "Book a convenient time to see your potential new home",
+    details: [
+      "Choose from available time slots",
+      "Receive confirmation via email and SMS",
+      "Get reminders before your scheduled visit",
+      "Easily reschedule if needed"
+    ]
+  },
+  {
+    icon: "📝",
+    title: "Book Instantly",
+    description: "Secure your preferred space with our simple booking process",
+    details: [
+      "Select your desired move-in date",
+      "Complete a quick verification process",
+      "Pay securely using multiple payment options",
+      "Receive instant booking confirmation"
+    ]
+  },
+  {
+    icon: "📄",
+    title: "Digital Agreement",
+    description: "Complete all paperwork electronically without hassle",
+    details: [
+      "Review terms and conditions online",
+      "Sign documents digitally from any device",
+      "Store all agreements securely in your account",
+      "Access your documents anytime, anywhere"
+    ]
+  },
+  {
+    icon: "💳",
+    title: "Secure Payment",
+    description: "Make payments confidently through our trusted platform",
+    details: [
+      "Multiple payment options available",
+      "End-to-end encrypted transactions",
+      "Automated receipts and payment history",
+      "Set up recurring payments for convenience"
+    ]
+  },
+  {
+    icon: "🏠",
+    title: "Move In With Ease",
+    description: "Experience a smooth transition to your new accommodation",
+    details: [
+      "Get detailed directions to your property",
+      "Connect with the property manager",
+      "Receive digital access codes if applicable",
+      "Enjoy 24/7 customer support for any issues"
+    ]
+  }
+];
 
 const BookingProcess = () => {
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
@@ -7,7 +78,10 @@ const BookingProcess = () => {
   return (
     <section className="py-16 bg-secondary">
       <div className="max-w-7xl mx-auto px-4">
-        {/* ... existing header code ... */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">How Roomyo Works</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">Our simple process makes finding and booking your perfect accommodation quick and hassle-free.</p>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {bookingSteps.map((step, idx) => (

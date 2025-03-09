@@ -97,7 +97,7 @@ export default function SpaceDetailsPage({
   };
 
   return (
-    <main className="min-h-screen bg-secondary pt-32 pb-16">
+    <main className="min-h-screen bg-secondary pt-12 pb-16">
       <div className="max-w-7xl mx-auto px-4">
         {/* Back Button */}
         <Link 

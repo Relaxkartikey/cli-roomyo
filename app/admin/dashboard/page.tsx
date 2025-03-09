@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, limit } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, limit, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { signOut } from 'firebase/auth';
@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { CATEGORIES, ROOM_TYPES, PRICE_PERIODS, DEFAULT_PRIVILEGES } from '@/app/types/property';
 import Cookies from 'js-cookie';
-import { Plus, MapPin, Building2, Tag, LogOut } from 'lucide-react';
+import { Plus, MapPin, Building2, Tag, LogOut, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 // Add test data constants
@@ -119,6 +119,7 @@ interface DashboardCard {
   icon: React.ReactNode;
   href: string;
   color: string;
+  onClick?: () => void;
 }
 
 interface StatsCard {
@@ -140,7 +141,8 @@ export default function DashboardPage() {
   const [stats, setStats] = useState({
     properties: 0,
     localities: 0,
-    categories: 0
+    categories: 0,
+    blogs: 0
   });
   const [recentProperties, setRecentProperties] = useState<any[]>([]);
   const [recentLocalities, setRecentLocalities] = useState<any[]>([]);
@@ -171,22 +173,115 @@ export default function DashboardPage() {
 
   const fetchProperties = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'properties'));
-      const propertiesList = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Property[];
-      setProperties(propertiesList);
+      const propertiesSnapshot = await getDocs(collection(db, 'properties'));
+      setStats(prev => ({ ...prev, properties: propertiesSnapshot.size }));
+      
+      // Fetch recent items
+      const recentPropertiesQuery = query(
+        collection(db, 'properties'),
+        orderBy('createdAt', 'desc'),
+        limit(5)
+      );
+      
+      const recentPropsSnapshot = await getDocs(recentPropertiesQuery);
+      setRecentProperties(recentPropsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     } catch (error) {
       console.error('Error fetching properties:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
+  const fetchLocalities = async () => {
+    try {
+      const localitiesSnapshot = await getDocs(collection(db, 'localities'));
+      setStats(prev => ({ ...prev, localities: localitiesSnapshot.size }));
+      
+      // Fetch recent items
+      const recentLocalitiesQuery = query(
+        collection(db, 'localities'),
+        orderBy('createdAt', 'desc'),
+        limit(5)
+      );
+      
+      const recentLocsSnapshot = await getDocs(recentLocalitiesQuery);
+      setRecentLocalities(recentLocsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    } catch (error) {
+      console.error('Error fetching localities:', error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const categoriesSnapshot = await getDocs(collection(db, 'categories'));
+      setStats(prev => ({ ...prev, categories: categoriesSnapshot.size }));
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchBlogs = async () => {
+    try {
+      const blogsCollection = collection(db, 'blogs');
+      const querySnapshot = await getDocs(blogsCollection);
+      const blogCount = querySnapshot.size;
+      
+      setStats(prev => ({ ...prev, blogs: blogCount }));
+      
+      if (querySnapshot.docs.length > 0) {
+        const recentBlogs = querySnapshot.docs
+          .map(doc => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              name: data.title,
+              date: data.createdAt,
+              url: `/admin/dashboard/blogs`
+            };
+          })
+          .sort((a, b) => (b.date || 0) - (a.date || 0))
+          .slice(0, 3);
+        
+        setRecentCategories(recentBlogs);
+      }
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+    }
+  };
+
+  // Function to update last activity timestamp
+  const updateActivity = () => {
+    setLastActivity(Date.now());
+    localStorage.setItem('lastActivity', Date.now().toString());
+  };
+
+  // Fetch data when component mounts
   useEffect(() => {
-    fetchProperties();
-  }, []);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        await fetchProperties();
+        await fetchLocalities();
+        await fetchCategories();
+        await fetchBlogs();
+        
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+    
+    const interval = setInterval(() => {
+      const inactiveTime = Date.now() - lastActivity;
+      if (inactiveTime > 30 * 60 * 1000) { // 30 minutes
+        handleLogout();
+      }
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [lastActivity]);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -199,109 +294,6 @@ export default function DashboardPage() {
 
     return () => unsubscribe();
   }, [router]);
-
-  useEffect(() => {
-    const fetchLocalities = async () => {
-      try {
-        const localitiesRef = collection(db, 'localities');
-        const snapshot = await getDocs(localitiesRef);
-        const localitiesList = snapshot.docs.map(doc => ({
-          id: doc.id,
-          name: doc.data().name,
-        }));
-        setLocalities(localitiesList);
-      } catch (error) {
-        console.error('Error fetching localities:', error);
-      }
-    };
-
-    fetchLocalities();
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      // Fetch counts
-      const propertiesSnapshot = await getDocs(collection(db, 'properties'));
-      const localitiesSnapshot = await getDocs(collection(db, 'localities'));
-      const categoriesSnapshot = await getDocs(collection(db, 'categories'));
-
-      setStats({
-        properties: propertiesSnapshot.size,
-        localities: localitiesSnapshot.size,
-        categories: categoriesSnapshot.size
-      });
-
-      // Fetch recent items
-      const recentPropertiesQuery = query(
-        collection(db, 'properties'),
-        orderBy('createdAt', 'desc'),
-        limit(5)
-      );
-      const recentLocalitiesQuery = query(
-        collection(db, 'localities'),
-        orderBy('createdAt', 'desc'),
-        limit(5)
-      );
-      const recentCategoriesQuery = query(
-        collection(db, 'categories'),
-        orderBy('createdAt', 'desc'),
-        limit(5)
-      );
-
-      const [recentPropsSnapshot, recentLocsSnapshot, recentCatsSnapshot] = await Promise.all([
-        getDocs(recentPropertiesQuery),
-        getDocs(recentLocalitiesQuery),
-        getDocs(recentCategoriesQuery)
-      ]);
-
-      setRecentProperties(recentPropsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      setRecentLocalities(recentLocsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      setRecentCategories(recentCatsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-    }
-  };
-
-  // Function to update last activity timestamp
-  const updateActivity = () => {
-    setLastActivity(Date.now());
-    localStorage.setItem('lastActivity', Date.now().toString());
-  };
-
-  // Check for inactivity
-  useEffect(() => {
-    const inactivityTimeout = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
-    
-    // Set up event listeners for user activity
-    const activityEvents = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart'];
-    
-    activityEvents.forEach(event => {
-      window.addEventListener(event, updateActivity);
-    });
-
-    // Check for inactivity every minute
-    const interval = setInterval(() => {
-      const lastActivityTime = parseInt(localStorage.getItem('lastActivity') || Date.now().toString());
-      if (Date.now() - lastActivityTime > inactivityTimeout) {
-        handleLogout();
-      }
-    }, 60000);
-
-    // Initialize last activity
-    updateActivity();
-
-    return () => {
-      // Cleanup
-      activityEvents.forEach(event => {
-        window.removeEventListener(event, updateActivity);
-      });
-      clearInterval(interval);
-    };
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -446,6 +438,12 @@ export default function DashboardPage() {
       color: 'bg-purple-500'
     },
     {
+      title: 'Blogs',
+      icon: <FileText className="w-6 h-6" />,
+      href: '/admin/dashboard/blogs',
+      color: 'bg-orange-500'
+    },
+    {
       title: 'Log Out',
       icon: <LogOut className="w-6 h-6" />,
       href: '#',
@@ -471,6 +469,12 @@ export default function DashboardPage() {
       count: stats.categories,
       icon: <Tag className="w-6 h-6" />,
       color: 'bg-purple-100 text-purple-600'
+    },
+    {
+      title: 'Total Blogs',
+      count: stats.blogs,
+      icon: <FileText className="w-6 h-6" />,
+      color: 'bg-orange-100 text-orange-600'
     }
   ];
 
@@ -480,39 +484,36 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <main className="min-h-screen bg-secondary pt-32 pb-16">
+      <main className="min-h-screen bg-secondary mt-4 pt-16 pb-16">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
           </div>
 
           {/* Navigation Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {navigationCards.map((card, index) => (
-              card.title === 'Log Out' ? (
-                <button
-                  key={index}
-                  onClick={handleLogout}
-                  className={`${card.color} text-white p-6 rounded-xl shadow-lg hover:opacity-90 transition-opacity flex items-center gap-4`}
-                >
-                  {card.icon}
-                  <span className="text-lg font-medium">{card.title}</span>
-                </button>
-              ) : (
-                <Link
-                  key={index}
-                  href={card.href}
-                  className={`${card.color} text-white p-6 rounded-xl shadow-lg hover:opacity-90 transition-opacity flex items-center gap-4`}
-                >
-                  {card.icon}
-                  <span className="text-lg font-medium">{card.title}</span>
-                </Link>
-              )
+            {navigationCards.filter(card => card.title !== 'Log Out').map((card, idx) => (
+              <Link
+                key={idx}
+                href={card.href}
+                onClick={card.onClick}
+                className={`${card.color} text-white p-6 rounded-xl shadow-lg hover:opacity-90 transition-opacity flex items-center gap-4`}
+              >
+                {card.icon}
+                <span className="text-lg font-medium">{card.title}</span>
+              </Link>
             ))}
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             {statsCards.map((card, index) => (
               <div
                 key={index}
@@ -528,7 +529,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Items Tables */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Recent Properties */}
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <div className="p-4 bg-blue-500 text-white">
@@ -544,24 +545,10 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Recent Localities */}
+            {/* Recent Blogs (renamed from Categories) */}
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="p-4 bg-green-500 text-white">
-                <h2 className="text-lg font-semibold">Recent Localities</h2>
-              </div>
-              <div className="p-4">
-                {recentLocalities.map((locality) => (
-                  <div key={locality.id} className="py-2 border-b last:border-0">
-                    <p className="font-medium">{locality.name}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Recent Categories */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="p-4 bg-purple-500 text-white">
-                <h2 className="text-lg font-semibold">Recent Categories</h2>
+              <div className="p-4 bg-orange-500 text-white">
+                <h2 className="text-lg font-semibold">Recent Blogs</h2>
               </div>
               <div className="p-4">
                 {recentCategories.map((category) => (

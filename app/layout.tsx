@@ -86,7 +86,8 @@ export default function RootLayout({
       <body className="min-h-screen bg-white font-body">
         <StyledComponentsRegistry>
           <Navbar />
-          <main>{children}</main>
+          <div className="h-[60px] sm:h-[70px]"></div>
+          <main className="relative">{children}</main>
           <PreFooter />
           <Footer />
         </StyledComponentsRegistry>
