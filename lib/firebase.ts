@@ -1,7 +1,7 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { getAnalytics, isSupported } from 'firebase/analytics';
+import { getAnalytics, isSupported, Analytics } from 'firebase/analytics';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -19,7 +19,8 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 // Initialize Analytics - only in browser environment
-let analytics = null;
+let analytics: Analytics | null = null;
+
 if (typeof window !== 'undefined') {
   // Analytics will only be initialized in the browser, not during SSR
   isSupported().then(supported => {

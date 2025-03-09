@@ -4,7 +4,7 @@ import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase
 import { db } from '@/lib/firebase';
 import Link from 'next/link';
 import { Pencil, Trash2, X } from 'lucide-react';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 interface Category {
   id: string;

@@ -23,7 +23,9 @@ const initialFormData: Property = {
     phone: '',
     email: '',
   },
-  privileges: []
+  privileges: [],
+  status: 'Available',
+  createdAt: Date.now()
 };
 
 export default function AddPropertyPage() {

@@ -306,6 +306,18 @@ export default function DashboardPage() {
     localStorage.setItem('lastActivity', Date.now().toString());
   };
 
+  // Handle user logout
+  const handleLogout = useCallback(async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem('lastActivity');
+      Cookies.remove('auth-token');
+      router.push('/admin/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  }, [router]);
+
   // Check for inactivity
   useEffect(() => {
     const inactivityTimeout = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
@@ -319,8 +331,8 @@ export default function DashboardPage() {
 
     // Check for inactivity every minute
     const interval = setInterval(() => {
-      const lastActivityTime = parseInt(localStorage.getItem('lastActivity') || Date.now().toString());
-      if (Date.now() - lastActivityTime > inactivityTimeout) {
+      const inactiveTime = Date.now() - lastActivity;
+      if (inactiveTime > 30 * 60 * 1000) { // 30 minutes
         handleLogout();
       }
     }, 60000);
@@ -335,18 +347,7 @@ export default function DashboardPage() {
       });
       clearInterval(interval);
     };
-  }, []);
-
-  const handleLogout = useCallback(async () => {
-    try {
-      await signOut(auth);
-      localStorage.removeItem('lastActivity');
-      Cookies.remove('auth-token');
-      router.push('/admin/login');
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  }, [router]);
+  }, [lastActivity, handleLogout]);
 
   const handleSort = useCallback((properties: any[]) => {
     if (sortBy === 'price-low-high') {

@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/lib/firebase';
-import { getAuth } from 'firebase/auth';
-import { google } from 'googleapis';
+import { google, Auth } from 'googleapis';
 import { headers } from 'next/headers';
 import * as path from 'path';
-import * as admin from 'firebase-admin';
+import { adminAuth } from '@/lib/firebase-admin';
 
 const analytics = google.analytics('v3');
 
@@ -16,90 +14,62 @@ const VIEW_ID = process.env.GOOGLE_ANALYTICS_VIEW_ID;
 const IS_DEV = process.env.NODE_ENV === 'development';
 
 export async function GET() {
+  // In development, always return mock data
+  if (IS_DEV) {
+    return NextResponse.json({ 
+      pageViews: 12500,
+      uniqueVisitors: 4800,
+      averageSessionDuration: '2m 45s',
+      bounceRate: '35.8%',
+      topPages: [
+        { path: '/', views: 5200 },
+        { path: '/properties', views: 3100 },
+        { path: '/contact', views: 1800 },
+        { path: '/about', views: 1200 },
+        { path: '/blogs', views: 1100 }
+      ],
+      userEngagement: {
+        daily: 850,
+        weekly: 4200,
+        monthly: 15600
+      },
+      deviceBreakdown: {
+        desktop: 45,
+        mobile: 48,
+        tablet: 7
+      },
+      geographicData: [
+        { country: 'India', users: 3500 },
+        { country: 'United States', users: 800 },
+        { country: 'United Kingdom', users: 300 },
+        { country: 'Canada', users: 200 }
+      ]
+    });
+  }
+
   try {
     // Authentication check
     const headersList = headers();
     const authHeader = headersList.get('authorization');
 
-    // Special handling for development mode
-    if (IS_DEV) {
-      console.log('Running in development mode, bypassing strict auth checks');
-      
-      // Provide a helpful message if no auth header is provided in dev mode
-      if (!authHeader) {
-        console.warn('No authorization header in development mode');
-        // Return mock data in development if no auth header
-        return NextResponse.json({ 
-          pageViews: 12500,
-          uniqueVisitors: 4800,
-          averageSessionDuration: '2m 45s',
-          bounceRate: '35.8%',
-          topPages: [
-            { path: '/', views: 5200 },
-            { path: '/properties', views: 3100 },
-            { path: '/contact', views: 1800 },
-            { path: '/about', views: 1200 },
-            { path: '/blogs', views: 1100 }
-          ],
-          userEngagement: {
-            daily: 850,
-            weekly: 4200,
-            monthly: 15600
-          },
-          deviceBreakdown: {
-            desktop: 45,
-            mobile: 48,
-            tablet: 7
-          },
-          geographicData: [
-            { country: 'India', users: 3500 },
-            { country: 'United States', users: 800 },
-            { country: 'United Kingdom', users: 300 },
-            { country: 'Canada', users: 200 }
-          ]
-        });
-      }
-    } else {
-      // In production, require auth header
-      if (!authHeader) {
-        return NextResponse.json({ 
-          error: 'Authentication required', 
-          details: 'No authorization header provided',
-          code: 'AUTH_HEADER_MISSING'
-        }, { status: 401 });
-      }
+    if (!authHeader) {
+      return NextResponse.json({ 
+        error: 'Authentication required', 
+        details: 'No authorization header provided',
+        code: 'AUTH_HEADER_MISSING'
+      }, { status: 401 });
     }
 
-    // Verify Firebase ID token with proper error handling
-    try {
-      if (authHeader) {
-        const idToken = authHeader.split('Bearer ')[1];
-        
-        // In development, we'll be more lenient with token verification
-        if (!IS_DEV) {
-          const decodedToken = await auth.verifyIdToken(idToken);
-          if (!decodedToken.admin) {
-            return NextResponse.json({ 
-              error: 'Access denied', 
-              details: 'Admin privileges required to view analytics',
-              code: 'ADMIN_REQUIRED'
-            }, { status: 403 });
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error verifying token:', error);
-      
-      // In development, we'll continue even if token verification fails
-      if (!IS_DEV) {
-        return NextResponse.json({ 
-          error: 'Authentication failed', 
-          details: error instanceof Error ? error.message : 'Invalid or expired token',
-          code: 'TOKEN_INVALID'
-        }, { status: 401 });
-      } else {
-        console.warn('Token verification failed in development mode, continuing anyway');
-      }
+    // Verify Firebase ID token
+    const idToken = authHeader.split('Bearer ')[1];
+    const decodedToken = await adminAuth.verifyIdToken(idToken);
+    
+    if (!decodedToken.admin) {
+      return NextResponse.json({ 
+        error: 'Access denied', 
+        details: 'Admin privileges required to view analytics',
+        code: 'ADMIN_REQUIRED'
+      }, { status: 403 });
     }
 
     // Set up Google Analytics authentication
@@ -112,8 +82,8 @@ export async function GET() {
         scopes: SCOPES,
       });
 
-      const client = await authClient.getClient();
-      google.options({ auth: client });
+      const client = await authClient.getClient() as Auth.OAuth2Client;
+      analytics.context._options = { auth: client };
 
       // Get date ranges
       const now = new Date();
@@ -160,7 +130,12 @@ export async function GET() {
       });
 
       // Process the results
-      const metrics = visitsResult.data.totals?.[0].values || [];
+      const metrics = visitsResult.data.rows?.[0] || [];
+      const pageViews = parseInt(metrics[0] || '0');
+      const uniqueVisitors = parseInt(metrics[1] || '0');
+      const avgSessionDuration = parseFloat(metrics[2] || '0');
+      const bounceRate = parseFloat(metrics[3] || '0');
+
       const topPages = topPagesResult.data.rows?.map(row => ({
         path: row[0],
         views: parseInt(row[1])
@@ -177,15 +152,15 @@ export async function GET() {
       })) || [];
 
       // Calculate user engagement
-      const dailyUsers = parseInt(metrics[1] || '0') / 30; // Average daily users
+      const dailyUsers = uniqueVisitors / 30; // Average daily users
       const weeklyUsers = dailyUsers * 7;
-      const monthlyUsers = parseInt(metrics[1] || '0');
+      const monthlyUsers = uniqueVisitors;
 
       const analyticsData = {
-        pageViews: parseInt(metrics[0] || '0'),
-        uniqueVisitors: parseInt(metrics[1] || '0'),
-        averageSessionDuration: formatDuration(parseFloat(metrics[2] || '0')),
-        bounceRate: `${parseFloat(metrics[3] || '0').toFixed(1)}%`,
+        pageViews,
+        uniqueVisitors,
+        averageSessionDuration: formatDuration(avgSessionDuration),
+        bounceRate: `${bounceRate.toFixed(1)}%`,
         topPages,
         userEngagement: {
           daily: Math.round(dailyUsers),

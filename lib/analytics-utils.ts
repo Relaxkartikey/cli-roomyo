@@ -1,6 +1,5 @@
-import { analytics } from './firebase';
-import { logEvent, getAnalytics } from 'firebase/analytics';
-import { app } from './firebase';
+import { analytics, app } from './firebase';
+import { logEvent, getAnalytics, Analytics } from 'firebase/analytics';
 import { 
   getAuth, 
   connectAuthEmulator 
@@ -33,12 +32,9 @@ export interface AnalyticsData {
 
 // Function to track admin analytics page view
 export const trackAdminAnalyticsView = () => {
-  if (!analytics) return;
-  
-  logEvent(analytics, 'admin_analytics_view', {
-    timestamp: new Date().toISOString(),
-    admin_section: 'analytics'
-  });
+  if (analytics) {
+    logEvent(analytics, 'admin_analytics_view');
+  }
 };
 
 // Function to get analytics data from Firebase

@@ -4,7 +4,7 @@ import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase
 import { db } from '@/lib/firebase';
 import { Plus, Pencil, Trash2, X, Check } from 'lucide-react';
 import Link from 'next/link';
-import { ProtectedRoute } from '@/components/ProtectedRoute';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 interface Locality {
   id: string;

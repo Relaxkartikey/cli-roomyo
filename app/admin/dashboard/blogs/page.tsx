@@ -257,6 +257,18 @@ export default function BlogsDashboard() {
     setLastActivity(Date.now());
   };
 
+  // Handle user logout
+  const handleLogout = useCallback(async () => {
+    try {
+      await auth.signOut();
+      Cookies.remove('user');
+      router.push('/admin');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast.error('Failed to sign out');
+    }
+  }, [router]);
+
   // Check for inactivity and logout if necessary
   useEffect(() => {
     const interval = setInterval(() => {
@@ -267,7 +279,7 @@ export default function BlogsDashboard() {
     }, 60000);
 
     return () => clearInterval(interval);
-  }, [lastActivity]);
+  }, [lastActivity, handleLogout]);
 
   // Add event listeners for activity tracking only on client side
   useEffect(() => {
@@ -399,18 +411,6 @@ export default function BlogsDashboard() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Handle user logout
-  const handleLogout = useCallback(async () => {
-    try {
-      await auth.signOut();
-      Cookies.remove('user');
-      router.push('/admin');
-    } catch (error) {
-      console.error('Error signing out:', error);
-      toast.error('Failed to sign out');
-    }
-  }, [router]);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
@@ -506,13 +506,13 @@ export default function BlogsDashboard() {
   const handleAutofill = () => {
     try {
       // First set all simple fields
-      const simpleFields = {
+      const simpleFields: Partial<Blog> = {
         title: 'Top 10 PG Accommodations in Bangalore for Students',
         featuredImage: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af',
         excerpt: 'Discover the top 10 PG accommodations in Bangalore that offer the perfect balance of comfort, convenience, and affordability for students.',
         tags: ['Accommodation', 'Bangalore', 'Students', 'Budget Living', 'PG'],
         readTime: '6 min read',
-        status: 'Draft',
+        status: 'Draft' as const,
         createdAt: Date.now(),
         slug: 'top-10-pg-accommodations-bangalore-students-' + Date.now().toString().slice(-6)
       };

@@ -171,6 +171,24 @@ export default function DashboardPage() {
   const [newAmenity, setNewAmenity] = useState('');
   const [newPrivilege, setNewPrivilege] = useState({ title: '', description: '', icon: 'star' });
 
+  // Function to update last activity timestamp
+  const updateActivity = () => {
+    setLastActivity(Date.now());
+    localStorage.setItem('lastActivity', Date.now().toString());
+  };
+
+  // Handle user logout
+  const handleLogout = useCallback(async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem('lastActivity');
+      Cookies.remove('auth-token');
+      router.push('/admin/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  }, [router]);
+
   const fetchProperties = async () => {
     try {
       const propertiesSnapshot = await getDocs(collection(db, 'properties'));
@@ -247,12 +265,6 @@ export default function DashboardPage() {
     }
   };
 
-  // Function to update last activity timestamp
-  const updateActivity = () => {
-    setLastActivity(Date.now());
-    localStorage.setItem('lastActivity', Date.now().toString());
-  };
-
   // Fetch data when component mounts
   useEffect(() => {
     const fetchData = async () => {
@@ -281,18 +293,7 @@ export default function DashboardPage() {
     }, 60000);
 
     return () => clearInterval(interval);
-  }, [lastActivity]);
-
-  const handleLogout = useCallback(async () => {
-    try {
-      await signOut(auth);
-      localStorage.removeItem('lastActivity');
-      Cookies.remove('auth-token');
-      router.push('/admin/login');
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  }, [router]);
+  }, [lastActivity, handleLogout]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
