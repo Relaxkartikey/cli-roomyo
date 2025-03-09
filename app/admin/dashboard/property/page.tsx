@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, limit } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { signOut } from 'firebase/auth';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { CATEGORIES, ROOM_TYPES, PRICE_PERIODS, DEFAULT_PRIVILEGES } from '@/app/types/property';
@@ -337,31 +337,44 @@ export default function DashboardPage() {
     };
   }, []);
 
-  // Update handleSort function
-  const handleSort = (type: string) => {
-    setSortBy(type);
-    let sorted = [...properties];
-
-    switch (type) {
-      case 'recent':
-        sorted.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-        break;
-      case 'oldest':
-        sorted.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-        break;
-      default:
-        if (type.startsWith('locality-')) {
-          const localityName = type.replace('locality-', '');
-          sorted = properties.filter(p => p.location === localityName);
-        } else if (type.startsWith('category-')) {
-          const categoryName = type.replace('category-', '');
-          sorted = properties.filter(p => p.category === categoryName);
-        }
-        break;
+  const handleLogout = useCallback(async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem('lastActivity');
+      Cookies.remove('auth-token');
+      router.push('/admin/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
     }
+  }, [router]);
 
+  const handleSort = useCallback((properties: any[]) => {
+    if (sortBy === 'price-low-high') {
+      return [...properties].sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'price-high-low') {
+      return [...properties].sort((a, b) => b.price - a.price);
+    } else if (sortBy === 'newest') {
+      return [...properties].sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds);
+    } else if (sortBy === 'oldest') {
+      return [...properties].sort((a, b) => a.createdAt?.seconds - b.createdAt?.seconds);
+    }
+    return properties;
+  }, [sortBy]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        handleLogout();
+      }
+    });
+
+    return () => unsubscribe();
+  }, [handleLogout]);
+
+  useEffect(() => {
+    const sorted = handleSort(properties);
     setSortedProperties(sorted);
-  };
+  }, [properties, handleSort]);
 
   // Update handleSubmit to include status and createdAt
   const handleSubmit = async (e: React.FormEvent) => {
@@ -427,17 +440,6 @@ export default function DashboardPage() {
     setEditingProperty(property);
     setFormData(property);
     setIsAddingProperty(true);
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      localStorage.removeItem('lastActivity');
-      Cookies.remove('auth-token');
-      router.push('/admin/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
   };
 
   const formatPrice = (value: string) => {
@@ -543,11 +545,6 @@ export default function DashboardPage() {
       color: 'bg-purple-100 text-purple-600'
     }
   ];
-
-  // Update useEffect to set sorted properties when properties change
-  useEffect(() => {
-    handleSort(sortBy);
-  }, [properties]);
 
   // Add bulk actions handler
   const handleBulkAction = async (action: 'delete' | 'available' | 'sold' | 'archived') => {
@@ -1067,7 +1064,7 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-end space-x-4">
                   <select
                     value={sortBy}
-                    onChange={(e) => handleSort(e.target.value)}
+                    onChange={(e) => setSortBy(e.target.value)}
                     className="rounded-lg border border-gray-300 px-3 py-2 text-sm min-w-[200px]"
                   >
                     <option value="recent">Most Recent</option>

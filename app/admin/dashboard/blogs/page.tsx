@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy, serverTimestamp } from 'firebase/firestore';
@@ -15,20 +15,13 @@ import Image from 'next/image';
 import BlogEditor from '@/app/components/BlogEditor';
 import Loader from '@/components/Loader';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import 'easymde/dist/easymde.min.css';
 
 // Dynamically import SimpleMDE with SSR disabled
 const SimpleMDE = dynamic(
   () => import('react-simplemde-editor'),
   { ssr: false }
 );
-
-// Import the CSS only on the client side
-const SimpleMDEStyles = () => {
-  useEffect(() => {
-    import('easymde/dist/easymde.min.css');
-  }, []);
-  return null;
-};
 
 // Define the Blog interface
 interface Blog {
@@ -407,7 +400,7 @@ export default function BlogsDashboard() {
   };
 
   // Handle user logout
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       await auth.signOut();
       Cookies.remove('user');
@@ -416,7 +409,17 @@ export default function BlogsDashboard() {
       console.error('Error signing out:', error);
       toast.error('Failed to sign out');
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        handleLogout();
+      }
+    });
+
+    return () => unsubscribe();
+  }, [handleLogout]);
 
   // Handle adding a new tag
   const handleAddTag = () => {

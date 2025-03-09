@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, limit, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { signOut } from 'firebase/auth';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { CATEGORIES, ROOM_TYPES, PRICE_PERIODS, DEFAULT_PRIVILEGES } from '@/app/types/property';
@@ -283,17 +283,26 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, [lastActivity]);
 
+  const handleLogout = useCallback(async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem('lastActivity');
+      Cookies.remove('auth-token');
+      router.push('/admin/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  }, [router]);
+
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUserId(user.uid);
-      } else {
-        router.push('/admin/login');
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        handleLogout();
       }
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, [handleLogout]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -355,17 +364,6 @@ export default function DashboardPage() {
     setEditingProperty(property);
     setFormData(property);
     setIsAddingProperty(true);
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      localStorage.removeItem('lastActivity');
-      Cookies.remove('auth-token');
-      router.push('/admin/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
   };
 
   const formatPrice = (value: string) => {
