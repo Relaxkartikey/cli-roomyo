@@ -23,15 +23,15 @@ const HeroSection = () => {
         const querySnapshot = await getDocs(propertiesRef);
         
         // Get unique locations from properties
-        const uniqueLocations = new Set<string>();
+        const uniqueLocalities = new Set<string>();
         querySnapshot.forEach((doc) => {
           const property = doc.data();
           if (property.location) {
-            uniqueLocations.add(property.location);
+            uniqueLocalities.add(property.location);
           }
         });
         
-        const locationsList = Array.from(uniqueLocations);
+        const locationsList = Array.from(uniqueLocalities);
         setLocations(locationsList);
         
         // Get recent 4 locations
@@ -62,58 +62,56 @@ const HeroSection = () => {
   return (
     <section
       id="home"
-      className="relative w-full min-h-[calc(100vh-80px)] bg-secondary flex items-center pt-20 pb-12"
+      className="relative w-full min-h-[calc(75vh-80px)] pt-[80px] pb-4 sm:pt-[90px] flex flex-col justify-center overflow-hidden bg-secondary"
     >
-      <div className="relative w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+      <div className="relative w-full max-w-[1800px] mx-auto px-3 sm:px-4 lg:px-6 flex-1 flex items-center py-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-8 items-center w-full">
           {/* Text Content */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-left order-2 lg:order-1"
+            className="text-left order-2 lg:order-1 flex flex-col max-w-md lg:max-w-xl"
           >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mb-4 text-sm md:text-base font-medium text-primary"
+              className="mb-2 sm:mb-2 text-sm md:text-sm font-medium text-primary"
             >
               Find Your Perfect Space
             </motion.div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-heading text-foreground mb-6 tracking-tight leading-[1.1]">
-              Your Perfect
-              <br />
-              Rental Is Just
-              <br />
-              A Click Away
+            <h1 className="text-3xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-foreground mb-2 sm:mb-3 tracking-tight leading-[1.1]">
+              <span className="block">Your Perfect</span>
+              <span className="block">Rental Is Just</span>
+              <span className="block">A Click Away</span>
             </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-              className="max-w-xl text-base sm:text-lg md:text-xl text-muted-foreground mb-8"
-          >
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="max-w-lg text-sm sm:text-sm md:text-base text-muted-foreground mb-3 sm:mb-4"
+            >
               Discover the perfect property or PG accommodation across all Jaipur cities. 
-              Easy booking, trusted dealers, and hassle-free experience.
-          </motion.p>
+              <span className="hidden sm:inline"> Easy booking, trusted dealers, and hassle-free experience.</span>
+            </motion.p>
 
             {/* Search Bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-              className="relative max-w-2xl mb-8"
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="relative max-w-md mb-3 sm:mb-4"
             >
-              <div className="flex items-center gap-2 p-2 bg-white rounded-lg shadow-lg">
-                <div className="flex-1 flex items-center gap-2 px-4 py-2">
-                  <MapPin className="w-5 h-5 text-primary" />
+              <div className="flex items-center gap-2 sm:gap-2 p-2 bg-white rounded-lg shadow-md">
+                <div className="flex-1 flex items-center gap-2 px-2 py-1.5">
+                  <MapPin className="w-4 h-4 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
                   <select
                     value={selectedLocation}
                     onChange={(e) => setSelectedLocation(e.target.value)}
-                    className="w-full bg-transparent border-none focus:outline-none text-foreground appearance-none cursor-pointer"
+                    className="w-full bg-transparent border-none focus:outline-none text-foreground appearance-none cursor-pointer text-sm sm:text-sm"
                   >
                     <option value="">Select a location</option>
                     {locations.map((location) => (
@@ -125,9 +123,9 @@ const HeroSection = () => {
                 </div>
                 <button 
                   onClick={handleSearch}
-                  className="bg-accent hover:bg-accent-dark text-white px-6 py-3 rounded-md transition-colors duration-300 flex items-center gap-2"
+                  className="bg-accent hover:bg-accent-dark text-white px-3 sm:px-4 py-2 sm:py-2 rounded-md transition-colors duration-300 flex items-center gap-1 text-sm sm:text-sm whitespace-nowrap"
                 >
-                  <Search className="w-5 h-5" />
+                  <Search className="w-4 h-4 sm:w-4 sm:h-4" />
                   <span>Search</span>
                 </button>
               </div>
@@ -138,20 +136,28 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="flex flex-wrap gap-2 mb-8"
+              className="flex flex-wrap gap-2 sm:gap-1.5 mb-3 sm:mb-4"
             >
-              {recentLocations.map((city) => (
+              {recentLocations.slice(0, 3).map((city) => (
                 <button
                   key={city}
                   onClick={() => {
                     setSelectedLocation(city);
                     handleSearch();
                   }}
-                  className="px-4 py-2 bg-white rounded-full text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm"
+                  className="px-3 sm:px-3 py-1.5 sm:py-1.5 bg-white rounded-full text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors duration-300 shadow-sm"
                 >
                   {city}
                 </button>
               ))}
+              {recentLocations.length > 3 && (
+                <button
+                  onClick={() => {}}
+                  className="px-3 sm:px-3 py-1.5 sm:py-1.5 bg-white rounded-full text-sm font-medium text-gray-500 hover:bg-gray-100 transition-colors duration-300 shadow-sm hidden sm:inline-block"
+                >
+                  +{recentLocations.length - 3} more
+                </button>
+              )}
             </motion.div>
 
             {/* Stats */}
@@ -159,87 +165,91 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="mt-12 grid grid-cols-3 gap-4 max-w-md"
+              className="mt-auto sm:mt-3 grid grid-cols-3 gap-2 sm:gap-2 max-w-xs"
             >
               <div>
-                <div className="text-2xl md:text-3xl font-bold text-primary">7+</div>
-                <div className="text-sm text-muted-foreground">Major Cities</div>
+                <div className="text-lg sm:text-lg md:text-xl lg:text-2xl font-bold text-primary">7+</div>
+                <div className="text-xs sm:text-xs text-muted-foreground">Major Cities</div>
               </div>
               <div>
-                <div className="text-2xl md:text-3xl font-bold text-primary">1000+</div>
-                <div className="text-sm text-muted-foreground">Properties</div>
+                <div className="text-lg sm:text-lg md:text-xl lg:text-2xl font-bold text-primary">1000+</div>
+                <div className="text-xs sm:text-xs text-muted-foreground">Properties</div>
               </div>
               <div>
-                <div className="text-2xl md:text-3xl font-bold text-primary">24/7</div>
-                <div className="text-sm text-muted-foreground">Support</div>
+                <div className="text-lg sm:text-lg md:text-xl lg:text-2xl font-bold text-primary">24/7</div>
+                <div className="text-xs sm:text-xs text-muted-foreground">Support</div>
               </div>
             </motion.div>
           </motion.div>
 
-          {/* Image Grid */}
+          {/* Image Grid - Hidden on mobile */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
-            className="relative order-1 lg:order-2"
+            className="relative order-1 lg:order-2 hidden md:block"
           >
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-4">
-                <div className="relative h-[200px] md:h-[300px] rounded-2xl overflow-hidden">
+            <div className="grid grid-cols-2 gap-2 max-w-md mx-auto lg:max-w-none">
+              <div className="space-y-2">
+                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
                   <Image
                     src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&auto=format&fit=crop&q=60"
                     alt="Modern Apartment"
                     fill
-                    className="object-cover hover:scale-110 transition-transform duration-500"
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    className="object-cover hover:scale-105 transition-transform duration-500"
                   />
                 </div>
-                <div className="relative h-[150px] md:h-[200px] rounded-2xl overflow-hidden">
+                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
                   <Image
                     src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=60"
                     alt="Luxury Home"
                     fill
-                    className="object-cover hover:scale-110 transition-transform duration-500"
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    className="object-cover hover:scale-105 transition-transform duration-500"
                   />
                 </div>
               </div>
-              <div className="space-y-4 pt-8">
-                <div className="relative h-[150px] md:h-[200px] rounded-2xl overflow-hidden">
+              <div className="space-y-2 pt-3">
+                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
                   <Image
                     src="https://images.unsplash.com/photo-1515263487990-61b07816b324?w=800&auto=format&fit=crop&q=60"
                     alt="Modern Kitchen"
                     fill
-                    className="object-cover hover:scale-110 transition-transform duration-500"
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    className="object-cover hover:scale-105 transition-transform duration-500"
                   />
                 </div>
-                <div className="relative h-[200px] md:h-[300px] rounded-2xl overflow-hidden">
+                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
                   <Image
                     src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&auto=format&fit=crop&q=60"
                     alt="Cozy Bedroom"
                     fill
-                    className="object-cover hover:scale-110 transition-transform duration-500"
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    className="object-cover hover:scale-105 transition-transform duration-500"
                   />
                 </div>
               </div>
             </div>
             
-            {/* Floating Elements */}
+            {/* Floating Elements - Only visible on tablet and above */}
             <motion.div
               animate={{
-                y: [0, -10, 0],
+                y: [0, -8, 0],
               }}
               transition={{
                 duration: 2,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute top-1/4 right-[10%] bg-white p-3 rounded-full shadow-lg hidden md:block"
+              className="absolute top-1/4 right-[10%] bg-white p-1.5 rounded-full shadow-md hidden sm:block"
             >
-              <Building2 className="w-6 h-6 text-primary" />
+              <Building2 className="w-4 h-4 text-primary" />
             </motion.div>
             
             <motion.div
               animate={{
-                y: [0, 10, 0],
+                y: [0, 8, 0],
               }}
               transition={{
                 duration: 2,
@@ -247,9 +257,9 @@ const HeroSection = () => {
                 ease: "easeInOut",
                 delay: 0.5,
               }}
-              className="absolute bottom-1/4 left-[10%] bg-white p-3 rounded-full shadow-lg hidden md:block"
+              className="absolute bottom-1/4 left-[10%] bg-white p-1.5 rounded-full shadow-md hidden sm:block"
             >
-              <Home className="w-6 h-6 text-accent" />
+              <Home className="w-4 h-4 text-accent" />
             </motion.div>
           </motion.div>
         </div>
@@ -259,3 +269,5 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+
+

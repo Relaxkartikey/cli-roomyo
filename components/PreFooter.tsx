@@ -32,106 +32,62 @@ const PreFooter = () => {
             </div>
           </div>
 
-          {/* Column 2: Rent Categories */}
+          {/* Column 2: pages (moved from Column 3) */}
           <div>
             <h3 className="text-lg font-semibold mb-6 text-gray-900 relative inline-block after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-8 after:bg-primary">
-              Rent
+              Pages
             </h3>
-            <div className="grid grid-cols-1 gap-4">
-              <div>
-                <h4 className="font-medium mb-2">By Location</h4>
-                <ul className="space-y-2">
-                  <li>
-                    <Link href="/mumbai" className="text-muted-foreground hover:text-primary transition-colors">
-                      Mumbai
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/delhi" className="text-muted-foreground hover:text-primary transition-colors">
-                      Delhi
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/bangalore" className="text-muted-foreground hover:text-primary transition-colors">
-                      Bangalore
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-medium mb-2">By Budget</h4>
-                <ul className="space-y-2">
-                  <li>
-                    <Link href="/budget/under-10000" className="text-muted-foreground hover:text-primary transition-colors">
-                      Under ₹10,000
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/budget/10000-20000" className="text-muted-foreground hover:text-primary transition-colors">
-                      ₹10,000 - ₹20,000
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/budget/above-20000" className="text-muted-foreground hover:text-primary transition-colors">
-                      Above ₹20,000
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/privileges" className="text-muted-foreground hover:text-primary transition-colors">
+                  Privileges
+                </Link>
+              </li>
+              <li>
+                <Link href="/Blogs" className="text-muted-foreground hover:text-primary transition-colors">
+                  Blogs
+                </Link>
+              </li>
+              <li>
+                <Link href="/spaces" className="text-muted-foreground hover:text-primary transition-colors">
+                  Browse Spaces
+                </Link>
+              </li>
+              <li>
+                <Link href="/About" className="text-muted-foreground hover:text-primary transition-colors">
+                  About Us
+                </Link>
+              </li>
+            </ul>
           </div>
 
-          {/* Column 3: Services and Company */}
+          {/* Column 3: Company (moved Company out) */}
           <div>
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-6 text-gray-900 relative inline-block after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-8 after:bg-primary">
-                Services
-              </h3>
-              <ul className="space-y-2">
-                <li>
-                  <Link href="/properties" className="text-muted-foreground hover:text-primary transition-colors">
-                    Properties
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/pg" className="text-muted-foreground hover:text-primary transition-colors">
-                    Paying Guests
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/services" className="text-muted-foreground hover:text-primary transition-colors">
-                    Other Services
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-6 text-gray-900 relative inline-block after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-8 after:bg-primary">
-                Company
-              </h3>
-              <ul className="space-y-2">
-                <li>
-                  <Link href="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/developer" className="text-muted-foreground hover:text-primary transition-colors">
-                    Developer
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/sitemap" className="text-muted-foreground hover:text-primary transition-colors">
-                    Sitemap
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/report" className="text-muted-foreground hover:text-primary transition-colors">
-                    Report
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            <h3 className="text-lg font-semibold mb-6 text-gray-900 relative inline-block after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-8 after:bg-primary">
+              Website
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/Privacy-Policy" className="text-muted-foreground hover:text-primary transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms-conditions" className="text-muted-foreground hover:text-primary transition-colors">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="https://kartikey.tech" className="text-muted-foreground hover:text-primary transition-colors">
+                  Developer
+                </Link>
+              </li>
+              <li>
+                <Link href="/report" className="text-muted-foreground hover:text-primary transition-colors">
+                  Report
+                </Link>
+              </li>
+            </ul>
           </div>
 
           {/* Column 4: Connect with Us */}
