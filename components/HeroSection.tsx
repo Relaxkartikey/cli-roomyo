@@ -17,9 +17,21 @@ const HeroSection = () => {
   const [recentLocations, setRecentLocations] = useState<string[]>([]);
 
   const stats = [
-    { number: '80+', label: 'Premium PGs' },
-    { number: '500+', label: 'Happy Residents' },
-    { number: '18+', label: 'Locations' },
+    { 
+      number: '50+', 
+      label: 'Properties',
+      description: 'Premium Spaces'
+    },
+    { 
+      number: '1000+', 
+      label: 'Residents',
+      description: 'Happy Members'
+    },
+    { 
+      number: '12+', 
+      label: 'Areas',
+      description: 'Prime Locations'
+    },
   ];
 
   useEffect(() => {
@@ -169,9 +181,13 @@ const HeroSection = () => {
                 className="mt-auto sm:mt-4 grid grid-cols-3 gap-4 sm:gap-6 max-w-lg"
               >
                 {stats.map((stat, index) => (
-                  <div key={index} className="flex flex-col items-center">
-                    <p className="text-primary font-bold text-base sm:text-lg">{stat.number}</p>
-                    <p className="text-gray-500 text-sm sm:text-base">{stat.label}</p>
+                  <div 
+                    key={index} 
+                    className="flex flex-col items-center text-center p-2 sm:p-3 rounded-lg hover:bg-white/50 transition-colors duration-300"
+                  >
+                    <p className="text-primary font-bold text-xl sm:text-2xl lg:text-3xl mb-0.5">{stat.number}</p>
+                    <p className="text-gray-900 font-medium text-xs sm:text-sm">{stat.label}</p>
+                    <p className="text-gray-500 text-xs sm:text-xs hidden sm:block">{stat.description}</p>
                   </div>
                 ))}
               </motion.div>

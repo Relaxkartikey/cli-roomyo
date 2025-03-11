@@ -10,6 +10,8 @@ import { CATEGORIES, ROOM_TYPES, PRICE_PERIODS, DEFAULT_PRIVILEGES } from '@/app
 import Cookies from 'js-cookie';
 import { Plus, MapPin, Building2, Tag, LogOut, FileText } from 'lucide-react';
 import Link from 'next/link';
+import Loader from '@/components/Loader';
+import { format } from 'date-fns';
 
 // Add test data constants
 const TEST_DATA = {
@@ -128,6 +130,16 @@ interface StatsCard {
   icon: React.ReactNode;
   color: string;
 }
+
+// Add a helper function for safe date formatting
+const formatDate = (timestamp: number | undefined) => {
+  if (!timestamp || isNaN(timestamp)) return 'N/A';
+  try {
+    return format(timestamp, 'MMM d, yyyy');
+  } catch (error) {
+    return 'Invalid Date';
+  }
+};
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -478,83 +490,149 @@ export default function DashboardPage() {
   ];
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (
     <ProtectedRoute>
-      <main className="min-h-screen bg-secondary pb-16">
-        <div className="max-w-7xl mx-auto px-4 p-6">
+      <main className="min-h-screen bg-gray-50/50">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* Header */}
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
+            <h1 className="text-2xl font-medium text-gray-900">Dashboard</h1>
             <button
               onClick={handleLogout}
-              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center gap-2"
+              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <LogOut className="w-4 h-4" />
               Logout
             </button>
           </div>
 
-          {/* Navigation Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Quick Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {navigationCards.filter(card => card.title !== 'Log Out').map((card, idx) => (
               <Link
                 key={idx}
                 href={card.href}
-                onClick={card.onClick}
-                className={`${card.color} text-white p-6 rounded-xl shadow-lg hover:opacity-90 transition-opacity flex items-center gap-4`}
+                className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow transition-all"
               >
-                {card.icon}
-                <span className="text-lg font-medium">{card.title}</span>
+                <div className={`p-2 rounded-lg ${
+                  card.title === 'Property' ? 'bg-blue-50 text-blue-600' :
+                  card.title === 'Locality' ? 'bg-green-50 text-green-600' :
+                  card.title === 'Category' ? 'bg-purple-50 text-purple-600' :
+                  'bg-orange-50 text-orange-600'
+                }`}>
+                  {card.icon}
+                </div>
+                <span className="font-medium text-gray-900">{card.title}</span>
               </Link>
             ))}
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          {/* Stats Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
             {statsCards.map((card, index) => (
               <div
                 key={index}
-                className={`${card.color} p-6 rounded-xl shadow-lg flex items-center justify-between`}
+                className="bg-white p-6 rounded-lg border border-gray-100 shadow-sm"
               >
-                <div>
-                  <h3 className="text-lg font-medium">{card.title}</h3>
-                  <p className="text-2xl font-semibold mt-2">{card.count}</p>
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 rounded-xl ${card.color}`}>
+                    {card.icon}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">{card.title}</p>
+                    <p className="text-2xl font-semibold text-gray-900 mt-1">{card.count}</p>
+                  </div>
                 </div>
-                {card.icon}
               </div>
             ))}
           </div>
 
-          {/* Recent Items Tables */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Recent Items Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Recent Properties */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="p-4 bg-blue-500 text-white">
-                <h2 className="text-lg font-semibold">Recent Properties</h2>
+            <div className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-gray-100">
+                <h2 className="text-lg font-medium text-gray-900">Recent Properties</h2>
               </div>
-              <div className="p-4">
-                {recentProperties.map((property) => (
-                  <div key={property.id} className="py-2 border-b last:border-0">
-                    <p className="font-medium">{property.name}</p>
-                    <p className="text-sm text-gray-500">{property.location}</p>
+              <div className="divide-y divide-gray-100">
+                {recentProperties.slice(0, 5).map((property: any) => (
+                  <div key={property.id} className="p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-start gap-4">
+                      {property.images?.[0] && (
+                        <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                          <Image
+                            src={property.images[0]}
+                            alt={property.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">{property.name}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <MapPin className="w-4 h-4 text-gray-400" />
+                          <p className="text-sm text-gray-500">{property.location}</p>
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-sm font-medium text-primary">
+                            {property.prices?.[0]?.price}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {property.prices?.[0]?.type}
+                          </span>
+                        </div>
+                      </div>
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        property.status === 'Available' ? 'bg-green-50 text-green-700' :
+                        property.status === 'Sold' ? 'bg-blue-50 text-blue-700' :
+                        'bg-gray-50 text-gray-700'
+                      }`}>
+                        {property.status}
+                      </span>
+                    </div>
                   </div>
                 ))}
+                {recentProperties.length === 0 && (
+                  <div className="p-4 text-center text-gray-500">
+                    No properties found
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Recent Blogs (renamed from Categories) */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="p-4 bg-orange-500 text-white">
-                <h2 className="text-lg font-semibold">Recent Blogs</h2>
+            {/* Recent Blogs */}
+            <div className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-gray-100">
+                <h2 className="text-lg font-medium text-gray-900">Recent Blogs</h2>
               </div>
-              <div className="p-4">
-                {recentCategories.map((category) => (
-                  <div key={category.id} className="py-2 border-b last:border-0">
-                    <p className="font-medium">{category.name}</p>
+              <div className="divide-y divide-gray-100">
+                {recentCategories.slice(0, 5).map((blog: any) => (
+                  <div key={blog.id} className="p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">{blog.name}</p>
+                        <p className="text-sm text-gray-500 mt-1">
+                          {formatDate(blog.date)}
+                        </p>
+                      </div>
+                      <Link
+                        href={blog.url}
+                        className="text-primary hover:text-primary/80"
+                      >
+                        <FileText className="w-4 h-4" />
+                      </Link>
+                    </div>
                   </div>
                 ))}
+                {recentCategories.length === 0 && (
+                  <div className="p-4 text-center text-gray-500">
+                    No blogs found
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -7,6 +7,7 @@ import Footer from "@/components/Footer"
 import StyledComponentsRegistry from './registry'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
 import { Analytics } from '@vercel/analytics/react'
+import FloatingContact from "../components/FloatingContact"
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -94,6 +95,7 @@ export default function RootLayout({
           <main className="relative pb-12 md:pb-0">{children}</main>
           <PreFooter />
           <Footer />
+          <FloatingContact />
         </StyledComponentsRegistry>
       </body>
     </html>

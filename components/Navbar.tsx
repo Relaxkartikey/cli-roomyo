@@ -155,12 +155,17 @@ export default function Navbar() {
               >
                 Browse Spaces
               </Link>
-              <Link
-                href="/contact"
-                className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary/90 transition-colors"
-              >
-                Connect with Us
-              </Link>
+              <div className="relative">
+                <div className="absolute -top-2 -right-2 bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full leading-none">
+                  Free
+                </div>
+                <Link
+                  href="/list-property"
+                  className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary/90 transition-colors"
+                >
+                  List Your Property
+                </Link>
+              </div>
             </div>
           </nav>
         </div>

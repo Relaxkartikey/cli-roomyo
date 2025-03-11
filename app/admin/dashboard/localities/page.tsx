@@ -5,6 +5,7 @@ import { db } from '@/lib/firebase';
 import { Plus, Pencil, Trash2, X, Check } from 'lucide-react';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import Loader from '@/components/Loader';
 
 interface Locality {
   id: string;
@@ -84,6 +85,10 @@ export default function LocalitiesPage() {
       console.error('Error updating locality:', error);
     }
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <ProtectedRoute>

@@ -12,7 +12,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import Image from 'next/image';
-import BlogEditor from '@/app/components/BlogEditor';
+import BlogEditor from '@/components/BlogEditor';
 import Loader from '@/components/Loader';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import 'easymde/dist/easymde.min.css';

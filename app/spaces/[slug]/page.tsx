@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { MapPin, Star, Clock, Phone, Mail, ArrowLeft, Send, Building2, User } from "lucide-react";
 import Link from "next/link";
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Property } from '@/app/types/property';
 import Loader from '@/components/Loader';
@@ -22,6 +22,7 @@ export default function SpaceDetailsPage({
   const [message, setMessage] = useState("");
   const [property, setProperty] = useState<Property | null>(null);
   const [relatedProperties, setRelatedProperties] = useState<Property[]>([]);
+  const [relatedType, setRelatedType] = useState<'locality' | 'recent'>('locality');
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
@@ -49,18 +50,38 @@ export default function SpaceDetailsPage({
 
           setProperty(propertyData);
 
-          // Fetch related properties (same category, different property, not archived)
-          const relatedQuery = query(
+          // First try to fetch properties from the same locality
+          const localityQuery = query(
             propertiesRef,
-            where('category', '==', propertyData.category),
+            where('location', '==', propertyData.location),
             where('__name__', '!=', id),
             where('status', '!=', 'Archived')
           );
-          const relatedSnapshot = await getDocs(relatedQuery);
-          const relatedData = relatedSnapshot.docs.map(doc => ({
+          const localitySnapshot = await getDocs(localityQuery);
+          let relatedData = localitySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
           })) as Property[];
+
+          // If no properties found in same locality, fetch recent properties
+          if (relatedData.length === 0) {
+            setRelatedType('recent');
+            const recentQuery = query(
+              propertiesRef,
+              where('status', '!=', 'Archived'),
+              where('__name__', '!=', id),
+              orderBy('createdAt', 'desc'),
+              limit(3)
+            );
+            const recentSnapshot = await getDocs(recentQuery);
+            relatedData = recentSnapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            })) as Property[];
+          } else {
+            setRelatedType('locality');
+          }
+
           setRelatedProperties(relatedData.slice(0, 3));
         }
       } catch (error) {
@@ -321,7 +342,11 @@ export default function SpaceDetailsPage({
 
         {/* Related Roomyos */}
         <div className="col-span-full mt-16">
-          <h2 className="text-2xl font-semibold mb-8">Related Roomyos</h2>
+          <h2 className="text-2xl font-semibold mb-8">
+            {relatedType === 'locality' 
+              ? `More Properties in ${property?.location}`
+              : 'Recently Added Properties'}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {relatedProperties.length > 0 ? (
               relatedProperties.map((relatedProperty, idx) => (
@@ -387,7 +412,9 @@ export default function SpaceDetailsPage({
               ))
             ) : (
               <p className="text-gray-600 col-span-full text-center py-8">
-                No related properties found in this category.
+                {relatedType === 'locality' 
+                  ? `No other properties available in ${property?.location}.`
+                  : 'No other properties available at the moment.'}
               </p>
             )}
           </div>

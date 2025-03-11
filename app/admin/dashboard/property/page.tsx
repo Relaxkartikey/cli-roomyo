@@ -11,6 +11,7 @@ import Cookies from 'js-cookie';
 import { Plus, MapPin, Building2, Tag, LogOut, Pencil, Trash2, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
+import Loader from '@/components/Loader';
 
 // Add test data constants
 const TEST_DATA = {
@@ -568,7 +569,7 @@ export default function DashboardPage() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (
@@ -577,12 +578,45 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 p-6">
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-2xl font-semibold">Property Manager</h1>
-            <Link
-              href="/admin/dashboard"
-              className="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
-            >
-              Back to Dashboard
-            </Link>
+            <div className="flex items-center gap-4">
+              <Link
+                href="/admin/dashboard"
+                className="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
+              >
+                Back to Dashboard
+              </Link>
+              <button
+                onClick={() => {
+                  setIsAddingProperty(true);
+                  setEditingProperty(null);
+                  setFormData({
+                    name: '',
+                    location: '',
+                    category: 'Roomyo Spaces',
+                    prices: [{ type: '', price: '', pricePeriod: 'monthly' }],
+                    amenities: [],
+                    images: [''],
+                    description: '',
+                    privileges: [],
+                    fullAddress: '',
+                    roomType: '',
+                    mapLocation: '',
+                    status: 'Available',
+                    createdAt: Date.now(),
+                    host: {
+                      name: '',
+                      phone: '',
+                      email: '',
+                      position: '',
+                    },
+                  });
+                }}
+                className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+              >
+                <Plus className="w-5 h-5" />
+                Add Property
+              </button>
+            </div>
           </div>
 
           {isAddingProperty && (
@@ -591,13 +625,25 @@ export default function DashboardPage() {
                 <h3 className="text-lg font-medium">
                   {editingProperty ? 'Edit Property' : 'Add New Property'}
                 </h3>
-                <button
-                  type="button"
-                  onClick={handleAutofill}
-                  className="px-4 py-2 text-sm font-medium text-primary bg-primary/5 rounded-lg hover:bg-primary/10"
-                >
-                  Autofill Test Data
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleAutofill}
+                    className="px-4 py-2 text-sm font-medium text-primary bg-primary/5 rounded-lg hover:bg-primary/10"
+                  >
+                    Autofill Test Data
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsAddingProperty(false);
+                      setEditingProperty(null);
+                    }}
+                    className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

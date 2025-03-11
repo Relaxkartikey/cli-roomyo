@@ -5,6 +5,7 @@ import { db } from '@/lib/firebase';
 import Link from 'next/link';
 import { Pencil, Trash2, X } from 'lucide-react';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import Loader from '@/components/Loader';
 
 interface Category {
   id: string;
@@ -77,7 +78,7 @@ export default function CategoryPage() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (
