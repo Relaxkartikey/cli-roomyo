@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Building, Phone, Menu } from 'lucide-react';
+import { Home, Building, Plus, Menu } from 'lucide-react';
 import { IoLogoWhatsapp } from 'react-icons/io';
 
 export default function MobileBottomNav() {
@@ -64,13 +64,13 @@ export default function MobileBottomNav() {
           </Link>
           
           <Link 
-            href="/contact" 
+            href="/list-property" 
             className={`flex flex-col items-center justify-center ${
-              pathname === '/contact' ? 'text-primary' : 'text-gray-600'
+              pathname === '/list-property' ? 'text-primary' : 'text-gray-600'
             }`}
           >
-            <Phone className="w-5 h-5" />
-            <span className="text-xs mt-1">Contact</span>
+            <Plus className="w-5 h-5" />
+            <span className="text-xs mt-1">List Property</span>
           </Link>
           
           <button 

@@ -4,6 +4,7 @@ import "../styles/globals.css"
 import Navbar from "@/components/Navbar"
 import PreFooter from "@/components/PreFooter"
 import Footer from "@/components/Footer"
+import MobileFooter from "@/components/MobileFooter"
 import StyledComponentsRegistry from './registry'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
 import { Analytics } from '@vercel/analytics/react'
@@ -95,6 +96,7 @@ export default function RootLayout({
           <main className="relative pb-12 md:pb-0">{children}</main>
           <PreFooter />
           <Footer />
+          <MobileFooter />
           <FloatingContact />
         </StyledComponentsRegistry>
       </body>
