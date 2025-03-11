@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, limit } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { CATEGORIES, ROOM_TYPES, PRICE_PERIODS, DEFAULT_PRIVILEGES } from '@/app/types/property';
 import Cookies from 'js-cookie';
-import { Plus, MapPin, Building2, Tag, LogOut, Pencil, Trash2, MoreVertical } from 'lucide-react';
+import { Plus, MapPin, Building2, Tag, LogOut, Pencil, Trash2, MoreVertical, ImageIcon, Upload, Copy } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import Loader from '@/components/Loader';
@@ -118,6 +118,14 @@ interface Property {
   };
 }
 
+// Add new interface for media library images
+interface MediaImage {
+  id: string;
+  url: string;
+  filename: string;
+  uploadedAt: string;
+}
+
 interface DashboardCard {
   title: string;
   icon: React.ReactNode;
@@ -188,6 +196,16 @@ export default function DashboardPage() {
 
   const [newAmenity, setNewAmenity] = useState('');
   const [newPrivilege, setNewPrivilege] = useState({ title: '', description: '', icon: 'star' });
+
+  const [showMediaLibrary, setShowMediaLibrary] = useState(false);
+  const [mediaImages, setMediaImages] = useState<MediaImage[]>([]);
+  const [loadingMedia, setLoadingMedia] = useState(false);
+
+  // Add new state for upload handling
+  const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchProperties = async () => {
     try {
@@ -568,6 +586,78 @@ export default function DashboardPage() {
     }
   };
 
+  // Add upload handling functions
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = Array.from(e.dataTransfer.files);
+    await handleUpload(files);
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      await handleUpload(files);
+    }
+  };
+
+  const handleUpload = async (files: File[]) => {
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Upload failed');
+        }
+
+        const data = await response.json();
+        setMediaImages(prev => [{
+          id: data.filename,
+          url: data.url,
+          filename: file.name,
+          uploadedAt: data.uploadedAt,
+        }, ...prev]);
+        
+        setUploadProgress(100);
+        await new Promise(resolve => setTimeout(resolve, 500)); // Show 100% briefly
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
+  };
+
+  // Add function to handle media image selection
+  const handleMediaImageSelect = (image: MediaImage) => {
+    setFormData({
+      ...formData,
+      images: [...formData.images, image.url]
+    });
+    setShowMediaLibrary(false);
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -825,18 +915,28 @@ export default function DashboardPage() {
                       </button>
                     </div>
                   ))}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFormData({
-                        ...formData,
-                        images: [...formData.images, '']
-                      });
-                    }}
-                    className="mt-2 px-4 py-2 text-sm text-primary hover:bg-primary/5 rounded-lg"
-                  >
-                    Add Image URL
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData({
+                          ...formData,
+                          images: [...formData.images, '']
+                        });
+                      }}
+                      className="mt-2 px-4 py-2 text-sm text-primary hover:bg-primary/5 rounded-lg"
+                    >
+                      Add Image URL
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowMediaLibrary(true)}
+                      className="mt-2 px-4 py-2 text-sm text-white bg-primary hover:bg-primary/90 rounded-lg flex items-center gap-2"
+                    >
+                      <ImageIcon className="w-4 h-4" />
+                      Select from Media
+                    </button>
+                  </div>
                 </div>
 
                 {/* Amenities */}
@@ -1060,6 +1160,153 @@ export default function DashboardPage() {
                   </button>
                 </div>
               </form>
+            </div>
+          )}
+
+          {/* Add Media Library Modal */}
+          {showMediaLibrary && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                  <h3 className="text-lg font-medium text-gray-900">Media Library</h3>
+                  <button
+                    onClick={() => setShowMediaLibrary(false)}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  >
+                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="p-6">
+                  {/* Upload Area */}
+                  <div
+                    className={`border-2 border-dashed rounded-xl p-8 mb-8 text-center transition-colors ${
+                      isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+                    }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                  >
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileSelect}
+                      className="hidden"
+                      multiple
+                      accept="image/*"
+                    />
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                      <Upload className="w-12 h-12 text-gray-400" />
+                      <div>
+                        <p className="text-xl font-medium text-gray-900">Drop your images here</p>
+                        <p className="text-sm text-gray-500 mt-1">or</p>
+                      </div>
+                      <button
+                        onClick={() => fileInputRef.current?.click()}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        disabled={isUploading}
+                      >
+                        Select Files
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Upload Progress */}
+                  {isUploading && (
+                    <div className="mb-8">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-gray-700">Uploading...</span>
+                        <span className="text-sm text-gray-500">{uploadProgress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${uploadProgress}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Images Table */}
+                  <div className="overflow-x-auto rounded-lg border border-gray-200">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
+                            Preview
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            File Name
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            URL
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Uploaded
+                          </th>
+                          <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {mediaImages.map((image) => (
+                          <tr key={image.id} className="hover:bg-gray-50">
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <ImageIcon className="w-4 h-4 text-gray-400" />
+                                </div>
+                                <Image
+                                  src={image.url}
+                                  alt={image.filename}
+                                  fill
+                                  className="object-cover"
+                                  unoptimized
+                                />
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {image.filename}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex items-center space-x-2">
+                                <div className="text-sm text-gray-500 truncate max-w-md">
+                                  {image.url}
+                                </div>
+                                <button
+                                  onClick={() => navigator.clipboard.writeText(image.url)}
+                                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                                  title="Copy URL"
+                                >
+                                  <Copy className="w-4 h-4 text-gray-500" />
+                                </button>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-500">
+                                {new Date(image.uploadedAt).toLocaleDateString()}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                              <button
+                                onClick={() => handleMediaImageSelect(image)}
+                                className="text-primary hover:text-primary/80 px-3 py-1 rounded-lg hover:bg-primary/5"
+                              >
+                                Select
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 

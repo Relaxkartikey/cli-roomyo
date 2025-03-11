@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { CATEGORIES, ROOM_TYPES, PRICE_PERIODS, DEFAULT_PRIVILEGES } from '@/app/types/property';
 import Cookies from 'js-cookie';
-import { Plus, MapPin, Building2, Tag, LogOut, FileText } from 'lucide-react';
+import { Plus, MapPin, Building2, Tag, LogOut, FileText, ImageIcon } from 'lucide-react';
 import Link from 'next/link';
 import Loader from '@/components/Loader';
 import { format } from 'date-fns';
@@ -455,6 +455,12 @@ export default function DashboardPage() {
       color: 'bg-orange-500'
     },
     {
+      title: 'Media',
+      icon: <ImageIcon className="w-6 h-6" />,
+      href: '/admin/dashboard/media',
+      color: 'bg-pink-500'
+    },
+    {
       title: 'Log Out',
       icon: <LogOut className="w-6 h-6" />,
       href: '#',
@@ -510,7 +516,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
             {navigationCards.filter(card => card.title !== 'Log Out').map((card, idx) => (
               <Link
                 key={idx}
@@ -521,7 +527,8 @@ export default function DashboardPage() {
                   card.title === 'Property' ? 'bg-blue-50 text-blue-600' :
                   card.title === 'Locality' ? 'bg-green-50 text-green-600' :
                   card.title === 'Category' ? 'bg-purple-50 text-purple-600' :
-                  'bg-orange-50 text-orange-600'
+                  card.title === 'Blogs' ? 'bg-orange-50 text-orange-600' :
+                  'bg-pink-50 text-pink-600'
                 }`}>
                   {card.icon}
                 </div>
