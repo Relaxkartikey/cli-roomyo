@@ -9,6 +9,7 @@ import { collection, getDocs, query, where, orderBy, limit } from 'firebase/fire
 import { db } from '@/lib/firebase';
 import { Property } from '@/app/types/property';
 import Loader from '@/components/Loader';
+import ContactForm from '@/components/ContactForm';
 
 export default function SpaceDetailsPage({
   params,
@@ -16,10 +17,6 @@ export default function SpaceDetailsPage({
   params: { slug: string };
 }) {
   const [selectedImage, setSelectedImage] = useState(0);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [message, setMessage] = useState("");
   const [property, setProperty] = useState<Property | null>(null);
   const [relatedProperties, setRelatedProperties] = useState<Property[]>([]);
   const [relatedType, setRelatedType] = useState<'locality' | 'recent'>('locality');
@@ -110,12 +107,6 @@ export default function SpaceDetailsPage({
   if (params.slug !== expectedSlug) {
     notFound();
   }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log({ name, email, phone, message });
-  };
 
   return (
     <main className="min-h-screen bg-secondary pt-12 pb-16">
@@ -285,58 +276,11 @@ export default function SpaceDetailsPage({
             </div>
 
             {/* Contact Form */}
-            <div className="bg-white rounded-xl p-6 shadow-lg space-y-4">
-              <h2 className="text-xl font-semibold">Contact Host</h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                  <textarea
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    rows={4}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    required
-                  ></textarea>
-                </div>
-                <button
-                  type="submit"
-                  className="w-full flex items-center justify-center gap-2 bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors"
-                >
-                  <Send className="w-4 h-4" />
-                  Send Message
-                </button>
-              </form>
-            </div>
+            <ContactForm 
+              title="Book Your Space" 
+              subtitle={`Interested in ${property?.name}? Reach out to book your space!`}
+              className="shadow-lg"
+            />
           </div>
         </div>
 

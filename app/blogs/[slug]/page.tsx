@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, Clock, ArrowLeft, Search, Mail, Phone, MapPin } from "lucide-react";
@@ -7,6 +7,7 @@ import { notFound, useRouter } from "next/navigation";
 import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import Loader from '@/components/Loader';
+import ContactForm from '@/components/ContactForm';
 
 // Define the Blog interface
 interface Blog {
@@ -53,6 +54,9 @@ export default function BlogDetailPage({ params }: Props) {
     type: "success" | "error" | null;
     message: string;
   }>({ type: null, message: "" });
+  const [isSticky, setIsSticky] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     const fetchBlog = async () => {
@@ -132,6 +136,26 @@ export default function BlogDetailPage({ params }: Props) {
     fetchLocations();
   }, [params.slug]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (sidebarRef.current && containerRef.current) {
+        const sidebarTop = sidebarRef.current.getBoundingClientRect().top;
+        const containerBottom = containerRef.current.getBoundingClientRect().bottom;
+        
+        // Make sidebar sticky when it's about to scroll out of view
+        // but only if there's still content below it
+        if (sidebarTop <= 36 && containerBottom > window.innerHeight) {
+          setIsSticky(true);
+        } else {
+          setIsSticky(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleSearch = () => {
     if (selectedLocation) {
       router.push(`/spaces?location=${selectedLocation}`);
@@ -189,7 +213,7 @@ export default function BlogDetailPage({ params }: Props) {
           Back to Blogs
         </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
             {/* Blog Header */}
@@ -287,7 +311,12 @@ export default function BlogDetailPage({ params }: Props) {
               </div>
 
           {/* Sidebar */}
-          <div className="lg:sticky lg:top-36 self-start">
+          <div 
+            ref={sidebarRef}
+            className={`lg:col-span-1 ${
+              isSticky ? 'lg:sticky lg:top-36' : ''
+            } transition-all duration-300`}
+          >
             {/* Search Properties Widget */}
             <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Find Your Perfect Space</h3>
@@ -327,96 +356,10 @@ export default function BlogDetailPage({ params }: Props) {
             </div>
 
             {/* Contact Widget */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Get in Touch</h3>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    placeholder="Your name"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email
-                  </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    placeholder="Your email"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone
-                  </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    placeholder="Your phone"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    rows={3}
-                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
-                    placeholder="Your message"
-                    required
-                  ></textarea>
-                </div>
-                
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full py-2 px-6 text-white rounded-lg transition-all duration-300 ${
-                    isSubmitting ? 'bg-primary/70 cursor-not-allowed' : 'bg-primary hover:bg-primary/90'
-                  }`}
-                >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
-                </button>
-                
-                {submitStatus.type && (
-                  <p
-                    className={`text-sm ${
-                      submitStatus.type === "success"
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {submitStatus.message}
-                  </p>
-                )}
-              </form>
-            </div>
+            <ContactForm 
+              title="Get in Touch" 
+              subtitle="Have questions about this property? Send us a message!"
+            />
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ import {
   Users, Target, Shield, Coffee, Clock, Zap,
   ChefHat, Smartphone, Lock, Home, ArrowRight
 } from "lucide-react";
+import ContactForm from "@/components/ContactForm";
 
 const MISSION_POINTS = [
   "Premium, fully-furnished accommodations with high-end amenities",
@@ -507,30 +508,10 @@ export default function AboutPage() {
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
               >
-                <form className="bg-white rounded-xl p-8 shadow-lg space-y-6">
-                  <h3 className="text-2xl font-bold mb-6">Send us a message</h3>
-                  <input
-                    type="text"
-                    placeholder="Your Name"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-primary/20 transition-colors"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Your Email"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-primary/20 transition-colors"
-                  />
-                  <textarea
-                    placeholder="Your Message"
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary focus:ring-primary/20 transition-colors"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors"
-                  >
-                    Send Message
-                  </button>
-                </form>
+                <ContactForm 
+                  title="Send us a message" 
+                  subtitle="We'd love to hear from you!"
+                />
               </motion.div>
             </div>
           </div>
