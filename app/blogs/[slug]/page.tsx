@@ -180,7 +180,7 @@ export default function BlogDetailPage({ params }: Props) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       setSubmitStatus({
         type: "success",
-        message: "Thank you for your message. We'll get back to you soon!",
+        message: "Thanks to reach out. We'll get back to you soon!",
       });
       setFormData({ name: "", email: "", phone: "", message: "" });
     } catch (error) {

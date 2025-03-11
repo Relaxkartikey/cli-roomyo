@@ -38,7 +38,6 @@ export default function ContactForm({ className = "", showTitle = true, title = 
   }>({ type: null, message: "" });
 
   useEffect(() => {
-    // Initialize EmailJS
     emailjs.init(EMAILJS_PUBLIC_KEY);
   }, []);
 
@@ -63,21 +62,28 @@ export default function ContactForm({ className = "", showTitle = true, title = 
       };
 
       // Send the email using EmailJS
-      const result = await emailjs.send(
+      await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
-        templateParams
+        templateParams,
+        EMAILJS_PUBLIC_KEY // Add the public key here as well
+      ).then(
+        (response) => {
+          if (response.status === 200) {
+            setSubmitStatus({
+              type: "success",
+              message: "Thanks to reach out. We'll get back to you soon!",
+            });
+            setFormData({ name: "", phone: "", email: "", message: "" });
+          } else {
+            throw new Error('Failed to send message');
+          }
+        },
+        (error) => {
+          console.error("EmailJS Error:", error);
+          throw new Error('Failed to send message');
+        }
       );
-
-      if (result.status === 200) {
-        setSubmitStatus({
-          type: "success",
-          message: "Thank you for your message. We'll get back to you soon!",
-        });
-        setFormData({ name: "", phone: "", email: "", message: "" });
-      } else {
-        throw new Error('Failed to send message');
-      }
     } catch (error) {
       console.error("Form Error:", error);
       setSubmitStatus({
