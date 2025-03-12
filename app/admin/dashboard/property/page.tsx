@@ -665,13 +665,13 @@ export default function DashboardPage() {
   return (
     <ProtectedRoute>
       <main className="min-h-screen bg-secondary pb-16">
-        <div className="max-w-7xl mx-auto px-4 p-6">
-          <div className="flex items-center justify-between mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <h1 className="text-2xl font-semibold">Property Manager</h1>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <Link
                 href="/admin/dashboard"
-                className="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
+                className="text-center bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
               >
                 Back to Dashboard
               </Link>
@@ -701,7 +701,7 @@ export default function DashboardPage() {
                     },
                   });
                 }}
-                className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+                className="flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors"
               >
                 <Plus className="w-5 h-5" />
                 Add Property
@@ -710,7 +710,7 @@ export default function DashboardPage() {
           </div>
 
           {isAddingProperty && (
-            <div className="bg-white rounded-lg shadow p-6 mb-6">
+            <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-medium">
                   {editingProperty ? 'Edit Property' : 'Add New Property'}
@@ -735,8 +735,8 @@ export default function DashboardPage() {
                   </button>
                 </div>
               </div>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Name <span className="text-red-500">*</span>
@@ -805,7 +805,7 @@ export default function DashboardPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Prices</label>
                   {formData.prices.map((price, index) => (
-                    <div key={index} className="flex gap-4 mb-2">
+                    <div key={index} className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-2">
                       <div className="flex-1">
                         <input
                           type="text"
@@ -879,7 +879,7 @@ export default function DashboardPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Image URLs</label>
                   {formData.images.map((image, index) => (
-                    <div key={index} className="flex gap-4 mb-2">
+                    <div key={index} className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-2">
                       <div className="flex-1">
                         <input
                           type="url"
@@ -1318,11 +1318,11 @@ export default function DashboardPage() {
               {/* Bulk Actions */}
               {selectedProperties.length > 0 && (
                 <div className="p-4 border-b border-gray-200 bg-blue-50">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <span className="text-sm text-gray-700">
                       {selectedProperties.length} properties selected
                     </span>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => handleBulkAction('available')}
                         className="px-3 py-1 text-sm bg-green-100 text-green-800 rounded-lg hover:bg-green-200"
@@ -1353,12 +1353,12 @@ export default function DashboardPage() {
               )}
               
               {/* Sorting Dropdown */}
-              <div className="px-6 py-4 border-b border-gray-200">
-                <div className="flex items-center justify-end space-x-4">
+              <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+                <div className="flex justify-end">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="rounded-lg border border-gray-300 px-3 py-2 text-sm min-w-[200px]"
+                    className="w-full sm:w-auto rounded-lg border border-gray-300 px-3 py-2 text-sm"
                   >
                     <option value="recent">Most Recent</option>
                     <option value="oldest">Oldest First</option>
@@ -1382,121 +1382,125 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left">
-                      <input
-                        type="checkbox"
-                        checked={selectedProperties.length === properties.length}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedProperties(properties.map(p => p.id!));
-                          } else {
-                            setSelectedProperties([]);
-                          }
-                        }}
-                        className="rounded border-gray-300 text-primary focus:ring-primary"
-                      />
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Locality
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Category
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Prices
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Created
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {properties.map((property) => (
-                    <tr key={property.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left">
                         <input
                           type="checkbox"
-                          checked={selectedProperties.includes(property.id!)}
+                          checked={selectedProperties.length === properties.length}
                           onChange={(e) => {
                             if (e.target.checked) {
-                              setSelectedProperties([...selectedProperties, property.id!]);
+                              setSelectedProperties(properties.map(p => p.id!));
                             } else {
-                              setSelectedProperties(selectedProperties.filter(id => id !== property.id));
+                              setSelectedProperties([]);
                             }
                           }}
                           className="rounded border-gray-300 text-primary focus:ring-primary"
                         />
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-gray-900">{property.name}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-500">{property.location}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-500">{property.category}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-500">
-                          {property.prices.map((price, index) => (
-                            <span
-                              key={index}
-                              className="relative group cursor-help"
-                              title={`${price.type} (${price.pricePeriod})`}
-                            >
-                              {index > 0 && ", "}
-                              {price.price}
-                              <span className="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded whitespace-nowrap">
-                                {price.type} ({price.pricePeriod})
-                              </span>
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-500">
-                          {formatDate(property.createdAt)}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          property.status === 'Available' ? 'bg-green-100 text-green-800' :
-                          property.status === 'Sold' ? 'bg-blue-100 text-blue-800' :
-                          'bg-gray-100 text-gray-800'
-                        }`}>
-                          {property.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right text-sm font-medium space-x-3">
-                        <button
-                          onClick={() => handleEdit(property)}
-                          className="text-primary hover:text-primary/80"
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(property.id!)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </td>
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Name
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Locality
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Category
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Prices
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Created
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {properties.map((property) => (
+                      <tr key={property.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4">
+                          <input
+                            type="checkbox"
+                            checked={selectedProperties.includes(property.id!)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedProperties([...selectedProperties, property.id!]);
+                              } else {
+                                setSelectedProperties(selectedProperties.filter(id => id !== property.id));
+                              }
+                            }}
+                            className="rounded border-gray-300 text-primary focus:ring-primary"
+                          />
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm font-medium text-gray-900">{property.name}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-500">{property.location}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-500">{property.category}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-500">
+                            {property.prices.map((price, index) => (
+                              <span
+                                key={index}
+                                className="relative group cursor-help"
+                                title={`${price.type} (${price.pricePeriod})`}
+                              >
+                                {index > 0 && ", "}
+                                {price.price}
+                                <span className="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded whitespace-nowrap">
+                                  {price.type} ({price.pricePeriod})
+                                </span>
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-500">
+                            {formatDate(property.createdAt)}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            property.status === 'Available' ? 'bg-green-100 text-green-800' :
+                            property.status === 'Sold' ? 'bg-blue-100 text-blue-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {property.status}
+                          </span>
+                        </td>
+                        <td className="px-4 sm:px-6 py-4 text-right text-sm font-medium whitespace-nowrap">
+                          <div className="flex items-center justify-end gap-3">
+                            <button
+                              onClick={() => handleEdit(property)}
+                              className="text-primary hover:text-primary/80"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(property.id!)}
+                              className="text-red-600 hover:text-red-800"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>

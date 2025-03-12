@@ -706,30 +706,30 @@ export default function BlogsDashboard() {
   return (
     <ProtectedRoute>
       <main className="min-h-screen bg-secondary pb-16">
-        <div className="max-w-7xl mx-auto px-4 p-6">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-2xl font-semibold">Blog Manager</h1>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+            <h1 className="text-xl sm:text-2xl font-semibold">Blog Manager</h1>
             <Link
               href="/admin/dashboard"
-              className="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
+              className="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors w-full sm:w-auto text-center"
             >
               Back to Dashboard
             </Link>
           </div>
 
-          {/* Stats cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          {/* Stats cards - Made responsive */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 sm:mb-8">
             {statsCards.map((card, idx) => (
               <div 
                 key={idx}
-                className="bg-white rounded-lg shadow p-6 flex items-center space-x-4"
+                className="bg-white rounded-lg shadow p-4 sm:p-6 flex items-center space-x-4"
               >
-                <div className={`${card.color} p-3 rounded-full text-white`}>
+                <div className={`${card.color} p-2 sm:p-3 rounded-full text-white`}>
                   {card.icon}
                 </div>
                 <div>
-                  <p className="text-gray-500">{card.title}</p>
-                  <h3 className="text-2xl font-bold">{card.count}</h3>
+                  <p className="text-gray-500 text-sm sm:text-base">{card.title}</p>
+                  <h3 className="text-xl sm:text-2xl font-bold">{card.count}</h3>
                 </div>
               </div>
             ))}
@@ -1115,11 +1115,11 @@ export default function BlogsDashboard() {
 
           {/* Blogs Management Section */}
           <div className="bg-white rounded-lg shadow overflow-hidden">
-            {/* Filter and Search Header */}
-            <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            {/* Filter and Search Header - Made responsive */}
+            <div className="px-4 sm:px-6 py-4 bg-gray-50 border-b border-gray-200">
+              <div className="flex flex-col gap-4">
                 {/* Search */}
-                <div className="relative w-full sm:w-64">
+                <div className="relative w-full">
                   <input
                     type="text"
                     placeholder="Search blogs..."
@@ -1130,13 +1130,13 @@ export default function BlogsDashboard() {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 </div>
                 
-                {/* Tag Filters */}
-                <div className="flex flex-wrap gap-2">
+                {/* Tag Filters - Scrollable on mobile */}
+                <div className="flex gap-2 overflow-x-auto pb-2 -mb-2 scrollbar-hide">
                   {allTags.slice(0, 5).map((tag, idx) => (
                     <button
                       key={idx}
                       onClick={() => handleTagFilter(tag)}
-                      className={`px-3 py-1 rounded-full text-sm flex items-center ${
+                      className={`px-3 py-1 rounded-full text-sm flex items-center flex-shrink-0 ${
                         selectedTags.includes(tag)
                           ? 'bg-primary text-white'
                           : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
@@ -1147,7 +1147,7 @@ export default function BlogsDashboard() {
                     </button>
                   ))}
                   {allTags.length > 5 && (
-                    <button className="px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800 hover:bg-gray-200">
+                    <button className="px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800 hover:bg-gray-200 flex-shrink-0">
                       +{allTags.length - 5} more
                     </button>
                   )}
@@ -1155,32 +1155,32 @@ export default function BlogsDashboard() {
               </div>
             </div>
 
-            {/* Bulk Actions */}
+            {/* Bulk Actions - Made responsive */}
             {selectedItems.length > 0 && (
-              <div className="px-6 py-2 bg-gray-50 border-b border-gray-200">
-                <div className="flex items-center gap-2">
+              <div className="px-4 sm:px-6 py-2 bg-gray-50 border-b border-gray-200 overflow-x-auto">
+                <div className="flex items-center gap-2 min-w-max">
                   <span className="text-sm text-gray-600">{selectedItems.length} selected</span>
                   <button
                     onClick={() => handleBulkAction('publish')}
-                    className="px-3 py-1 text-sm bg-green-100 text-green-800 rounded-lg hover:bg-green-200"
+                    className="px-3 py-1 text-sm bg-green-100 text-green-800 rounded-lg hover:bg-green-200 whitespace-nowrap"
                   >
                     Publish
                   </button>
                   <button
                     onClick={() => handleBulkAction('draft')}
-                    className="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200"
+                    className="px-3 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 whitespace-nowrap"
                   >
                     Draft
                   </button>
                   <button
                     onClick={() => handleBulkAction('archive')}
-                    className="px-3 py-1 text-sm bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200"
+                    className="px-3 py-1 text-sm bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 whitespace-nowrap"
                   >
                     Archive
                   </button>
                   <button
                     onClick={() => handleBulkAction('delete')}
-                    className="px-3 py-1 text-sm bg-red-100 text-red-800 rounded-lg hover:bg-red-200"
+                    className="px-3 py-1 text-sm bg-red-100 text-red-800 rounded-lg hover:bg-red-200 whitespace-nowrap"
                   >
                     Delete
                   </button>
@@ -1188,13 +1188,13 @@ export default function BlogsDashboard() {
               </div>
             )}
             
-            {/* Sorting Dropdown */}
-            <div className="px-6 py-4 border-b border-gray-200">
-              <div className="flex items-center justify-end space-x-4">
+            {/* Sorting Dropdown - Made responsive */}
+            <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+              <div className="flex items-center justify-end">
                 <select
                   value={sortOption}
                   onChange={(e) => handleSort(e.target.value)}
-                  className="rounded-lg border border-gray-300 px-3 py-2 text-sm min-w-[200px]"
+                  className="rounded-lg border border-gray-300 px-3 py-2 text-sm w-full sm:w-auto"
                 >
                   <option value="newest">Newest First</option>
                   <option value="oldest">Oldest First</option>
@@ -1203,159 +1203,163 @@ export default function BlogsDashboard() {
               </div>
             </div>
 
-            {/* Blogs Table */}
-            {filteredBlogs.length === 0 ? (
-              <div className="text-center py-12 bg-gray-50">
-                <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-700">No Blogs Found</h3>
-                <p className="text-gray-500 mt-1">{searchTerm ? 'Try a different search term' : 'Add your first blog'}</p>
-                {!isAddingBlog && (
-                  <button
-                    onClick={() => {
-                      setIsAddingBlog(true);
-                      setEditingBlog(null);
-                    }}
-                    className="mt-4 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 inline-flex items-center"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add New Blog
-                  </button>
-                )}
-              </div>
-            ) : (
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left">
-                      <input
-                        type="checkbox"
-                        checked={selectAll}
-                        onChange={handleSelectAll}
-                        className="rounded border-gray-300 text-primary focus:ring-primary"
-                      />
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Blog
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Tags
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Created
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredBlogs.map((blog) => (
-                    <tr key={blog.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
+            {/* Blogs Table - Made scrollable on mobile */}
+            <div className="overflow-x-auto">
+              {filteredBlogs.length === 0 ? (
+                <div className="text-center py-12 bg-gray-50">
+                  <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-700">No Blogs Found</h3>
+                  <p className="text-gray-500 mt-1">{searchTerm ? 'Try a different search term' : 'Add your first blog'}</p>
+                  {!isAddingBlog && (
+                    <button
+                      onClick={() => {
+                        setIsAddingBlog(true);
+                        setEditingBlog(null);
+                      }}
+                      className="mt-4 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 inline-flex items-center"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add New Blog
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 sm:px-6 py-3 text-left">
                         <input
                           type="checkbox"
-                          checked={selectedItems.includes(blog.id as string)}
-                          onChange={() => handleSelectItem(blog.id as string)}
+                          checked={selectAll}
+                          onChange={handleSelectAll}
                           className="rounded border-gray-300 text-primary focus:ring-primary"
                         />
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="flex-shrink-0 w-12 h-12 relative rounded overflow-hidden">
-                            {blog.featuredImage ? (
-                              <Image
-                                src={blog.featuredImage}
-                                alt={blog.title}
-                                fill
-                                className="object-cover"
-                              />
-                            ) : (
-                              <div className="bg-gray-200 w-full h-full flex items-center justify-center">
-                                <ImageIcon className="w-6 h-6 text-gray-400" />
+                      </th>
+                      <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Blog
+                      </th>
+                      <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Tags
+                      </th>
+                      <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Created
+                      </th>
+                      <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredBlogs.map((blog) => (
+                      <tr key={blog.id} className="hover:bg-gray-50">
+                        <td className="px-4 sm:px-6 py-4">
+                          <input
+                            type="checkbox"
+                            checked={selectedItems.includes(blog.id as string)}
+                            onChange={() => handleSelectItem(blog.id as string)}
+                            className="rounded border-gray-300 text-primary focus:ring-primary"
+                          />
+                        </td>
+                        <td className="px-4 sm:px-6 py-4">
+                          <div className="flex items-center space-x-3">
+                            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 relative rounded overflow-hidden">
+                              {blog.featuredImage ? (
+                                <Image
+                                  src={blog.featuredImage}
+                                  alt={blog.title}
+                                  fill
+                                  className="object-cover"
+                                />
+                              ) : (
+                                <div className="bg-gray-200 w-full h-full flex items-center justify-center">
+                                  <ImageIcon className="w-6 h-6 text-gray-400" />
+                                </div>
+                              )}
+                            </div>
+                            <div>
+                              <div className="text-sm font-medium text-gray-900 truncate max-w-[150px] sm:max-w-xs">
+                                {blog.title}
                               </div>
-                            )}
-                          </div>
-                          <div>
-                            <div className="text-sm font-medium text-gray-900 truncate max-w-xs">{blog.title}</div>
-                            <div className="text-xs text-gray-500 flex items-center">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {blog.readTime}
+                              <div className="text-xs text-gray-500 flex items-center">
+                                <Clock className="w-3 h-3 mr-1" />
+                                {blog.readTime}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-wrap gap-1 max-w-xs">
-                          {blog.tags.slice(0, 3).map((tag, idx) => (
-                            <span 
-                              key={idx}
-                              className="inline-block bg-gray-100 text-gray-800 text-xs px-2 py-0.5 rounded-full"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                          {blog.tags.length > 3 && (
-                            <span className="inline-block text-xs text-gray-500">
-                              +{blog.tags.length - 3} more
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span 
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            blog.status === 'Published' 
-                              ? 'bg-green-100 text-green-800' 
-                              : blog.status === 'Draft' 
-                                ? 'bg-yellow-100 text-yellow-800'
-                                : 'bg-gray-100 text-gray-800'
-                          }`}
-                        >
-                          {blog.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        {formatDate(blog.createdAt)}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end space-x-2">
-                          <button
-                            onClick={() => handleEdit(blog)}
-                            className="text-blue-600 hover:text-blue-900"
-                            title="Edit"
+                        </td>
+                        <td className="hidden sm:table-cell px-6 py-4">
+                          <div className="flex flex-wrap gap-1 max-w-xs">
+                            {blog.tags.slice(0, 3).map((tag, idx) => (
+                              <span 
+                                key={idx}
+                                className="inline-block bg-gray-100 text-gray-800 text-xs px-2 py-0.5 rounded-full"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                            {blog.tags.length > 3 && (
+                              <span className="inline-block text-xs text-gray-500">
+                                +{blog.tags.length - 3} more
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 sm:px-6 py-4">
+                          <span 
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              blog.status === 'Published' 
+                                ? 'bg-green-100 text-green-800' 
+                                : blog.status === 'Draft' 
+                                  ? 'bg-yellow-100 text-yellow-800'
+                                  : 'bg-gray-100 text-gray-800'
+                            }`}
                           >
-                            <Edit className="w-5 h-5" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(blog.id as string)}
-                            className="text-red-600 hover:text-red-900"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </button>
-                          {blog.status === 'Published' && (
-                            <Link
-                              href={`/blogs/${blog.slug}`}
-                              target="_blank"
-                              className="text-gray-600 hover:text-gray-900"
-                              title="View"
+                            {blog.status}
+                          </span>
+                        </td>
+                        <td className="hidden sm:table-cell px-6 py-4 text-sm text-gray-500">
+                          {formatDate(blog.createdAt)}
+                        </td>
+                        <td className="px-4 sm:px-6 py-4 text-right">
+                          <div className="flex items-center justify-end space-x-2">
+                            <button
+                              onClick={() => handleEdit(blog)}
+                              className="text-blue-600 hover:text-blue-900"
+                              title="Edit"
                             >
-                              <ExternalLink className="w-5 h-5" />
-                            </Link>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+                              <Edit className="w-5 h-5" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(blog.id as string)}
+                              className="text-red-600 hover:text-red-900"
+                              title="Delete"
+                            >
+                              <Trash2 className="w-5 h-5" />
+                            </button>
+                            {blog.status === 'Published' && (
+                              <Link
+                                href={`/blogs/${blog.slug}`}
+                                target="_blank"
+                                className="text-gray-600 hover:text-gray-900"
+                                title="View"
+                              >
+                                <ExternalLink className="w-5 h-5" />
+                              </Link>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
           </div>
         </div>
       </main>
     </ProtectedRoute>
   );
-} 
+}
