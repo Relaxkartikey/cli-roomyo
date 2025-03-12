@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import { format } from 'date-fns';
-import { FileText, Plus, Search, Tag, Trash2, Edit, ArrowLeft, Calendar, Clock, Save, X, Image as ImageIcon, ExternalLink } from 'lucide-react';
+import { FileText, Plus, Search, Tag, Trash2, Edit, ArrowLeft, Calendar, Clock, Save, X, Image as ImageIcon, ExternalLink, Upload, Copy } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { onAuthStateChanged } from 'firebase/auth';
 import Cookies from 'js-cookie';
@@ -49,6 +49,13 @@ interface StatsCard {
   count: number;
   icon: React.ReactNode;
   color: string;
+}
+
+interface UploadedImage {
+  id: string;
+  url: string;
+  filename: string;
+  uploadedAt: string;
 }
 
 // Add a helper function for safe date formatting
@@ -143,6 +150,14 @@ export default function BlogsDashboard() {
   // Selected items for bulk actions
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState(false);
+
+  const [showMediaLibrary, setShowMediaLibrary] = useState(false);
+  const [mediaImages, setMediaImages] = useState<UploadedImage[]>([]);
+  const [loadingMedia, setLoadingMedia] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch blogs data
   const fetchBlogs = async () => {
@@ -567,6 +582,101 @@ export default function BlogsDashboard() {
     }
   };
 
+  // Add fetchMediaImages function
+  const fetchMediaImages = async () => {
+    try {
+      setLoadingMedia(true);
+      const response = await fetch('/api/upload');
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch images');
+      }
+
+      if (!Array.isArray(data.images)) {
+        throw new Error('Invalid response format');
+      }
+
+      setMediaImages(data.images);
+    } catch (error) {
+      toast.error('Failed to load media images');
+    } finally {
+      setLoadingMedia(false);
+    }
+  };
+
+  // Add media upload handlers
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = Array.from(e.dataTransfer.files);
+    await handleUpload(files);
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      await handleUpload(files);
+    }
+  };
+
+  const handleUpload = async (files: File[]) => {
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Upload failed');
+        }
+
+        const data = await response.json();
+        const newImage: UploadedImage = {
+          id: data.filename,
+          url: data.url,
+          filename: file.name,
+          uploadedAt: data.uploadedAt,
+        };
+
+        setMediaImages(prev => [newImage, ...prev]);
+        setUploadProgress(100);
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+    } catch (error) {
+      toast.error('Failed to upload image');
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const handleMediaImageSelect = (image: UploadedImage) => {
+    setFormData(prev => ({
+      ...prev,
+      featuredImage: image.url
+    }));
+    setShowMediaLibrary(false);
+  };
+
   // Stats cards for the dashboard
   const statsCards: StatsCard[] = [
     {
@@ -669,96 +779,252 @@ export default function BlogsDashboard() {
                 <h3 className="text-lg font-medium">
                   {editingBlog ? 'Edit Blog' : 'Add New Blog'}
                 </h3>
-                <button
-                  type="button"
-                  onClick={handleAutofill}
-                  className="px-4 py-2 text-sm font-medium text-primary bg-primary/5 rounded-lg hover:bg-primary/10"
-                >
-                  Autofill Test Data
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleAutofill}
+                    className="px-4 py-2 text-sm font-medium text-primary bg-primary/5 rounded-lg hover:bg-primary/10"
+                  >
+                    Autofill Test Data
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsAddingBlog(false);
+                      setEditingBlog(null);
+                    }}
+                    className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6 overflow-visible">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Title */}
-                  <div>
-                    <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-                      Blog Title <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="title"
-                      value={formData.title}
-                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="Enter blog title"
-                      required
-                    />
-                  </div>
+                {/* Blog Title */}
+                <div>
+                  <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                    Blog Title <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="title"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="Enter blog title"
+                    required
+                  />
+                </div>
 
-                  {/* Featured Image */}
-                  <div>
-                    <label htmlFor="featuredImage" className="block text-sm font-medium text-gray-700 mb-1">
-                      Featured Image URL <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="featuredImage"
-                      value={formData.featuredImage}
-                      onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="Enter image URL"
-                      required
-                    />
-                  </div>
+                {/* Status */}
+                <div>
+                  <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+                    Status <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="status"
+                    value={formData.status}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value as Blog['status'] })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="Draft">Draft</option>
+                    <option value="Published">Published</option>
+                    <option value="Archived">Archived</option>
+                  </select>
+                </div>
 
-                  {/* Status & Read Time in one row */}
-                  <div>
-                    <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-                      Status <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      id="status"
-                      value={formData.status}
-                      onChange={(e) => setFormData({ ...formData, status: e.target.value as Blog['status'] })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                {/* Featured Image */}
+                <div>
+                  <label htmlFor="featuredImage" className="block text-sm font-medium text-gray-700 mb-1">
+                    Featured Image <span className="text-red-500">*</span>
+                  </label>
+                  <div className="space-y-2">
+                    <div className="flex gap-4">
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          id="featuredImage"
+                          value={formData.featuredImage}
+                          onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                          placeholder="Enter image URL"
+                          required
+                        />
+                      </div>
+                      {formData.featuredImage && (
+                        <div className="w-20 h-20 relative">
+                          <Image
+                            src={formData.featuredImage}
+                            alt="Preview"
+                            fill
+                            className="object-cover rounded-lg"
+                          />
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowMediaLibrary(true);
+                        fetchMediaImages();
+                      }}
+                      className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 flex items-center justify-center gap-2"
                     >
-                      <option value="Draft">Draft</option>
-                      <option value="Published">Published</option>
-                      <option value="Archived">Archived</option>
-                    </select>
-                  </div>
-
-                  {/* Read Time */}
-                  <div>
-                    <label htmlFor="readTime" className="block text-sm font-medium text-gray-700 mb-1">
-                      Read Time
-                    </label>
-                    <input
-                      type="text"
-                      id="readTime"
-                      value={formData.readTime}
-                      onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="e.g. 5 min read"
-                    />
-                    <p className="mt-1 text-xs text-gray-500">Will be calculated automatically if left empty</p>
+                      <ImageIcon className="w-4 h-4" />
+                      Select from Media Library
+                    </button>
                   </div>
                 </div>
 
-                {/* Preview Image if URL provided */}
-                {formData.featuredImage && (
-                  <div className="mt-2 relative w-full h-60 rounded-md overflow-hidden">
-                    <Image
-                      src={formData.featuredImage}
-                      alt="Preview"
-                      fill
-                      className="object-cover"
-                    />
+                {/* Media Library Modal */}
+                {showMediaLibrary && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-xl shadow-2xl max-w-6xl w-full h-[90vh] flex flex-col">
+                      <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                        <h3 className="text-lg font-medium text-gray-900">Media Library</h3>
+                        <button
+                          onClick={() => setShowMediaLibrary(false)}
+                          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                        >
+                          <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+
+                      <div className="flex-1 overflow-y-auto p-6">
+                        {/* Upload Area */}
+                        <div
+                          className={`border-2 border-dashed rounded-xl p-8 mb-8 text-center transition-colors ${
+                            isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+                          }`}
+                          onDragOver={handleDragOver}
+                          onDragLeave={handleDragLeave}
+                          onDrop={handleDrop}
+                        >
+                          <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileSelect}
+                            className="hidden"
+                            multiple
+                            accept="image/*"
+                          />
+                          <div className="flex flex-col items-center justify-center space-y-4">
+                            <Upload className="w-12 h-12 text-gray-400" />
+                            <div>
+                              <p className="text-xl font-medium text-gray-900">Drop your images here</p>
+                              <p className="text-sm text-gray-500 mt-1">or</p>
+                            </div>
+                            <button
+                              onClick={() => fileInputRef.current?.click()}
+                              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                              disabled={isUploading}
+                            >
+                              Select Files
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Upload Progress */}
+                        {isUploading && (
+                          <div className="mb-8">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-sm font-medium text-gray-700">Uploading...</span>
+                              <span className="text-sm text-gray-500">{uploadProgress}%</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div
+                                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${uploadProgress}%` }}
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Images Table */}
+                        <div className="rounded-lg border border-gray-200">
+                          <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                              <tr>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
+                                  Preview
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  File Name
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  URL
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Uploaded
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Actions
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                              {mediaImages.map((image) => (
+                                <tr key={image.id} className="hover:bg-gray-50">
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
+                                      <div className="absolute inset-0 flex items-center justify-center">
+                                        <ImageIcon className="w-4 h-4 text-gray-400" />
+                                      </div>
+                                      <Image
+                                        src={image.url}
+                                        alt={image.filename}
+                                        fill
+                                        className="object-cover"
+                                        unoptimized
+                                      />
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4">
+                                    <div className="text-sm font-medium text-gray-900">
+                                      {image.filename}
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4">
+                                    <div className="flex items-center space-x-2">
+                                      <div className="text-sm text-gray-500 truncate max-w-md">
+                                        {image.url}
+                                      </div>
+                                      <button
+                                        onClick={() => navigator.clipboard.writeText(image.url)}
+                                        className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                                        title="Copy URL"
+                                      >
+                                        <Copy className="w-4 h-4 text-gray-500" />
+                                      </button>
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="text-sm text-gray-500">
+                                      {new Date(image.uploadedAt).toLocaleDateString()}
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button
+                                      onClick={() => handleMediaImageSelect(image)}
+                                      className="text-primary hover:text-primary/80 px-3 py-1 rounded-lg hover:bg-primary/5"
+                                    >
+                                      Select
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
 
-                {/* Content - Full Width */}
+                {/* Content */}
                 <div>
                   <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
                     Content <span className="text-red-500">*</span>

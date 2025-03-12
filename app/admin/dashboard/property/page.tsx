@@ -1166,7 +1166,7 @@ export default function DashboardPage() {
           {/* Add Media Library Modal */}
           {showMediaLibrary && (
             <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-              <div className="bg-white rounded-xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+              <div className="bg-white rounded-xl shadow-2xl max-w-6xl w-full h-[90vh] flex flex-col">
                 <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                   <h3 className="text-lg font-medium text-gray-900">Media Library</h3>
                   <button
@@ -1179,7 +1179,7 @@ export default function DashboardPage() {
                   </button>
                 </div>
 
-                <div className="p-6">
+                <div className="flex-1 overflow-y-auto p-6">
                   {/* Upload Area */}
                   <div
                     className={`border-2 border-dashed rounded-xl p-8 mb-8 text-center transition-colors ${
@@ -1230,7 +1230,7 @@ export default function DashboardPage() {
                   )}
 
                   {/* Images Table */}
-                  <div className="overflow-x-auto rounded-lg border border-gray-200">
+                  <div className="rounded-lg border border-gray-200">
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
                         <tr>
