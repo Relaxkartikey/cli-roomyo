@@ -29,35 +29,19 @@ export default function MediaPage() {
 
   const fetchImages = async () => {
     try {
-      console.log('Fetching images...');
       const response = await fetch('/api/upload');
-      console.log('Response status:', response.status);
-      
       const data = await response.json();
-      console.log('Fetched data:', JSON.stringify(data, null, 2));
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch images');
       }
 
       if (!Array.isArray(data.images)) {
-        console.error('Invalid images data:', data);
         throw new Error('Invalid response format');
       }
 
-      // Log each image URL
-      data.images.forEach((img: UploadedImage) => {
-        console.log('Image data:', {
-          id: img.id,
-          url: img.url,
-          filename: img.filename
-        });
-      });
-
-      console.log('Setting images:', data.images.length);
       setImages(data.images);
     } catch (error) {
-      console.error('Fetch images error:', error);
       setError(error instanceof Error ? error.message : 'Failed to load images');
     } finally {
       setLoading(false);
@@ -119,10 +103,9 @@ export default function MediaPage() {
 
         setImages(prev => [newImage, ...prev]);
         setUploadProgress(100);
-        await new Promise(resolve => setTimeout(resolve, 500)); // Show 100% briefly
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
     } catch (error) {
-      console.error('Upload error:', error);
       setError(error instanceof Error ? error.message : 'Failed to upload image');
     } finally {
       setIsUploading(false);
@@ -132,7 +115,6 @@ export default function MediaPage() {
 
   const handleCopyUrl = (url: string) => {
     navigator.clipboard.writeText(url);
-    // TODO: Add toast notification
   };
 
   const handleDelete = async (id: string) => {
@@ -150,8 +132,7 @@ export default function MediaPage() {
         setSelectedImage(null);
       }
     } catch (error) {
-      console.error('Delete error:', error);
-      // TODO: Add error toast notification
+      setError(error instanceof Error ? error.message : 'Failed to delete image');
     }
   };
 
@@ -267,7 +248,6 @@ export default function MediaPage() {
                       className="object-cover"
                       unoptimized
                       onError={(e) => {
-                        console.error('Image load error:', image.url);
                         const target = e.target as HTMLImageElement;
                         target.style.display = 'none';
                       }}
