@@ -795,7 +795,7 @@ export default function DashboardPage() {
                       value={formData.roomType}
                       onChange={(e) => setFormData({ ...formData, roomType: e.target.value })}
                       className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2"
-                      placeholder="i.e., 2BHK, 3BHK, Studio, Single Room, etc."
+                      placeholder="i.e., PG Room, Home, Apartment, etc"
                       required
                     />
                   </div>
@@ -809,7 +809,7 @@ export default function DashboardPage() {
                       <div className="flex-1">
                         <input
                           type="text"
-                          placeholder="Studio / Single Room / Double Room"
+                          placeholder="i.e, Single Room, Double Room, 2BHK, 3BHK, Premium, etc"
                           value={price.type}
                           onChange={(e) => {
                             const newPrices = [...formData.prices];
@@ -983,7 +983,7 @@ export default function DashboardPage() {
                         }
                       }}
                       className="flex-1 rounded-lg border border-gray-300 px-3 py-2"
-                      placeholder="Type amenities separated by commas or press Enter"
+                      placeholder="i.e, WiFi, AC, Parking, etc (separate by comma)"
                     />
                   </div>
                 </div>
@@ -1022,7 +1022,6 @@ export default function DashboardPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Map Location URL (optional)
-                    <span className="text-sm text-gray-500 ml-2">Example: https://maps.google.com/?q=...</span>
                   </label>
                   <input
                     type="url"
