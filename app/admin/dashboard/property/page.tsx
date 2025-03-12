@@ -795,7 +795,7 @@ export default function DashboardPage() {
                       value={formData.roomType}
                       onChange={(e) => setFormData({ ...formData, roomType: e.target.value })}
                       className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2"
-                      placeholder="i.e., PG Room, Home, Apartment, etc"
+                      placeholder="i.e., PG Room/Home/Apartment/etc"
                       required
                     />
                   </div>
@@ -809,7 +809,7 @@ export default function DashboardPage() {
                       <div className="flex-1">
                         <input
                           type="text"
-                          placeholder="i.e, Single Room, Double Room, 2BHK, 3BHK, Premium, etc"
+                          placeholder="i.e, Studio/3BHK/Premium/etc"
                           value={price.type}
                           onChange={(e) => {
                             const newPrices = [...formData.prices];
