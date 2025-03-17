@@ -6,68 +6,68 @@ import { motion } from 'framer-motion';
 const bookingSteps = [
   {
     icon: "🔍",
-    title: "Search & Discover",
-    description: "Find your ideal accommodation with our smart search filters",
+    title: "Discover & Compare",
+    description: "Find your perfect space with our detailed property listings",
     details: [
-      "Filter by location, price, and amenities",
-      "View high-quality photos and virtual tours",
-      "Read verified reviews from previous tenants",
-      "Compare multiple properties side by side"
-    ]
-  },
-  {
-    icon: "📱",
-    title: "Schedule Visit",
-    description: "Book a convenient time to see your potential new home",
-    details: [
-      "Choose from available time slots",
-      "Receive confirmation via email and SMS",
-      "Get reminders before your scheduled visit",
-      "Easily reschedule if needed"
+      "Browse high-quality photos and virtual tours",
+      "Compare amenities and features",
+      "Check detailed pricing and availability",
+      "Filter by location and preferences"
     ]
   },
   {
     icon: "📝",
-    title: "Book Instantly",
-    description: "Secure your preferred space with our simple booking process",
+    title: "Submit Booking Request",
+    description: "Share your requirements through our simple booking form",
     details: [
-      "Select your desired move-in date",
-      "Complete a quick verification process",
-      "Pay securely using multiple payment options",
-      "Receive instant booking confirmation"
+      "Fill in your personal details",
+      "Specify your preferred move-in date",
+      "Mention any special requirements",
+      "Submit your interest to our team"
     ]
   },
   {
-    icon: "📄",
-    title: "Digital Agreement",
-    description: "Complete all paperwork electronically without hassle",
+    icon: "✨",
+    title: "Request Processing",
+    description: "Our team reviews your request and prepares personalized options",
     details: [
-      "Review terms and conditions online",
-      "Sign documents digitally from any device",
-      "Store all agreements securely in your account",
-      "Access your documents anytime, anywhere"
-    ]
-  },
-  {
-    icon: "💳",
-    title: "Secure Payment",
-    description: "Make payments confidently through our trusted platform",
-    details: [
-      "Multiple payment options available",
-      "End-to-end encrypted transactions",
-      "Automated receipts and payment history",
-      "Set up recurring payments for convenience"
+      "Receive request acknowledgment",
+      "Property availability confirmation",
+      "Custom recommendations based on needs",
+      "Direct communication with our team"
     ]
   },
   {
     icon: "🏠",
-    title: "Move In With Ease",
-    description: "Experience a smooth transition to your new accommodation",
+    title: "Property Visit",
+    description: "Schedule a visit to experience your chosen property",
     details: [
-      "Get detailed directions to your property",
-      "Connect with the property manager",
-      "Receive digital access codes if applicable",
-      "Enjoy 24/7 customer support for any issues"
+      "Arrange viewing at your convenience",
+      "Meet our property expert on-site",
+      "Ask questions and get clarity",
+      "Explore the neighborhood"
+    ]
+  },
+  {
+    icon: "📄",
+    title: "Booking Confirmation",
+    description: "Complete the booking process with our agent's assistance",
+    details: [
+      "Review terms and documentation",
+      "Get guidance on payment process",
+      "Complete necessary verifications",
+      "Receive booking confirmation"
+    ]
+  },
+  {
+    icon: "🎉",
+    title: "Welcome Home",
+    description: "Start your journey in your new home with our support",
+    details: [
+      "Get move-in instructions",
+      "Connect with property manager",
+      "Access essential information",
+      "Enjoy dedicated support service"
     ]
   }
 ];
