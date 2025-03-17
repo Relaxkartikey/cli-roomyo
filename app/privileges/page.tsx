@@ -9,6 +9,7 @@ import {
   Utensils, Smartphone, Lock, Building, CreditCard, Sparkles,
   Waves, PartyPopper, Tv, CheckCircle2, Zap, CheckCircle
 } from "lucide-react";
+import ContactForm from "@/components/ContactForm";
 
 const AMENITIES = [
   {
@@ -65,11 +66,6 @@ const STATS = [
 ];
 
 const LIFESTYLE_FEATURES = [
-  {
-    icon: Waves,
-    title: "Swimming & Wellness",
-    description: "Rooftop pools and wellness spaces for relaxation"
-  },
   {
     icon: PartyPopper,
     title: "Social Events",
@@ -138,14 +134,14 @@ const MAIN_FEATURES = [
     image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
   },
   {
-    title: "Professional Housekeeping",
-    description: "Daily, no-contact housekeeping services by trained professionals",
+    title: "Laundry Services",
+    description: "Professional laundry services for your convenience",
     icon: Sparkles,
     details: [
-      "Regular room cleaning",
-      "Bathroom sanitization",
-      "Dusting and maintenance",
-      "Professional staff"
+      "Regular laundry pickup",
+      "Professional cleaning",
+      "Timely delivery",
+      "Quality service"
     ],
     image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80"
   },
@@ -175,59 +171,7 @@ const MAIN_FEATURES = [
   }
 ];
 
-// Add new sections content after MAIN_FEATURES
-const ADDITIONAL_FEATURES = [
-  {
-    title: "Laundry Services",
-    description: "Doorstep laundry services twice a week",
-    icon: Shirt,
-    details: [
-      "Washing and ironing services",
-      "Clean, fresh clothes delivered",
-      "Premium detergents used",
-      "Zero waiting time"
-    ],
-    image: "https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&w=1000&q=80"
-  },
-  {
-    title: "IHM Trained Managers",
-    description: "24/7 support from hospitality experts",
-    icon: Users,
-    details: [
-      "Zero landlord interference",
-      "24/7 in-house support",
-      "Quick conflict resolution",
-      "Professional management"
-    ],
-    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1000&q=80"
-  },
-  {
-    title: "Smart Living App",
-    description: "Control everything at your fingertips",
-    icon: Smartphone,
-    details: [
-      "Instant rent payments",
-      "Maintenance requests",
-      "Service bookings",
-      "Community connect"
-    ],
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1000&q=80"
-  },
-  {
-    title: "3-Tier Security",
-    description: "Your safety is our priority",
-    icon: Shield,
-    details: [
-      "Tech-enabled smart locks",
-      "24/7 CCTV surveillance",
-      "On-duty security guards",
-      "Biometric access"
-    ],
-    image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=1000&q=80"
-  }
-];
-
-// Add after ADDITIONAL_FEATURES
+// Add after MAIN_FEATURES
 const COMPARISON_DATA = {
   features: [
     "Fully Furnished Rooms",
@@ -274,9 +218,10 @@ export default function PrivilegesPage() {
             src={HERO_CONTENT.image}
             alt="Luxury Living"
             fill
-            className="object-cover brightness-[0.85]"
+            className="object-cover brightness-[0.65]"
             priority
           />
+          <div className="absolute inset-0 bg-black/50" />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 text-white">
           <motion.div
@@ -300,11 +245,11 @@ export default function PrivilegesPage() {
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
-                href="/contact"
+                href="#inquiry-form"
                 className="bg-white hover:bg-gray-100 text-gray-900 px-6 py-3 rounded-lg flex items-center gap-2 transition-colors"
               >
-                Contact Us
-                <Phone className="w-5 h-5" />
+                Accommodation Enquiry
+                <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
           </motion.div>
@@ -340,7 +285,7 @@ export default function PrivilegesPage() {
                     </div>
                     <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
                     <p className="text-gray-600 mb-6">{feature.description}</p>
-                    <ul className="space-y-3">
+                    <ul className="space-y-3 mb-6">
                       {feature.details.map((detail, idx) => (
                         <li key={idx} className="flex items-center gap-3">
                           <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
@@ -348,6 +293,12 @@ export default function PrivilegesPage() {
                         </li>
                       ))}
                     </ul>
+                    <Link
+                      href="#inquiry-form"
+                      className="inline-flex items-center justify-center w-full px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                    >
+                      Inquire Now
+                    </Link>
                   </div>
                 </motion.div>
               );
@@ -356,7 +307,7 @@ export default function PrivilegesPage() {
         </div>
       </section>
 
-      {/* Additional Features Section */}
+      {/* Lifestyle Features Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
@@ -366,14 +317,14 @@ export default function PrivilegesPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold mb-4">Enhanced Living Experience</h2>
+            <h2 className="text-4xl font-bold mb-4">Lifestyle & Entertainment</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              We go beyond the basics to ensure your stay is comfortable, convenient, and memorable
+              Experience a vibrant community life with premium amenities and engaging activities
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {ADDITIONAL_FEATURES.map((feature, index) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {LIFESTYLE_FEATURES.map((feature, index) => {
               const Icon = feature.icon;
               return (
                 <motion.div
@@ -382,31 +333,13 @@ export default function PrivilegesPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="flex gap-6 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all"
+                  className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all text-center flex flex-col items-center"
                 >
-                  <div className="relative w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden">
-                    <Image
-                      src={feature.image}
-                      alt={feature.title}
-                      fill
-                      className="object-cover"
-                    />
+                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                    <Icon className="w-6 h-6 text-primary" />
                   </div>
-                  <div>
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                      <Icon className="w-5 h-5 text-primary" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                    <p className="text-gray-600 mb-4">{feature.description}</p>
-              <ul className="space-y-2">
-                      {feature.details.map((detail, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-                          <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
-                          <span>{detail}</span>
-                  </li>
-                ))}
-              </ul>
-              </div>
+                  <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+                  <p className="text-gray-600">{feature.description}</p>
                 </motion.div>
               );
             })}
@@ -465,46 +398,6 @@ export default function PrivilegesPage() {
         </div>
       </section>
 
-      {/* Lifestyle Features Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold mb-4">Lifestyle & Entertainment</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Experience a vibrant community life with premium amenities and engaging activities
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {LIFESTYLE_FEATURES.map((feature, index) => {
-              const Icon = feature.icon;
-            return (
-                <motion.div
-                  key={feature.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all text-center"
-                >
-                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 mx-auto">
-                    <Icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-                </div>
-      </section>
-
       {/* Pricing Benefits Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4">
@@ -542,6 +435,38 @@ export default function PrivilegesPage() {
             );
           })}
         </div>
+        </div>
+      </section>
+
+      {/* Inquiry Form Section */}
+      <section id="inquiry-form" className="py-20 bg-white scroll-mt-24">
+        <div className="max-w-7xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold mb-4">Additional Accommodations</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Interested in our additional services? Let us know your requirements and we'll help you customize your stay
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="max-w-2xl mx-auto"
+          >
+            <ContactForm 
+              showTitle={false}
+              messageLabel="Required Services"
+              messagePlaceholder="Please specify which additional services you're interested in (e.g., Laundry, Meals, etc.)"
+            />
+          </motion.div>
         </div>
       </section>
 

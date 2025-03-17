@@ -8,6 +8,7 @@ interface ContactFormData {
   name: string;
   phone: string;
   email: string;
+  locality: string;
   message: string;
 }
 
@@ -16,6 +17,8 @@ interface ContactFormProps {
   showTitle?: boolean;
   title?: string;
   subtitle?: string;
+  messageLabel?: string;
+  messagePlaceholder?: string;
 }
 
 // Replace these with your actual EmailJS credentials
@@ -23,12 +26,13 @@ const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
 const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
 const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
 
-export default function ContactForm({ className = "", showTitle = true, title = "Send us a message", subtitle }: ContactFormProps) {
+export default function ContactForm({ className = "", showTitle = true, title = "Send us a message", subtitle, messageLabel = "Message", messagePlaceholder = "Your message" }: ContactFormProps) {
   const pathname = usePathname();
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     phone: "",
     email: "",
+    locality: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,6 +60,7 @@ export default function ContactForm({ className = "", showTitle = true, title = 
         from_name: formData.name,
         from_email: formData.email || "No email provided",
         from_phone: formData.phone,
+        from_locality: formData.locality,
         message: formData.message || "No message provided",
         source_url: sourceUrl,
         page_title: pageTitle,
@@ -74,7 +79,7 @@ export default function ContactForm({ className = "", showTitle = true, title = 
               type: "success",
               message: "Thanks to reach out. We'll get back to you soon!",
             });
-            setFormData({ name: "", phone: "", email: "", message: "" });
+            setFormData({ name: "", phone: "", email: "", locality: "", message: "" });
           } else {
             throw new Error('Failed to send message');
           }
@@ -168,8 +173,24 @@ export default function ContactForm({ className = "", showTitle = true, title = 
         </div>
 
         <div>
+          <label htmlFor="locality" className="block text-sm font-medium text-gray-700 mb-2">
+            Preferred Locality
+          </label>
+          <input
+            type="text"
+            id="locality"
+            name="locality"
+            value={formData.locality}
+            onChange={handleChange}
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+            placeholder="Your preferred locality"
+            required
+          />
+        </div>
+
+        <div>
           <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-            Message (optional)
+            {messageLabel}
           </label>
           <textarea
             id="message"
@@ -178,7 +199,7 @@ export default function ContactForm({ className = "", showTitle = true, title = 
             onChange={handleChange}
             rows={4}
             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
-            placeholder="Your message"
+            placeholder={messagePlaceholder}
           ></textarea>
         </div>
 
