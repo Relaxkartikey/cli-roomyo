@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const faqs = [
   {
     question: "What makes Roomyo different from traditional PG and rental options?",
-    answer: "Roomyo offers a curated selection of verified PGs and rental spaces with transparent pricing, high-quality amenities, and a seamless booking process. We focus on creating a trustworthy platform where you can find comfortable living spaces that match your lifestyle and budget."
+    answer: "Roomyo offers a curated selection of verified rental spaces with transparent pricing, high-quality amenities, and a seamless booking process. We focus on creating a trustworthy platform where you can find comfortable living spaces that match your lifestyle and budget."
   },
   {
     question: "How does Roomyo verify its listed properties?",
@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     question: "What types of accommodations can I find on Roomyo?",
-    answer: "Roomyo features a diverse range of living spaces including PG accommodations, shared apartments, studio apartments, and private rooms. Whether you're a student, working professional, or someone looking for a comfortable stay, we have options tailored to different needs and preferences."
+    answer: "Roomyo features a diverse range of living spaces including accommodations, shared apartments, studio apartments, and private rooms. Whether you're a student, working professional, or someone looking for a comfortable stay, we have options tailored to different needs and preferences."
   },
   {
     question: "How do I book a space through Roomyo?",

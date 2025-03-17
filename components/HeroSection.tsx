@@ -110,7 +110,33 @@ const HeroSection = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="max-w-2xl text-sm sm:text-base md:text-lg text-muted-foreground mb-3 sm:mb-4"
               >
-                Discover the perfect property or PG accommodation across all Jaipur cities. 
+                Discover the perfect property spaces across {" "}
+                <motion.span
+                  initial={{ backgroundColor: "rgba(59, 130, 246, 0)" }}
+                  animate={{ 
+                    backgroundColor: ["rgba(59, 130, 246, 0)", "rgba(59, 130, 246, 0.1)", "rgba(59, 130, 246, 0)"],
+                    color: "#2563eb",
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
+                  className="font-semibold relative inline-block"
+                >
+                  <span className="relative z-10">Jaipur</span>
+                  <motion.span
+                    className="absolute bottom-0 left-0 w-full h-[2px] bg-primary"
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
+                    transition={{ 
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                    }}
+                  />
+                </motion.span>
+                {" "}cities. 
                 <span className="hidden sm:inline"> Easy booking, trusted dealers, and hassle-free experience.</span>
               </motion.p>
 

@@ -187,27 +187,6 @@ const COMPARISON_DATA = {
   others: [false, false, false, false, false, true, false, false]
 };
 
-const TESTIMONIALS = [
-  {
-    name: "Aman Kumar",
-    role: "Working Professional",
-    text: "Roomyo has redefined PG living for me. Clean, professional, and peaceful.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"
-  },
-  {
-    name: "Priya Singh",
-    role: "Student",
-    text: "I've never seen such well-managed accommodations. Roomyo is amazing!",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"
-  },
-  {
-    name: "Rahul Sharma",
-    role: "Working Professional",
-    text: "The best part? No landlord interference. Roomyo takes care of everything.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
-  }
-];
-
 export default function PrivilegesPage() {
   return (
     <main className="min-h-screen bg-white">
