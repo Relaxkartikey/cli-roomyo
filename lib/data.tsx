@@ -1,34 +1,33 @@
-
 // Testimonials
 export const testimonials = [
   {
-    quote: "White Box Media transformed our corporate event into an unforgettable experience. Their attention to detail and creative vision exceeded our expectations.",
-    name: "Rajesh Kumar",
-    title: "CEO, TechCorp India",
+    quote: "No more landlord hassles! The fully furnished rooms and professional management make life easier.",
+    name: "Rahul Verma",
+    title: "Working Professional",
   },
   {
-    quote: "The team's professionalism and innovative approach made our product launch a massive success. They truly understand how to create impactful events.",
+    quote: "Found more than just a room - got a comfortable home with a great community. Perfect for students!",
     name: "Priya Sharma",
-    title: "Marketing Director, InnovateX",
+    title: "College Student",
   },
   {
-    quote: "Our wedding was nothing short of magical, thanks to White Box Media. They captured every moment perfectly and created an atmosphere we'll never forget.",
-    name: "Amit & Neha Patel",
-    title: "Happy Couple",
+    quote: "Zero brokerage and transparent pricing. Professional management that's worth every penny.",
+    name: "Amit Kumar",
+    title: "IT Professional",
   },
   {
-    quote: "The video production quality is outstanding. They have a unique ability to tell compelling stories through their work.",
-    name: "Vikram Singh",
-    title: "Creative Head, MediaFirst",
+    quote: "Made my transition to Jaipur smooth. The community events helped me settle quickly.",
+    name: "Neha Singh",
+    title: "Working Professional",
   },
   {
-    quote: "From concept to execution, their branding expertise helped us establish a strong market presence. Highly recommended!",
+    quote: "As a woman professional, the security and cleanliness give me complete peace of mind.",
     name: "Meera Reddy",
-    title: "Founder, StartUp Hub",
+    title: "Software Engineer",
   },
   {
-    quote: "Their corporate event management is top-notch. They handle everything with precision and creativity.",
+    quote: "Prime location with all amenities nearby. Optional services make life convenient.",
     name: "Arun Kapoor",
-    title: "Operations Manager, Enterprise Solutions",
-  },
+    title: "Business Analyst",
+  }
 ];

@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://whiteboxmedia.co.in/sitemap.xml
+Sitemap: https://roomyo.in/sitemap.xml
 
 # Disallow crawling of error pages and admin routes
 Disallow: /404
