@@ -44,7 +44,7 @@ export interface Property {
 export const SAMPLE_PROPERTIES: Property[] = [
   {
     id: 1,
-    name: "Luxury PG in Powai",
+    name: "Luxury Rental Spaces in Powai",
     location: "Mumbai",
     category: "Roomyo Spaces",
     prices: [
@@ -59,7 +59,7 @@ export const SAMPLE_PROPERTIES: Property[] = [
       "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3",
       "https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3",
     ],
-    description: "Experience luxury living in the heart of Powai. This fully furnished PG offers modern amenities, spacious rooms, and a vibrant community. Perfect for young professionals and students looking for a premium living experience.",
+    description: "Experience luxury living in the heart of Powai. This fully furnished Rental Spaces offers modern amenities, spacious rooms, and a vibrant community. Perfect for young professionals and students looking for a premium living experience.",
     privileges: [
       {
         icon: "wifi",

@@ -1,6 +1,6 @@
 # Roomyo App
 
-It's a real estate and PG booking company. Showing properties and allowing someone to contact the dealer or PG manager.
+It's a real estate and Rental Spaces booking company. Showing properties and allowing someone to contact the dealer or Rental Spaces manager.
 
 ## Tech Stacks:
     - Next.js, typescript, Tailwind CSS, Strapi (later for Backend for Spaces page and blogs) 

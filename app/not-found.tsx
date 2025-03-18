@@ -6,8 +6,8 @@ import { Home, Search } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-secondary px-4">
-      <div className="max-w-2xl mx-auto text-center">
+    <div className="min-h-screen bg-secondary flex items-center justify-center px-4">
+      <div className="max-w-md w-full text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -15,26 +15,26 @@ export default function NotFound() {
         >
           <h1 className="text-6xl md:text-8xl font-bold text-primary mb-4">404</h1>
           <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-6">
-            Oops! Space Not Found
+            Oops! Page Not Found
           </h2>
           <p className="text-gray-600 mb-8 max-w-md mx-auto">
-            The space you're looking for seems to have moved or doesn't exist. Let's help you find the perfect space.
+            The page you're looking for seems to have moved or doesn't exist. Let's help you find the perfect space.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/"
-              className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors w-full sm:w-auto justify-center"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
             >
               <Home className="w-5 h-5" />
-              <span>Back to Home</span>
+              Return Home
             </Link>
             <Link
-              href="/spaces"
-              className="flex items-center gap-2 bg-white text-primary px-6 py-3 rounded-lg border-2 border-primary hover:bg-primary/5 transition-colors w-full sm:w-auto justify-center"
+              href="/search"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors"
             >
               <Search className="w-5 h-5" />
-              <span>Browse Spaces</span>
+              Search Properties
             </Link>
           </div>
         </motion.div>

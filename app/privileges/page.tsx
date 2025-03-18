@@ -338,7 +338,7 @@ export default function PrivilegesPage() {
           >
             <h2 className="text-4xl font-bold mb-4">Why Roomyo Is Different?</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              See how we compare to traditional PG accommodations
+              See how we compare to traditional Rental Spaces accommodations
             </p>
           </motion.div>
 
@@ -348,7 +348,7 @@ export default function PrivilegesPage() {
                 <tr className="bg-gray-50">
                   <th className="px-6 py-4 text-left text-gray-900">Feature</th>
                   <th className="px-6 py-4 text-center text-primary">Roomyo</th>
-                  <th className="px-6 py-4 text-center text-gray-600">Other PGs</th>
+                  <th className="px-6 py-4 text-center text-gray-600">Other Rental Spacess</th>
                 </tr>
               </thead>
               <tbody>

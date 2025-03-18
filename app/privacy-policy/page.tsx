@@ -1,8 +1,10 @@
-'use client';
+"use client";
 
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Shield, Lock, Eye, FileText, Server, Key, Database, Bell, Share2, Trash2 } from "lucide-react";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -102,7 +104,7 @@ export default function PrivacyPolicyPage() {
               </p>
               <ul className="list-disc pl-10 text-gray-700">
                 <li>Process your booking requests.</li>
-                <li>Connect you with landlords or PG owners.</li>
+                <li>Connect you with landlords or Rental Spaces owners.</li>
                 <li>Send booking confirmations and updates.</li>
               </ul>
             </div>
@@ -165,7 +167,7 @@ export default function PrivacyPolicyPage() {
               <h3 className="text-xl font-medium text-gray-800 mb-2">a. Service Providers</h3>
               <p className="text-gray-700 mb-2">We may share your information with:</p>
               <ul className="list-disc pl-6 text-gray-700">
-                <li>Landlords or PG hosts for bookings.</li>
+                <li>Landlords or Rental Spaces hosts for bookings.</li>
                 <li>Payment gateways for payment processing.</li>
                 <li>Third-party communication platforms for support.</li>
               </ul>
