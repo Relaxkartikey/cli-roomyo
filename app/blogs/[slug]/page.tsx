@@ -8,8 +8,6 @@ import { collection, query, where, getDocs, orderBy, limit } from "firebase/fire
 import { db } from "@/lib/firebase";
 import Loader from '@/components/Loader';
 import ContactForm from '@/components/ContactForm';
-import { motion } from "framer-motion";
-import { User } from "lucide-react";
 
 // Define the Blog interface
 interface Blog {
@@ -32,13 +30,13 @@ interface ContactFormData {
   message: string;
 }
 
-interface BlogPageProps {
+interface Props {
   params: {
     slug: string;
   };
 }
 
-export default function BlogPage({ params }: BlogPageProps) {
+export default function BlogDetailPage({ params }: Props) {
   const router = useRouter();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
@@ -254,7 +252,7 @@ export default function BlogPage({ params }: BlogPageProps) {
                     <Clock className="w-5 h-5" />
                     <span>{blog.readTime}</span>
                   </div>
-                </div>
+            </div>
 
                 {/* Blog Content - Render HTML content */}
                 <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: blog.content }}></div>

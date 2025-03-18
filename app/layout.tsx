@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next'
+import type { Metadata } from 'next'
 import { Inter, Raleway } from 'next/font/google'
 import "../styles/globals.css"
 import Navbar from "@/components/Navbar"
@@ -9,7 +9,6 @@ import StyledComponentsRegistry from './registry'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
 import { Analytics } from '@vercel/analytics/react'
 import FloatingContact from "../components/FloatingContact"
-import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -20,39 +19,48 @@ const raleway = Raleway({
   display: 'swap',
 })
 
-export const viewport: Viewport = {
-  themeColor: '#4F46E5',
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-}
-
 export const metadata: Metadata = {
-  metadataBase: new URL('https://roomyo.com'),
+  metadataBase: new URL('https://roomyo.in'),
   title: {
     default: 'Roomyo - Find Your Perfect Property & PG Accommodation',
-    template: '%s - Roomyo'
+    template: '%s | Roomyo'
   },
-  description: 'Find and book verified properties and PG accommodations across major Indian cities. Browse through our collection of premium spaces with detailed amenities and transparent pricing.',
-  keywords: ['property', 'PG accommodation', 'rental', 'housing', 'real estate', 'India'],
-  authors: [{ name: 'Roomyo' }],
+  description: 'Roomyo is your trusted platform for finding the perfect property or PG accommodation across major Indian cities. Easy booking, verified listings, and hassle-free experience.',
+  keywords: ['real estate', 'PG accommodation', 'property rental', 'house hunting', 'rental properties', 'paying guest', 'India', 'accommodation'],
+  authors: [
+    { name: 'Roomyo', url: 'https://roomyo.in' },
+  ],
   creator: 'Roomyo',
-  publisher: 'Roomyo',
+  publisher: 'Roomyo Pvt. Ltd.',
   formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  verification: {
-    google: 'add-your-google-site-verification-here',
-    yandex: 'add-your-yandex-verification-here',
+    email: true,
+    address: true,
+    telephone: true,
   },
   alternates: {
     canonical: '/',
-    languages: {
-      'en-US': '/en',
-    },
+  },
+  openGraph: {
+    title: 'Roomyo - Find Your Perfect Property & PG Accommodation',
+    description: 'Discover and book the perfect property or PG accommodation across major Indian cities. Verified listings, easy booking, and 24/7 support.',
+    url: 'https://roomyo.in',
+    siteName: 'Roomyo',
+    locale: 'en_IN',
+    type: 'website',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Roomyo - Property & PG Booking',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Roomyo - Property & PG Booking Made Easy',
+    description: 'Find your perfect property or PG accommodation across major Indian cities',
+    images: ['/og-image.jpg'],
   },
   robots: {
     index: true,
@@ -65,53 +73,11 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
-    other: [
-      {
-        rel: 'icon',
-        type: 'image/png',
-        sizes: '32x32',
-        url: '/favicon-32x32.png',
-      },
-    ],
+  verification: {
+    google: 'add-your-google-site-verification-here',
   },
-  manifest: '/manifest.json',
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://roomyo.com',
-    siteName: 'Roomyo',
-    title: {
-      default: 'Roomyo - Find Your Perfect Property & PG Accommodation',
-      template: '%s - Roomyo'
-    },
-    description: 'Find and book verified properties and PG accommodations across major Indian cities.',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Roomyo - Property & PG Accommodation Platform',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Roomyo - Find Your Perfect Property & PG Accommodation',
-    description: 'Find and book verified properties and PG accommodations across major Indian cities.',
-    images: ['/og-image.jpg'],
-    creator: '@roomyo',
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
-  themeColor: '#4F46E5',
+  category: 'Real Estate & Accommodation',
+  classification: 'Property Rental',
 }
 
 export default function RootLayout({
@@ -132,7 +98,6 @@ export default function RootLayout({
           <Footer />
           <MobileFooter />
           <FloatingContact />
-          <Toaster position="bottom-right" />
         </StyledComponentsRegistry>
       </body>
     </html>
