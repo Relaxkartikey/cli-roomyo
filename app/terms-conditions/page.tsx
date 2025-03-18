@@ -57,7 +57,7 @@ export default function TermsConditionsPage() {
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-primary mb-4">4. Booking and Payment</h2>
             <ul className="list-disc pl-6 text-gray-700">
-              <li className="mb-2"><strong>Booking Process:</strong> All booking requests made through Roomyo are subject to confirmation by the respective property owner or PG host. Roomyo facilitates the connection but does not guarantee availability.</li>
+              <li className="mb-2"><strong>Booking Process:</strong> All booking requests made through Roomyo are subject to confirmation by the respective property owner or Rental Spaces host. Roomyo facilitates the connection but does not guarantee availability.</li>
               <li className="mb-2"><strong>Payment:</strong> Payment for bookings is processed securely via third-party payment gateways. Roomyo does not store sensitive payment details.</li>
               <li><strong>Security:</strong> You agree to follow secure payment practices and are responsible for maintaining the confidentiality of your payment credentials.</li>
             </ul>
@@ -67,7 +67,7 @@ export default function TermsConditionsPage() {
             <h2 className="text-2xl font-semibold text-primary mb-4">5. Cancellation and Refunds</h2>
             <ul className="list-disc pl-6 text-gray-700">
               <li className="mb-2"><strong>Cancellation Policy:</strong> Cancellation or modification of bookings is subject to the terms provided during the booking process. Specific cancellation policies will be communicated at the time of booking.</li>
-              <li><strong>Refunds:</strong> Any refunds, if applicable, will be processed according to the cancellation policy of the property owner or PG host. Roomyo is not liable for delays or discrepancies in refund processing.</li>
+              <li><strong>Refunds:</strong> Any refunds, if applicable, will be processed according to the cancellation policy of the property owner or Rental Spaces host. Roomyo is not liable for delays or discrepancies in refund processing.</li>
             </ul>
           </section>
           

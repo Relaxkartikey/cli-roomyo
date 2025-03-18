@@ -35,7 +35,7 @@ export interface Property {
 export const SAMPLE_PROPERTIES: Property[] = [
   {
     id: 1,
-    name: "Luxury PG in Powai",
+    name: "Luxury Rental Spaces in Powai",
     location: "Mumbai",
     category: "Roomyo Spaces",
     prices: [
@@ -50,7 +50,7 @@ export const SAMPLE_PROPERTIES: Property[] = [
       "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3",
       "https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3",
     ],
-    description: "Experience luxury living in the heart of Powai. This fully furnished PG offers modern amenities, spacious rooms, and a vibrant community. Perfect for young professionals and students looking for a premium living experience.",
+    description: "Experience luxury living in the heart of Powai. This fully furnished Rental Spaces offers modern amenities, spacious rooms, and a vibrant community. Perfect for young professionals and students looking for a premium living experience.",
     privileges: [
       {
         icon: "wifi",
@@ -198,7 +198,7 @@ export const SAMPLE_PROPERTIES: Property[] = [
   },
   {
     id: 4,
-    name: "Premium PG in Andheri",
+    name: "Premium Rental Spaces in Andheri",
     location: "Mumbai",
     category: "Roomyo Spaces",
     prices: [
@@ -212,7 +212,7 @@ export const SAMPLE_PROPERTIES: Property[] = [
       "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3",
       "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3",
     ],
-    description: "Luxurious PG accommodation in the heart of Andheri. Features modern amenities, spacious rooms, and a vibrant community. Perfect for working professionals seeking comfort and convenience.",
+    description: "Luxurious Rental Spaces accommodation in the heart of Andheri. Features modern amenities, spacious rooms, and a vibrant community. Perfect for working professionals seeking comfort and convenience.",
     privileges: [
       {
         icon: "dumbbell",
@@ -306,7 +306,7 @@ export const SAMPLE_PROPERTIES: Property[] = [
   },
   {
     id: 6,
-    name: "Student PG in Viman Nagar",
+    name: "Student Rental Spaces in Viman Nagar",
     location: "Pune",
     category: "Roomyo Spaces",
     prices: [
@@ -319,7 +319,7 @@ export const SAMPLE_PROPERTIES: Property[] = [
       "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3",
       "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3",
     ],
-    description: "Student-friendly PG with dedicated study areas and high-speed internet. Features a well-stocked library and comfortable rooms. Perfect for students and young learners.",
+    description: "Student-friendly Rental Spaces with dedicated study areas and high-speed internet. Features a well-stocked library and comfortable rooms. Perfect for students and young learners.",
     privileges: [
       {
         icon: "book",

@@ -522,10 +522,10 @@ export default function BlogsDashboard() {
     try {
       // First set all simple fields
       const simpleFields: Partial<Blog> = {
-        title: 'Top 10 PG Accommodations in Bangalore for Students',
+        title: 'Top 10 Rental Spaces Accommodations in Bangalore for Students',
         featuredImage: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af',
-        excerpt: 'Discover the top 10 PG accommodations in Bangalore that offer the perfect balance of comfort, convenience, and affordability for students.',
-        tags: ['Accommodation', 'Bangalore', 'Students', 'Budget Living', 'PG'],
+        excerpt: 'Discover the top 10 Rental Spaces accommodations in Bangalore that offer the perfect balance of comfort, convenience, and affordability for students.',
+        tags: ['Accommodation', 'Bangalore', 'Students', 'Budget Living', 'Rental Spaces'],
         readTime: '6 min read',
         status: 'Draft' as const,
         createdAt: Date.now(),
@@ -542,10 +542,10 @@ export default function BlogsDashboard() {
       setTimeout(() => {
         setFormData(prev => ({
           ...prev,
-          content: `<h1>Top 10 PG Accommodations in Bangalore for Students</h1>
+          content: `<h1>Top 10 Rental Spaces Accommodations in Bangalore for Students</h1>
 
 <h2>Introduction</h2>
-<p>Finding the perfect PG accommodation in Bangalore can be challenging for students. This guide helps you discover the best options that offer comfort, convenience, and affordability.</p>
+<p>Finding the perfect Rental Spaces accommodation in Bangalore can be challenging for students. This guide helps you discover the best options that offer comfort, convenience, and affordability.</p>
 
 <h2>What to Look For</h2>
 <ul>
@@ -568,10 +568,10 @@ export default function BlogsDashboard() {
 <p>Prices range from ₹8,000 to ₹15,000 depending on location, room type, and facilities included.</p>
 
 <h2>Booking Process</h2>
-<p>Most PGs require a security deposit equivalent to 1-2 months' rent and advance payment for the first month.</p>
+<p>Most Rental Spacess require a security deposit equivalent to 1-2 months' rent and advance payment for the first month.</p>
 
 <h2>Conclusion</h2>
-<p>With these options, finding your ideal PG accommodation in Bangalore becomes much easier. Book early to secure the best deals!</p>`
+<p>With these options, finding your ideal Rental Spaces accommodation in Bangalore becomes much easier. Book early to secure the best deals!</p>`
         }));
         
         toast.success('Form autofilled with sample data');

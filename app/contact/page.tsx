@@ -6,6 +6,7 @@ import { FaInstagram, FaFacebookF, FaLinkedin, FaWhatsapp } from "react-icons/fa
 import Link from "next/link";
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import ContactForm from "@/components/ContactForm";
 
 interface FormData {
   name: string;

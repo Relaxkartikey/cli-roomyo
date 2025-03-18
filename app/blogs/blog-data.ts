@@ -2,8 +2,8 @@
 export const FEATURED_BLOGS = [
   {
     id: 1,
-    title: "Ultimate Guide to Finding PG Accommodation in Mumbai",
-    excerpt: "Everything you need to know about finding the perfect PG in Mumbai - from locations to budgets and what to look out for.",
+    title: "Ultimate Guide to Finding Rental Spaces Accommodation in Mumbai",
+    excerpt: "Everything you need to know about finding the perfect Rental Spaces in Mumbai - from locations to budgets and what to look out for.",
     image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
     date: "Feb 15, 2024",
     readTime: "8 min read",

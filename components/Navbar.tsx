@@ -74,7 +74,7 @@ export default function Navbar() {
   return (
     <>
       {/* Desktop Header */}
-      <header className={`hidden md:block fixed w-full top-0 z-50 transition-all duration-300 font-raleway ${
+      <header className={`hidden md:block fixed w-full top-0 z-50 transition-all duration-300 ${
         hasScrolled ? 'bg-white shadow-md' : 'bg-white'
       }`}>
         {/* Top Marketing Bar */}

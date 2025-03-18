@@ -1,0 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+- if you are new to the projectss, scan codebase in depth is must.
+- Always try to not change functionality and ui of existing projects until it is being said
+- if request or prompt is big try to solve it in parts
+- Try to keep less build errors
+- Change over somethings, you should know how its working in present time

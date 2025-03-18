@@ -8,6 +8,9 @@ import { collection, query, where, getDocs, orderBy, limit } from "firebase/fire
 import { db } from "@/lib/firebase";
 import Loader from '@/components/Loader';
 import ContactForm from '@/components/ContactForm';
+import { generateBlogStructuredData } from '@/lib/seo/structured-data';
+import StructuredData from '@/components/StructuredData';
+import { trackMetadata } from '@/lib/seo/analytics';
 
 // Define the Blog interface
 interface Blog {
@@ -194,6 +197,22 @@ export default function BlogDetailPage({ params }: Props) {
     }
   };
 
+  useEffect(() => {
+    if (blog) {
+      // Track metadata when blog loads
+      trackMetadata({
+        title: blog.title,
+        description: blog.excerpt,
+        blogDetails: {
+          author: 'Roomyo',
+          publishDate: new Date(blog.createdAt).toISOString(),
+          readTime: blog.readTime,
+          tags: blog.tags,
+        }
+      }, `/blogs/${params.slug}`);
+    }
+  }, [blog, params.slug]);
+
   if (loading) {
     return <Loader />;
   }
@@ -202,167 +221,166 @@ export default function BlogDetailPage({ params }: Props) {
     notFound();
   }
 
+  const structuredData = generateBlogStructuredData(blog);
+
   return (
-    <main className="min-h-screen bg-secondary pb-16">
-      <div className="max-w-6xl mx-auto px-4 p-6">
-        <Link 
-          href="/blogs" 
-          className="inline-flex items-center text-gray-600 hover:text-primary mb-6"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Blogs
-        </Link>
+    <>
+      <StructuredData data={structuredData} />
+      <main className="min-h-screen bg-secondary pb-16">
+        <div className="max-w-6xl mx-auto px-4 p-6">
+          <Link 
+            href="/blogs" 
+            className="inline-flex items-center text-gray-600 hover:text-primary mb-6"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Blogs
+          </Link>
 
-        <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            {/* Blog Header */}
-            <div className="bg-white rounded-xl overflow-hidden shadow-lg mb-12">
-              <div className="relative h-72 sm:h-96 md:h-[400px]">
-              <Image
-                  src={blog.featuredImage}
-                alt={blog.title}
-                fill
-                className="object-cover"
-                priority
-              />
-              </div>
-              <div className="p-6 md:p-10">
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {blog.tags.map((tag, idx) => (
-                    <span 
-                      key={idx} 
-                      className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+          <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main Content */}
+            <div className="lg:col-span-2">
+              {/* Blog Header */}
+              <div className="bg-white rounded-xl overflow-hidden shadow-lg mb-12">
+                <div className="relative h-72 sm:h-96 md:h-[400px]">
+                <Image
+                    src={blog.featuredImage}
+                  alt={blog.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
                 </div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6">{blog.title}</h1>
-                <div className="flex items-center gap-6 text-gray-500 mb-10">
-                  <div className="flex items-center gap-2">
-                    <CalendarDays className="w-5 h-5" />
-                    <span>{new Date(blog.createdAt).toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}</span>
+                <div className="p-6 md:p-10">
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {blog.tags.map((tag, idx) => (
+                      <span 
+                        key={idx} 
+                        className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm"
+                      >
+                        {tag}
+                      </span>
+                    ))}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-5 h-5" />
-                    <span>{blog.readTime}</span>
-                  </div>
-            </div>
-
-                {/* Blog Content - Render HTML content */}
-                <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: blog.content }}></div>
-              </div>
-            </div>
-
-            {/* Related Posts */}
-            {relatedBlogs.length > 0 && (
-              <section className="mb-16">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-8">Related Posts</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {relatedBlogs.map((relatedBlog) => (
-                    <Link 
-                      key={relatedBlog.id}
-                      href={`/blogs/${relatedBlog.slug}`}
-                      className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
-                    >
-                      <div className="relative h-48">
-                        <Image
-                          src={relatedBlog.featuredImage}
-                          alt={relatedBlog.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        {relatedBlog.tags.length > 0 && (
-                          <div className="absolute top-4 right-4 bg-primary/90 text-white text-xs px-3 py-1 rounded-full">
-                            {relatedBlog.tags[0]}
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-6">
-                        <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-primary transition-colors">
-                          {relatedBlog.title}
-                        </h3>
-                        <p className="text-gray-600 mb-4 line-clamp-2">{relatedBlog.excerpt}</p>
-                        <div className="flex items-center justify-between text-sm text-gray-500">
-                <div className="flex items-center gap-1">
-                  <CalendarDays className="w-4 h-4" />
-                            <span>{new Date(relatedBlog.createdAt).toLocaleDateString('en-US', { 
-                              year: 'numeric', 
-                              month: 'short', 
-                              day: 'numeric' 
-                            })}</span>
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6">{blog.title}</h1>
+                  <div className="flex items-center gap-6 text-gray-500 mb-10">
+                    <div className="flex items-center gap-2">
+                      <CalendarDays className="w-5 h-5" />
+                      <span>{new Date(blog.createdAt).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-5 h-5" />
+                      <span>{blog.readTime}</span>
+                    </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                            <span>{relatedBlog.readTime}</span>
+
+                  {/* Blog Content - Render HTML content */}
+                  <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: blog.content }}></div>
+                </div>
+              </div>
+
+              {/* Related Posts */}
+              {relatedBlogs.length > 0 && (
+                <section className="mb-16">
+                  <h2 className="text-2xl font-semibold text-gray-900 mb-8">Related Posts</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {relatedBlogs.map((relatedBlog) => (
+                      <Link 
+                        key={relatedBlog.id}
+                        href={`/blogs/${relatedBlog.slug}`}
+                        className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
+                      >
+                        <div className="relative h-48">
+                          <Image
+                            src={relatedBlog.featuredImage}
+                            alt={relatedBlog.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                          {relatedBlog.tags.length > 0 && (
+                            <div className="absolute top-4 right-4 bg-primary/90 text-white text-xs px-3 py-1 rounded-full">
+                              {relatedBlog.tags[0]}
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-6">
+                          <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-primary transition-colors">
+                            {relatedBlog.title}
+                          </h3>
+                          <p className="text-gray-600 mb-4 line-clamp-2">{relatedBlog.excerpt}</p>
+                          <div className="flex items-center justify-between text-sm text-gray-500">
+                  <div className="flex items-center gap-1">
+                    <CalendarDays className="w-4 h-4" />
+                              <span>{new Date(relatedBlog.createdAt).toLocaleDateString('en-US', { 
+                                year: 'numeric', 
+                                month: 'short', 
+                                day: 'numeric' 
+                              })}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                              <span>{relatedBlog.readTime}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            )}
-              </div>
-
-          {/* Sidebar */}
-          <div 
-            ref={sidebarRef}
-            className={`lg:col-span-1 ${
-              isSticky ? 'lg:sticky lg:top-36' : ''
-            } transition-all duration-300`}
-          >
-            {/* Search Properties Widget */}
-            <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Find Your Perfect Space</h3>
-              <div className="space-y-4">
-                <div className="flex flex-col">
-                  <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
-                    Select Location
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="location"
-                      value={selectedLocation}
-                      onChange={(e) => setSelectedLocation(e.target.value)}
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    >
-                      <option value="">Select a location</option>
-                      {locations.map((location) => (
-                        <option key={location} value={location}>
-                          {location}
-                        </option>
-                      ))}
-                    </select>
-                    <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={18} />
+                      </Link>
+                    ))}
                   </div>
+                </section>
+              )}
                 </div>
-                
-                <button
-                  onClick={handleSearch}
-                  disabled={!selectedLocation}
-                  className={`w-full py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 
-                    ${selectedLocation ? 'bg-primary hover:bg-primary/90 text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
-                >
-                  <Search className="w-4 h-4" />
-                  <span>Search Properties</span>
-                </button>
+
+            {/* Sidebar */}
+            <div 
+              ref={sidebarRef}
+              className={`lg:col-span-1 ${
+                isSticky ? 'lg:sticky lg:top-36' : ''
+              } transition-all duration-300`}
+            >
+              {/* Search Properties Widget */}
+              <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Find Your Perfect Space</h3>
+                <div className="space-y-4">
+                  <div className="flex flex-col">
+                    <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+                      Select Location
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="location"
+                        value={selectedLocation}
+                        onChange={(e) => setSelectedLocation(e.target.value)}
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      >
+                        <option value="">Select a location</option>
+                        {locations.map((location) => (
+                          <option key={location} value={location}>
+                            {location}
+                          </option>
+                        ))}
+                      </select>
+                      <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={18} />
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={handleSearch}
+                    disabled={!selectedLocation}
+                    className={`w-full py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 
+                      ${selectedLocation ? 'bg-primary hover:bg-primary/90 text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
+                  >
+                    <Search className="w-4 h-4" />
+                    <span>Search Properties</span>
+                  </button>
+                </div>
               </div>
             </div>
-
-            {/* Contact Widget */}
-            <ContactForm 
-              title="Get in Touch" 
-              subtitle="Have questions about this property? Send us a message!"
-            />
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 } 

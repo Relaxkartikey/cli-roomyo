@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-raleway)', 'Raleway', 'sans-serif'],
+      },
       colors: {
         primary: '#2563eb',
       },

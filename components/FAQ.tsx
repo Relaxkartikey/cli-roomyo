@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const faqs = [
   {
-    question: "What makes Roomyo different from traditional PG and rental options?",
+    question: "What makes Roomyo different from traditional Rental Spaces and rental options?",
     answer: "Roomyo offers a curated selection of verified rental spaces with transparent pricing, high-quality amenities, and a seamless booking process. We focus on creating a trustworthy platform where you can find comfortable living spaces that match your lifestyle and budget."
   },
   {
@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     question: "Is there a minimum stay duration at Roomyo properties?",
-    answer: "Stay duration varies by property. While most PGs and shared spaces have a minimum stay of 3-6 months, some properties offer flexible short-term stays. Long-term rentals typically require a minimum 11-month commitment. Check individual listings for specific terms."
+    answer: "Stay duration varies by property. While most Rental Spacess and shared spaces have a minimum stay of 3-6 months, some properties offer flexible short-term stays. Long-term rentals typically require a minimum 11-month commitment. Check individual listings for specific terms."
   },
   {
     question: "How does Roomyo ensure safety and security?",

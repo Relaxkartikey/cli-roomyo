@@ -1,13 +1,17 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { 
   CheckCircle2, X, ArrowRight, Building, 
   Shield, Users, Zap, Clock, CheckSquare,
-  ClipboardCheck, BadgeCheck, Rocket
+  ClipboardCheck, BadgeCheck, Rocket, Upload, Home, Building2, MapPin, DollarSign, BedDouble, Bath, Square
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { db } from "@/lib/firebase";
+import { collection, addDoc } from "firebase/firestore";
+import { toast } from "react-hot-toast";
 
 // Form component will be defined separately
 const ListingForm = () => {
