@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
-        http://www.google.com/schemas/sitemap-image/1.1
-        http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <!-- Home Page -->
   <url>
     <loc>https://roomyo.in</loc>
     <lastmod>2024-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <image:image>
-      <image:loc>https://roomyo.in/logo.png</image:loc>
-      <image:title>Roomyo - Find Your Perfect Space</image:title>
-      <image:caption>Roomyo - Your Trusted Property Search Platform</image:caption>
-    </image:image>
   </url>
 
   <!-- Spaces/Properties Page -->
@@ -27,11 +17,6 @@
     <lastmod>2024-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>https://roomyo.in/spaces-og.jpg</image:loc>
-      <image:title>Browse Properties</image:title>
-      <image:caption>Find Your Perfect Property or PG Accommodation</image:caption>
-    </image:image>
   </url>
 
   <!-- Blogs Page -->
@@ -40,11 +25,6 @@
     <lastmod>2024-03-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://roomyo.in/blogs-og.jpg</image:loc>
-      <image:title>Property Insights & Tips</image:title>
-      <image:caption>Read Latest Property News and Tips</image:caption>
-    </image:image>
   </url>
 
   <!-- About Page -->
@@ -53,11 +33,6 @@
     <lastmod>2024-03-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://roomyo.in/about-og.jpg</image:loc>
-      <image:title>About Roomyo</image:title>
-      <image:caption>Learn About Our Mission and Values</image:caption>
-    </image:image>
   </url>
 
   <!-- Contact Page -->
@@ -66,11 +41,6 @@
     <lastmod>2024-03-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://roomyo.in/contact-og.jpg</image:loc>
-      <image:title>Contact Us</image:title>
-      <image:caption>Get in Touch with Roomyo</image:caption>
-    </image:image>
   </url>
 
   <!-- Privacy Policy -->
