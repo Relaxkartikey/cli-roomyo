@@ -377,6 +377,14 @@ export default function BlogDetailPage({ params }: Props) {
                   </button>
                 </div>
               </div>
+
+              {/* Contact Form */}
+              <ContactForm 
+                title="Get in Touch"
+                subtitle="Interested in finding your perfect space? We're here to help!"
+                messageLabel="Your Requirements"
+                messagePlaceholder="Tell us about your requirements or Find your space first"
+              />
             </div>
           </div>
         </div>
