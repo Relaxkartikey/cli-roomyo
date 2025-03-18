@@ -8,10 +8,6 @@ import {
   Shield, Users, Zap, Clock, CheckSquare,
   ClipboardCheck, BadgeCheck, Rocket, Upload, Home, Building2, MapPin, DollarSign, BedDouble, Bath, Square
 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { db } from "@/lib/firebase";
-import { collection, addDoc } from "firebase/firestore";
-import { toast } from "react-hot-toast";
 
 // Form component will be defined separately
 const ListingForm = () => {
