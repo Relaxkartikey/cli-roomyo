@@ -5,11 +5,17 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { MapPin, Star, Clock, Phone, Mail, ArrowLeft, Send, Building2, User } from "lucide-react";
 import Link from "next/link";
-import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit, doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Property } from '@/app/types/property';
 import Loader from '@/components/Loader';
 import ContactForm from '@/components/ContactForm';
+
+interface SpacePageProps {
+  params: {
+    slug: string;
+  };
+}
 
 export default function SpaceDetailsPage({
   params,
